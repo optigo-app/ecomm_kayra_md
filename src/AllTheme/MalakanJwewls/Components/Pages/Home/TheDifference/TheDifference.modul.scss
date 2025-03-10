@@ -1,0 +1,55 @@
+@import "../../../scss/variable";
+
+.malkana-containerrr {
+  width: 100%;
+  min-height: 110vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  font-family: "Rowan5";
+  @media screen and (max-width: 768px) {
+    min-height: 70vh;
+  }
+  @media screen and (max-width: 420px) {
+    min-height: 55vh;
+  }
+}
+
+.malkana-heading {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  margin-bottom: 2rem;
+  letter-spacing: 0.2em;
+  text-align: center;
+  font-weight: 500;
+  color: #01332A;
+  letter-spacing: -0.5px;
+}
+
+.malkana-videoContainer {
+  width: 100%;
+  max-width: 1200px;
+  aspect-ratio: 16/9;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.malkana-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.malkana-description {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  max-width: 800px;
+  text-align: center;
+  margin: 2rem auto;
+  line-height: 1.6;
+  font-weight: 300;
+  color: #01332A;
+}
