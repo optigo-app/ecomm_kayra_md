@@ -1,31 +1,49 @@
 
+import { fetchAPIUrlFromStoreInit } from "../../Glob_Functions/GlobalFunction";
 import axios from "axios";
 // const APIURL = 'https://api.optigoapps.com/storev26/store.aspx';
 // const APIURL = 'http://zen/api/ReactStore.aspx'
 // const APIURL = (window.location.hostname === 'localhost' || window.location.hostname === 'zen') ? 'http://zen/api/ReactStore.aspx' : 'https://api.optigoapps.com/storev26/ReactStore.aspx';
-const isTesting = true;
-const LIVE_BASE_URL = isTesting ? `https://api.optigoapps.com/ReactStoreTest/ReactStore.aspx` : 'https://api.optigoapps.com/ReactStore/ReactStore.aspx';
-const APIURL = (window.location.hostname === 'localhost'
-    || window.location.hostname === 'zen'
-    || window.location.hostname === 'fgstore.web'
-    || window.location.hostname === 'fgstore.mapp'
-    || window.location.hostname === 'fgstorepro.mapp'
-    || window.location.hostname === 'fgstore.pro'
-    || window.location.hostname === 'fgstore.plw'
-    || window.location.hostname === 'malakan.web'
-    || window.location.hostname === 'rpjewel.web'
-    
-    || window.location.hostname === 'hdstore.web'
-    || window.location.hostname === 'hdstore.mapp'
-    || window.location.hostname === 'hdstore.pro'
-    || window.location.hostname === 'hdstore.plw'
-    || window.location.hostname === 'stamford.web'
-    || window.location.hostname === 'mddesignworld.web'
 
-    || window.location.hostname === 'elvee.web'
-    || window.location.hostname === 'diamondtine.web'
-    || window.location.hostname === 'forevery.web'
-    || window.location.hostname === 'hoq.web') ? 'http://zen/api/ReactStore.aspx' : LIVE_BASE_URL ;
+let APIURL = '';
+
+const getApiUrl = async () => {
+    try {
+        const getApi = await fetchAPIUrlFromStoreInit();
+
+        if (getApi?.ApiUrl) {
+            APIURL = getApi.ApiUrl;
+        }
+    } catch (error) {
+        console.error('Failed to fetch API URL:', error);
+    }
+};
+
+getApiUrl();
+
+// const isTesting = true;
+// const LIVE_BASE_URL = isTesting ? `https://api.optigoapps.com/ReactStoreTest/ReactStore.aspx` : 'https://api.optigoapps.com/ReactStore/ReactStore.aspx';
+// const APIURL = (window.location.hostname === 'localhost'
+//     || window.location.hostname === 'zen'
+//     || window.location.hostname === 'fgstore.web'
+//     || window.location.hostname === 'fgstore.mapp'
+//     || window.location.hostname === 'fgstorepro.mapp'
+//     || window.location.hostname === 'fgstore.pro'
+//     || window.location.hostname === 'fgstore.plw'
+//     || window.location.hostname === 'malakan.web'
+//     || window.location.hostname === 'rpjewel.web'
+    
+//     || window.location.hostname === 'hdstore.web'
+//     || window.location.hostname === 'hdstore.mapp'
+//     || window.location.hostname === 'hdstore.pro'
+//     || window.location.hostname === 'hdstore.plw'
+//     || window.location.hostname === 'stamford.web'
+//     || window.location.hostname === 'mddesignworld.web'
+
+//     || window.location.hostname === 'elvee.web'
+//     || window.location.hostname === 'diamondtine.web'
+//     || window.location.hostname === 'forevery.web'
+//     || window.location.hostname === 'hoq.web') ? 'http://zen/api/ReactStore.aspx' : LIVE_BASE_URL ;
     // 'https://api.optigoapps.com/ReactStore/ReactStore.aspx';
     // || window.location.hostname === 'hoq.web') ? 'http://zen/api/ReactStore.aspx' : 'https://api.optigoapps.com/test/ReactStore.aspx';
 
