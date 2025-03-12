@@ -51,7 +51,7 @@ import { Helmet } from "react-helmet";
 import axios from "axios";
 import { SaveLastViewDesign } from "../../../../../../utils/API/SaveLastViewDesign/SaveLastViewDesign";
 import useBackNavigation from "../../../hooks/useBackNavigation";
-import { formatTitleLine } from "../../../../../../utils/Glob_Functions/GlobalFunction";
+import { formatRedirectTitleLine, formatTitleLine } from "../../../../../../utils/Glob_Functions/GlobalFunction";
 
 const ProductDetail = () => {
   let location = useLocation();
