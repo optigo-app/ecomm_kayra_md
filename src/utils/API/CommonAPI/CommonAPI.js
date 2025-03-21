@@ -53,7 +53,15 @@ getApiUrl();
 
 
 export const CommonAPI = async (body) => {
+    if (!APIURL) {
+        await setApiUrl();
+    }
+
     const storeInit = JSON.parse(sessionStorage.getItem('storeInit'));
+
+    if (!storeInit) {
+        throw new Error('StoreInit data not found in sessionStorage');
+    }
     try {
         const YearCode = storeInit?.YearCode ?? '';
         const version = storeInit?.version ?? '';
@@ -74,4 +82,5 @@ export const CommonAPI = async (body) => {
         console.error('error is..', error);
     }
 };
+
 
