@@ -79,6 +79,35 @@ export const formatTitleLine = (titleLine) => {
   return titleLine;
 };
 
+export const downloadExcelLedgerData = () => {
+  setTimeout(() => {
+    const button = document.getElementById('test-table-xls-button');
+    button.click();
+  }, 500);
+}
+
+export const fetchAPIUrlFromStoreInit = () => {
+  let retries = 3;
+  let getStoreInitData = null;
+
+  const checkData = () => {
+    getStoreInitData = JSON?.parse(sessionStorage?.getItem("storeInit"));
+
+    if (getStoreInitData?.ApiUrl || retries <= 0) {
+      return getStoreInitData;
+    } else {
+      retries -= 1;
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve(checkData());
+        }, 100);
+      });
+    }
+  };
+
+  return checkData();
+};
+
 export const formatter = new Intl.NumberFormat('en-IN')?.format;
 
 export const wesbiteDomainName = window.location.host;
