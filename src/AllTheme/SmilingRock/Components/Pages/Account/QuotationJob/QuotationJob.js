@@ -1086,7 +1086,12 @@ const scrollToTop = () => {
             { 
               <>
               <Paper sx={{ width: '100%', overflow: 'hidden' }} className='QuoteJobtable'>
-              <TableContainer sx={{ maxHeight: 810 }} className='quotationJobSec'>
+              <TableContainer sx={{ maxHeight: 810 ,
+                scrollbarColor: "transparent transparent",
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+               }} className='quotationJobSec'>
                 <Table stickyHeader aria-label="sticky table" className='quotaionFiltertable'>
                   <TableHead className='user-select-none'>
                     <TableRow style={{zIndex:1}}>
@@ -1126,7 +1131,7 @@ const scrollToTop = () => {
 })}
                     </TableRow>
                   </TableHead>
-                  <TableBody>
+                  <TableBody >
                     { filterData?.length > 0 ?  stableSort(filterData, getComparator(order, orderBy === 'PO' ? 'lineid' : orderBy))
                       ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       ?.map((row, rowIndex) => {
@@ -1151,7 +1156,7 @@ const scrollToTop = () => {
 
                               const value =  column?.id === 'PO' ? row?.lineid : row[column?.id];
                               return (
-                                <TableCell key={column?.id} align={column?.align}>
+                                <TableCell key={column?.id} align={column?.align} >
                                 {column.id === 'Sr#' ? serialNumber : 
                                   column?.id === 'checkbox' ? 
                                     <Checkbox checked={row?.isJobSelected} onChange={(event) => handleCheckboxChange(event, rowIndex, row)} /> 
