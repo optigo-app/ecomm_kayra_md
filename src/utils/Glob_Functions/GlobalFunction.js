@@ -79,6 +79,13 @@ export const formatTitleLine = (titleLine) => {
   return titleLine;
 };
 
+export const downloadExcelLedgerData = () => {
+  setTimeout(() => {
+    const button = document.getElementById('test-table-xls-button');
+    button.click();
+  }, 500);
+}
+
 export const fetchAPIUrlFromStoreInit = () => {
   let retries = 3;
   let getStoreInitData = null;
