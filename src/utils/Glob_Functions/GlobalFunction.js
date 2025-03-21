@@ -86,26 +86,45 @@ export const downloadExcelLedgerData = () => {
   }, 500);
 }
 
-export const fetchAPIUrlFromStoreInit = () => {
-  let retries = 3;
-  let getStoreInitData = null;
+const fetchWithRetry = (url, retries = 3, delay = 1000) => {
+  return new Promise((resolve, reject) => {
+    const attemptFetch = (n) => {
+      fetch(url)
+        .then((response) => response.json())
+        .then(resolve)
+        .catch((error) => {
+          if (n === 0) {
+            reject(error)
+          } else {
+            setTimeout(() => attemptFetch(n - 1), delay);
+          }
+        });
+    };
+    attemptFetch(retries);
+  });
+};
 
-  const checkData = () => {
-    getStoreInitData = JSON?.parse(sessionStorage?.getItem("storeInit"));
+export const fetchAPIUrlFromStoreInit = async () => {
+  let getStoreInitData = JSON?.parse(sessionStorage?.getItem("storeInit"));
 
-    if (getStoreInitData?.ApiUrl || retries <= 0) {
-      return getStoreInitData;
-    } else {
-      retries -= 1;
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(checkData());
-        }, 100);
-      });
+  if (getStoreInitData?.ApiUrl) {
+    return getStoreInitData;
+  } else {
+    try {
+      const path = `${storInitDataPath()}/StoreInit.json`;
+
+      const fetchedData = await fetchWithRetry(path, 3, 200);
+
+      if (fetchedData) {
+        sessionStorage.setItem("storeInit", JSON.stringify(fetchedData.rd[0]));
+      }
+
+      return fetchedData;
+    } catch (error) {
+      console.error("Failed to fetch StoreInit.json after 3 retries:", error);
+      return null;
     }
-  };
-
-  return checkData();
+  }
 };
 
 export const formatter = new Intl.NumberFormat('en-IN')?.format;
