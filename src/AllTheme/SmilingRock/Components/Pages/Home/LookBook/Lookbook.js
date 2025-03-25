@@ -80,10 +80,11 @@ import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { formatter } from "../../../../../../utils/Glob_Functions/GlobalFunction";
 import useBackNavigation from "../../../hooks/useBackNavigation";
+import EditablePagination from "../../../ReusableComponent/EditablePagination/EditablePagination";
 
 const Lookbook = () => {
   let location = useLocation();
-  const {HandleMoveToMenu} = useBackNavigation();
+  const { HandleMoveToMenu } = useBackNavigation();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [imageUrl, setImageUrl] = useState();
   const [imageUrlDesignSet, setImageUrlDesignSet] = useState();
@@ -119,6 +120,7 @@ const Lookbook = () => {
   const SwiperSlideRef = useRef();
   const [DynamicSize, setDynamicSize] = useState({ w: 0, h: 0 });
   const [currentPage, setCurrentPage] = useState();
+  const [inputPage, setInputPage] = useState(currentPage);
   const [CurrentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(20);
   let maxwidth464px = useMediaQuery('(max-width:464px)')
@@ -126,9 +128,10 @@ const Lookbook = () => {
   const LookLastProductId = sessionStorage.getItem('LookbookLastViewed');
   let LookBookLastPageNo = JSON.parse(sessionStorage.getItem('lookbookPage'));
 
-  useEffect(()=>{
+  useEffect(() => {
     setCurrentPage(LookBookLastPageNo)
-  },[LookBookLastPageNo])
+    setInputPage(LookBookLastPageNo);
+  }, [LookBookLastPageNo])
   const handleImageError = (index) => {
     setImageLoadError((prev) => ({ ...prev, [index]: true }));
   };
@@ -182,7 +185,7 @@ const Lookbook = () => {
   //   } else {
   //     setCurrentPage(1)
   //   }
-    
+
   // }, [location])
 
 
@@ -219,10 +222,10 @@ const Lookbook = () => {
     const output = FilterValueWithCheckedOnly();
 
     if (Object.keys(filterChecked)?.length >= 0) {
-      setIsProdLoading(true); 
-       setIsPgLoading(true);
+      setIsProdLoading(true);
+      setIsPgLoading(true);
       // API call
-      console.log(LookBookLastPageNo ,"LookBookLastPageNo")
+      console.log(LookBookLastPageNo, "LookBookLastPageNo")
       Get_Tren_BestS_NewAr_DesigSet_Album("GETDesignSet_List", finalID, output, LookBookLastPageNo, itemsPerPage)
         .then((response) => {
           if (response?.Data?.rd) {
@@ -253,7 +256,7 @@ const Lookbook = () => {
           setIsPgLoading(false);
         });
     }
-  }, [filterChecked, LookBookLastPageNo ,currentPage, islogin]); // Dependency array ensures this runs only when dependencies change
+  }, [filterChecked, LookBookLastPageNo, currentPage, islogin]); // Dependency array ensures this runs only when dependencies change
 
 
   // useEffect(() => {
@@ -323,8 +326,8 @@ const Lookbook = () => {
   const handelFilterClearAll = () => {
     if (Object.values(filterChecked).filter((ele) => ele.checked)?.length > 0) {
       setFilterChecked({});
-      sessionStorage.setItem("Lookbookcheckboxes",'')
-      sessionStorage.setItem("listingPageNo",1)
+      sessionStorage.setItem("Lookbookcheckboxes", '')
+      sessionStorage.setItem("listingPageNo", 1)
       setThumbsSwiper(null)
     }
   };
@@ -426,7 +429,7 @@ const Lookbook = () => {
     } else {
       finalprodListimg = 'a.jpg';
     }
-    console.log(finalprodListimg,"finalprodListimg")
+    console.log(finalprodListimg, "finalprodListimg")
     return finalprodListimg;
   };
 
@@ -547,7 +550,7 @@ const Lookbook = () => {
     }
   };
 
-  const handleNavigation = (designNo, autoCode, titleLine,uniqueCode) => {
+  const handleNavigation = (designNo, autoCode, titleLine, uniqueCode) => {
     let obj = {
       a: autoCode,
       b: designNo,
@@ -561,9 +564,9 @@ const Lookbook = () => {
       `/d/${titleLine?.replace(/\s+/g, `_`)}${titleLine?.length > 0 ? "_" : ""
       }${designNo}?p=${encodeObj}`
     );
-   if(uniqueCode){
-    sessionStorage.setItem('LookbookLastViewed', JSON.stringify(uniqueCode))
-   }
+    if (uniqueCode) {
+      sessionStorage.setItem('LookbookLastViewed', JSON.stringify(uniqueCode))
+    }
   };
 
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -658,22 +661,35 @@ const Lookbook = () => {
     const newValue = parseInt(event.target.value);
     if (newValue !== null) {
       sessionStorage.setItem("LookBookView", newValue);
-     sessionStorage.setItem('lookbookPage',JSON.stringify(1))
-     sessionStorage.setItem("Lookbookcheckboxes",'')
-     setCurrentPage(1)
+      sessionStorage.setItem('lookbookPage', JSON.stringify(1))
+      sessionStorage.setItem("Lookbookcheckboxes", '')
+      setCurrentPage(1)
+      setInputPage(1);
       setSelectedValue(newValue);
       setThumbsSwiper(null);
     }
   };
 
-  useEffect(()=>{
-      const LookBookView = JSON.parse(sessionStorage.getItem('LookBookView'));
-      if(LookBookView){
-    setSelectedValue(LookBookView)
-      }else{
-        setSelectedValue(1)
-      }
-  },[])
+  // Handle page change using the editable input
+  const handlePageInputChange = (event) => {
+    if (event.key === 'Enter') {
+      let newPage = parseInt(inputPage, 10);
+      if (newPage < 1) newPage = 1; // Ensure the page is at least 1
+      if (newPage > totalPages) newPage = totalPages; // Ensure the page doesn't exceed total pages
+      setCurrentPage(newPage);
+      setInputPage(newPage);
+      handelPageChange("", newPage);
+    }
+  };
+
+  useEffect(() => {
+    const LookBookView = JSON.parse(sessionStorage.getItem('LookBookView'));
+    if (LookBookView) {
+      setSelectedValue(LookBookView)
+    } else {
+      setSelectedValue(1)
+    }
+  }, [])
 
   const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -738,15 +754,69 @@ const Lookbook = () => {
     }
   }, [filteredDesignSetLstData, imageUrlDesignSet]);
 
+  const totalPages = Math.ceil(dstCount / itemsPerPage);
 
+  // const handelPageChange = (event, value) => {
+  //   setCurrentPage(value);
+  //   setInputPage(value);
+  //   setThumbsSwiper(null);
+  //   setIsPgLoading(true);
+  //   setCurrentSlideIndex(0);
+  //   sessionStorage.setItem('currentSlideIndex', 0)
+  //   sessionStorage.setItem('lookbookPage', JSON.stringify(value))
+  //   window.scrollTo({
+  //     behavior: 'smooth',
+  //     top: 0
+  //   })
+  // };
 
   const handelPageChange = (event, value) => {
-    setCurrentPage(value);
     setThumbsSwiper(null);
-    setIsPgLoading(true);
-    setCurrentSlideIndex(0); 
-    sessionStorage.setItem('currentSlideIndex',0)
-    sessionStorage.setItem('lookbookPage',JSON.stringify(value))
+    setCurrentPage(value);
+    setInputPage(value);
+    const { IsB2BWebsite } = storeInit || {};
+    const visiterID = Cookies.get("visiterId");
+
+    const finalID = IsB2BWebsite === 0
+      ? (islogin === false ? visiterID : loginUserDetail?.id || "0")
+      : loginUserDetail?.id || "0";
+
+    const output = FilterValueWithCheckedOnly();
+
+    if (Object.keys(filterChecked)?.length >= 0) {
+      setIsProdLoading(true);
+      setIsPgLoading(true);
+      // API call
+      Get_Tren_BestS_NewAr_DesigSet_Album("GETDesignSet_List", finalID, output, LookBookLastPageNo, itemsPerPage)
+        .then((response) => {
+          if (response?.Data?.rd) {
+            setDesignSetListData(response?.Data?.rd);
+            setDstCount(response?.Data?.rd1[0]?.TotalCount);
+
+            // Extract initial cart items
+            const initialCartItems = response?.Data?.rd.flatMap((slide) =>
+              parseDesignDetails(slide?.Designdetail)
+                .filter((detail) => detail?.IsInCart === 1)
+                .map((detail) => detail.autocode)
+            );
+            setCartItems((prevCartItems) => [
+              ...new Set([...prevCartItems, ...initialCartItems]),
+            ]);
+            const parsed = JSON?.parse(LookLastProductId)
+            try {
+              HandleMoveToMenu(parsed, 100);
+            } catch (error) {
+              console.log(error);
+              console.log('Error during scrolling: ' + error);
+            }
+          }
+        })
+        .catch((err) => console.error(err))
+        .finally(() => {
+          setIsProdLoading(false);
+          setIsPgLoading(false);
+        });
+    }
     window.scrollTo({
       behavior: 'smooth',
       top: 0
@@ -759,7 +829,7 @@ const Lookbook = () => {
     sessionStorage.setItem('currentSlideIndex', slide?.activeIndex)
   }
 
-  const Slide =(e)=>{
+  const Slide = (e) => {
     console.log(e)
   }
 
@@ -768,13 +838,14 @@ const Lookbook = () => {
       sessionStorage.setItem("Lookbookcheckboxes", JSON.stringify(filterChecked))
       const IsProductId = sessionStorage.getItem("LookbookLastViewed");
       if (!IsProductId || IsProductId === "null" || IsProductId === "undefined") {
-        sessionStorage.setItem('lookbookPage',JSON.stringify(1))
+        sessionStorage.setItem('lookbookPage', JSON.stringify(1))
         setCurrentPage(1)
+        setInputPage(1);
       }
-      
+
     }
   }, [filterChecked])
-  
+
 
   useEffect(() => {
     try {
@@ -782,14 +853,14 @@ const Lookbook = () => {
       if (RetrieveSlideIndex !== null) {
         setCurrentSlideIndex(parseInt(RetrieveSlideIndex, 10));
       } else {
-        setCurrentSlideIndex(0); 
+        setCurrentSlideIndex(0);
       }
       setTimeout(() => {
         sessionStorage.setItem('currentSlideIndex', 0);
       }, 2000);
     } catch (error) {
       console.log(error, "slide initial setting failed");
-      setCurrentSlideIndex(1); 
+      setCurrentSlideIndex(1);
     }
   }, []);
 
@@ -809,7 +880,7 @@ const Lookbook = () => {
     window.addEventListener("popstate", handleNavigation)
     return () => window.removeEventListener("popstate", handleNavigation)
   }, [])
-  
+
   useEffect(() => {
     const loadFilters = () => {
       const Storedlookfilter = sessionStorage.getItem("Lookbookcheckboxes")
@@ -818,6 +889,7 @@ const Lookbook = () => {
           const parsedFilters = JSON.parse(Storedlookfilter)
           setFilterChecked(parsedFilters)
           setCurrentPage(LookBookLastPageNo)
+          setInputPage(LookBookLastPageNo)
         } catch (err) {
           console.error("Error parsing stored filters:", err)
           sessionStorage.removeItem("Lookbookcheckboxes")
@@ -839,14 +911,14 @@ const Lookbook = () => {
         console.log('Error during scrolling: ' + error);
       }
     }
-  }, [isProdLoading , LookLastProductId]);
+  }, [isProdLoading, LookLastProductId]);
 
-  const handleSwiperThumb =(e)=>{
-    console.log(e,"handleSwiperThumb")
+  const handleSwiperThumb = (e) => {
+    console.log(e, "handleSwiperThumb")
     setThumbsSwiper(e)
   }
 
-  
+
   useEffect(() => {
     setImageLoadError({});
   }, [currentPage]);
@@ -875,16 +947,16 @@ const Lookbook = () => {
               />
             </div>
             <span className="smr_filter_text"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width:'100%',
-              marginTop:'1rem'
-            }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: '100%',
+                marginTop: '1rem'
+              }}
             >
               <span>Filters</span>
-              <span style={{cursor:'pointer'}} onClick={() => handelFilterClearAll()}>
+              <span style={{ cursor: 'pointer' }} onClick={() => handelFilterClearAll()}>
                 {Object.values(filterChecked).filter((ele) => ele.checked)
                   ?.length > 0
                   ? "Clear All"
@@ -959,12 +1031,12 @@ const Lookbook = () => {
                                         {opt.Name}
                                       </small> */}
                               <FormControlLabel
-                               sx={{
-                                width:"100%",
-                                display: "flex",
-                                justifyContent: "space-between", 
-                                flexDirection: "row-reverse", 
-                              }}
+                                sx={{
+                                  width: "100%",
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                  flexDirection: "row-reverse",
+                                }}
                                 control={
                                   <Checkbox
                                     name={`${ele?.id}${opt?.id}`}
@@ -1074,12 +1146,12 @@ const Lookbook = () => {
                                         {opt.Name}
                                       </small> */}
                             <FormControlLabel
-                             sx={{
-                              width:"100%",
-                              display: "flex",
-                              justifyContent: "space-between", 
-                              flexDirection: "row-reverse", 
-                            }}
+                              sx={{
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "space-between",
+                                flexDirection: "row-reverse",
+                              }}
                               control={
                                 <Checkbox
                                   name={`Price${i}${i}`}
@@ -1164,7 +1236,7 @@ const Lookbook = () => {
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 2,
-            
+
           }}
           className="smr_lookBookCategoryPoupuBox"
         >
@@ -1221,12 +1293,12 @@ const Lookbook = () => {
                         key={opt?.id}
                       >
                         <FormControlLabel
-                        sx={{
-                          width:"100%",
-                          display: "flex",
-                          justifyContent: "space-between",
-                          flexDirection: "row-reverse",
-                        }}
+                          sx={{
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            flexDirection: "row-reverse",
+                          }}
                           control={
                             <Checkbox
                               name={`${ele?.id}${opt?.id}`}
@@ -1236,8 +1308,8 @@ const Lookbook = () => {
                                 padding: 0,
                                 width: "10px",
                               }}
-                              onClick={(e) =>{
-                                
+                              onClick={(e) => {
+
                                 handleCheckboxChangeNew(e, opt?.Name)
                               }
                               }
@@ -1426,12 +1498,12 @@ const Lookbook = () => {
                                         {opt.Name}
                                       </small> */}
                                     <FormControlLabel
-                                    sx={{
-                                      width:"100%",
-                                      display: "flex",
-                                      justifyContent: "space-between", 
-                                      flexDirection: "row-reverse", 
-                                    }}
+                                      sx={{
+                                        width: "100%",
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        flexDirection: "row-reverse",
+                                      }}
                                       control={
                                         <Checkbox
                                           name={`${ele?.id}${opt?.id}`}
@@ -1545,12 +1617,12 @@ const Lookbook = () => {
                                         {opt.Name}
                                       </small> */}
                                     <FormControlLabel
-                                     sx={{
-                                      width:"100%",
-                                      display: "flex",
-                                      justifyContent: "space-between", 
-                                      flexDirection: "row-reverse", 
-                                    }}
+                                      sx={{
+                                        width: "100%",
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        flexDirection: "row-reverse",
+                                      }}
                                       control={
                                         <Checkbox
                                           name={`Price${i}${i}`}
@@ -1758,10 +1830,10 @@ const Lookbook = () => {
                                   480: { slidesPerView: 2, spaceBetween: 20 },
                                   640: { slidesPerView: 3, spaceBetween: 30 },
                                 }}
-                                  
-                                  onSlideChangeTransitionEnd={SlideIndexHandler}
-                                  
-                                 
+
+                                onSlideChangeTransitionEnd={SlideIndexHandler}
+
+
                               >
                                 {sortDesignDetailsBySrNo(parseDesignDetails(slide?.Designdetail))?.map((detail, subIndex) => {
                                   const imageSrc = imageSources[detail?.designno] || imageNotFound;
@@ -1784,8 +1856,8 @@ const Lookbook = () => {
                                             handleNavigation(
                                               detail?.designno,
                                               detail?.autocode,
-                                              detail?.TitleLine ? detail?.TitleLine : "" ,
-                                              slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString() 
+                                              detail?.TitleLine ? detail?.TitleLine : "",
+                                              slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                                             )
                                           }
                                           onError={(e) => {
@@ -1985,9 +2057,9 @@ const Lookbook = () => {
                                       spaceBetween: 30,
                                     },
                                   }}
-                                  
+
                                   onSlideChangeTransitionEnd={SlideIndexHandler}
-                                  
+
                                 >
                                   {sortDesignDetailsBySrNo(
                                     parseDesignDetails(slide?.Designdetail)
@@ -2020,7 +2092,7 @@ const Lookbook = () => {
                                               detail?.TitleLine
                                                 ? detail?.TitleLine
                                                 : "",
-slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString() 
+                                              slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                                             )
                                           }
                                           onError={(e) => {
@@ -2068,9 +2140,9 @@ slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                                       navigation
                                       pagination
                                       initialSlide={CurrentSlideIndex}
-                                      
-                                  onSlideChangeTransitionEnd={SlideIndexHandler}
-                                      
+
+                                      onSlideChangeTransitionEnd={SlideIndexHandler}
+
 
                                     >
                                       {sortDesignDetailsBySrNo(
@@ -2103,10 +2175,10 @@ slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                                                   detail?.autocode,
                                                   detail?.TitleLine
                                                     ? detail?.TitleLine
-                                                    : "" ,
-                                                    slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString() ,
-                                                    
-                                                  
+                                                    : "",
+                                                  slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString(),
+
+
                                                 )
                                               }
                                               onError={(e) => {
@@ -2174,13 +2246,13 @@ slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                           <Swiper
                             initialSlide={CurrentSlideIndex}
                             slidesPerView={1}
-                            
+
                             onSlideChangeTransitionEnd={SlideIndexHandler}
-                            
+
                             spaceBetween={10}
                             navigation={true}
                             loop={true}
-                            thumbs={{ swiper:thumbsSwiper || null }}
+                            thumbs={{ swiper: thumbsSwiper || null }}
                             modules={[Keyboard, FreeMode, Navigation, Thumbs, Scrollbar]}
                             keyboard={{ enabled: true }}
                             mousewheel={true}
@@ -2283,8 +2355,8 @@ slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                                                       ele?.autocode,
                                                       ele?.TitleLine
                                                         ? ele?.TitleLine
-                                                        : ""  ,
-                                                    slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString() ,
+                                                        : "",
+                                                      slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString(),
 
                                                     )
                                                   }
@@ -2299,8 +2371,8 @@ slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                                                   ele?.autocode,
                                                   ele?.TitleLine
                                                     ? ele?.TitleLine
-                                                    : "" ,
-                                                    slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString() ,
+                                                    : "",
+                                                  slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString(),
 
                                                 )
                                               }>
@@ -2459,7 +2531,7 @@ slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                                 className="mySwiper"
                                 // thumbs={}
                                 onSlideChangeTransitionEnd={SlideIndexHandler}
-                                
+
                                 breakpoints={{
                                   320: {
                                     slidesPerView: 2,
@@ -2543,8 +2615,11 @@ slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
 
             </div>
           </div>
-          <div className="lpDiv">
-            <MuiPagination
+          {storeInit?.IsProductListPagination == 1 &&
+            Math.ceil(dstCount / itemsPerPage)
+            > 1 && (
+              <div className="lpDiv">
+                {/* <MuiPagination
               count={Math.ceil(dstCount / itemsPerPage)}
               size={maxwidth464px ? "small" : "large"}
               shape="circular"
@@ -2561,8 +2636,22 @@ slide?.designsetno?.split(" ")?.join("") + slide?.designsetuniqueno?.toString()
                   }}
                 />
               )}
-            />
-          </div>
+            /> */}
+                <EditablePagination
+                  currentPage={currentPage}
+                  totalItems={dstCount}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={handelPageChange}
+                  inputPage={inputPage}
+                  setInputPage={setInputPage}
+                  handlePageInputChange={handlePageInputChange}
+                  maxwidth464px={maxwidth464px}
+                  totalPages={totalPages}
+                  currPage={currentPage}
+                  isShowButton={false}
+                />
+              </div>
+            )}
         </div>
       )}
       <div>

@@ -1,8 +1,8 @@
 import { CommonAPI } from "../CommonAPI/CommonAPI";
 
 
-const ProductListApi = async (filterObj = {}, page, obj = {}, mainData = "", visiterId, sortby = "", diaRange = {}, netWt = {}, gross = {}, Shape = "",dno = "",album = "") => {
-  
+const ProductListApi = async (filterObj = {}, page, obj = {}, mainData = "", visiterId, sortby = "", diaRange = {}, netWt = {}, gross = {}, Shape = "", dno = "", album = "") => {
+
   let MenuParams = {};
   let serachVar = ""
 
@@ -24,24 +24,24 @@ const ProductListApi = async (filterObj = {}, page, obj = {}, mainData = "", vis
   } else {
     if (mainData !== "") {
 
-      if(mainData?.split("=")[0] == "S") {
+      if (mainData?.split("=")[0] == "S") {
         serachVar = JSON.parse(atob(mainData?.split("=")[1]))
       } else {
         MenuParams.FilterKey = atob(mainData)
         MenuParams.FilterVal = atob(mainData)
       }
 
-      if(mainData?.split("=")[0] !== "S") {
+      if (mainData?.split("=")[0] !== "S") {
         if (atob(mainData)?.split("=")[0] == "AlbumName") {
           MenuParams.FilterKey = atob(mainData)?.split("=")[0]
           MenuParams.FilterVal = atob(mainData)?.split("=")[1]
-        }else {
+        } else {
           MenuParams.FilterKey = atob(mainData)
           MenuParams.FilterVal = atob(mainData)
         }
       }
 
-      
+
     }
   }
 
@@ -133,6 +133,7 @@ const ProductListApi = async (filterObj = {}, page, obj = {}, mainData = "", vis
     FilPrice: filPrice,
     // Max_Price: '',
     // Min_Price: '',
+    WebDiscount: islogin ? `${loginInfo?.WebDiscount ?? 0}` : `${0}`,
     CurrencyRate: `${(loginInfo?.CurrencyRate ?? storeinit?.CurrencyRate) ?? ''}`,
     SortBy: `${sortby ?? ""}`,
     Laboursetid: `${storeinit?.IsB2BWebsite == 0 && islogin == false
@@ -156,7 +157,7 @@ const ProductListApi = async (filterObj = {}, page, obj = {}, mainData = "", vis
     IsFromDesDet: "",
     IsPLW: `${storeinit?.IsPLW ?? ''}`,
     DomainForNo: `${storeinit?.DomainForNo ?? ""}`,
-    AlbumName:album ?? ""
+    AlbumName: album ?? ""
   };
 
   let encData = JSON.stringify(data)

@@ -21,7 +21,8 @@ export const CartAndWishListAPI = async (type, obj, visiterId, type2 = "", stock
         "IsPLW": `${storeInit?.IsPLW}`,
         "AddCartDetail": type2 ? obj : [obj],
         "stockno": `${stockno ?? ""}`,
-        "DomainForNo": `${storeInit?.DomainForNo ?? ""}`
+        "DomainForNo": `${storeInit?.DomainForNo ?? ""}`,
+        "WebDiscount": islogin ? `${loginUserDetail?.WebDiscount ?? 0}` : `${0}`,
     }
 
     let body = {
