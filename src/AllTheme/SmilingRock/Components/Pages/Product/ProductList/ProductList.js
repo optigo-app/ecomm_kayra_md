@@ -120,6 +120,7 @@ const ProductList = () => {
   let LastPageNo = JSON.parse(sessionStorage.getItem('listingPageNo'));
   const [inputPage, setInputPage] = useState(currPage);
   const [dstCount, setDstCount] = useState();
+  const [isClearAllClicked, setIsClearAllClicked] = useState(false);
 
   const isEditablePage = 0;
 
@@ -906,7 +907,7 @@ const ProductList = () => {
     const isGross = JSON.stringify(sliderValue2) !== JSON.stringify([diafilter2?.Min, diafilter2?.Max]);
 
     //  if(location?.state?.SearchVal === undefined && Object.keys(filterChecked)?.length > 0){
-    if (location?.key === locationKey && Object.keys(filterChecked)?.length > 0) {
+    if (location?.key === locationKey && (Object.keys(filterChecked)?.length > 0 || isClearAllClicked === true)) {
 
       setIsOnlyProdLoading(true)
       let DiaRange = { DiaMin: isDia ? sliderValue[0] : "", DiaMax: isDia ? sliderValue[1] : "" };
@@ -935,7 +936,7 @@ const ProductList = () => {
         //    }
         //    return res
         //  })
-        .catch((err) => console.log("err", err)).finally(() => { setTimeout(() => setIsOnlyProdLoading(false), 1000) })
+        .catch((err) => console.log("err", err)).finally(() => { setTimeout(() => { setIsOnlyProdLoading(false); setIsClearAllClicked(false); }, 1000) })
     }
     // .then(async(res)=>{
     //   if(res){
@@ -1030,6 +1031,7 @@ const ProductList = () => {
       setFilterChecked({});
       sessionStorage.setItem('checkboxes', JSON.stringify({}))
       sessionStorage.setItem('listingPageNo', JSON.stringify(1))
+      setIsClearAllClicked(true);
       setCurrPage(1)
       setInputPage(1);
 
