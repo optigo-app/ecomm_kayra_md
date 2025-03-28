@@ -158,7 +158,8 @@ const ProductListApi = async (filterObj = {}, page, obj = {}, mainData = "", vis
     IsPLW: `${storeinit?.IsPLW ?? ''}`,
     DomainForNo: `${storeinit?.DomainForNo ?? ""}`,
     AlbumName: album ?? "",
-    IsZeroPriceProductShow : `${storeinit?.IsZeroPriceProductShow ?? 0}`,
+    IsZeroPriceProductShow: `${storeinit?.IsZeroPriceProductShow ?? 0}`,
+    IsSolitaireWebsite: `${storeinit?.IsSolitaireWebsite ?? 0}`,
   };
 
   let encData = JSON.stringify(data)

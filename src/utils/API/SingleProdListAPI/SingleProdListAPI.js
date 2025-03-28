@@ -77,6 +77,7 @@ export const SingleProdListAPI = async (singprod, size = "", obj = {}, visiterId
     AlbumName: AlbumName ?? '',
     DomainForNo: `${storeinit?.DomainForNo ?? ""}`,
     IsZeroPriceProductShow: `${storeinit?.IsZeroPriceProductShow ?? 0}`,
+    IsSolitaireWebsite: `${storeinit?.IsSolitaireWebsite ?? 0}`,
   };
 
   let encData = JSON.stringify(data)
