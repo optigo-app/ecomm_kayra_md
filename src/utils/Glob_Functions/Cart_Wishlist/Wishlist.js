@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchWishlistDetails } from '../../API/WishlistAPI/WishlistAPI';
 import { removeFromCartList } from '../../API/RemoveCartAPI/RemoveCartAPI';
 import { handleWishlistToCartAPI } from '../../API/WishList_Cart/WishlistToCart';
@@ -57,52 +57,57 @@ const Usewishlist = () => {
   }, [])
 
 
+  const isFetchingRef = useRef(false);
+
   const getWishlistData = async () => {
     const visiterId = Cookies.get('visiterId');
+    if (!visiterId) {
+      console.error("Visitor ID not found.");
+      return;
+    }
+
+    if (isFetchingRef.current) {
+      console.log("Already fetching wishlist data.");
+      return;
+    }
+
+    isFetchingRef.current = true;
+
     setIsWlLoading(true);
+
     try {
       const response = await fetchWishlistDetails(visiterId);
-      if (response?.Data?.rd[0]?.stat != 0) {
-        let diamondData = response?.Data?.rd1;
-        setWishlistData(response?.Data?.rd);
-        setIsWlLoading(false);
-       
-        if (diamondData?.length != 0) {
-          const solStockNos = diamondData?.map(item => item?.Sol_StockNo);
-          const commaSeparatedString = solStockNos?.join(',');
+      if (response?.Data?.rd[0]?.stat !== 0) {
+        const wishlistData = response?.Data?.rd;
+        const diamondData = response?.Data?.rd1;
+
+        setWishlistData(wishlistData);
+
+        if (diamondData?.length > 0) {
+          const solStockNos = diamondData.map(item => item?.Sol_StockNo);
+          const commaSeparatedString = solStockNos.join(',');
+
           if (commaSeparatedString != null || commaSeparatedString != undefined) {
-            getDiamondData(commaSeparatedString)
+            const diamondResponse = await DiamondListData(1, "", commaSeparatedString);
+            if (diamondResponse?.Data?.rd) {
+              setDiamondWishData(diamondResponse?.Data?.rd);
+            }
           }
         }
       }
     } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const getDiamondData = async (commaSeparatedString) => {
-    setIsWlLoading(true);
-    try {
-      const response = await DiamondListData(1, "", commaSeparatedString);
-      if (response && response.Data) {
-        let resData = response.Data?.rd
-        setDiamondWishData(resData)
-        setIsWlLoading(false)
-
-      } else {
-        console.warn("No data found in the response");
-        setIsWlLoading(false)
-      }
-    } catch (error) {
-      console.error("Error fetching diamond data:", error);
+      console.error("Error fetching wishlist or diamond data:", error);
+    } finally {
+      isFetchingRef.current = false;
       setIsWlLoading(false);
     }
   };
 
+
   useEffect(() => {
     getWishlistData();
-    setSelectedItem(LastViewedWished)
-  }, []);
+    setSelectedItem(LastViewedWished);
+  }, [])
 
 
   // remove
@@ -325,18 +330,18 @@ const Usewishlist = () => {
     sessionStorage.setItem("LastViewedWishlist", wishtData?.autocode)
   }
 
-  useEffect(()=>{
-    if (LastViewedWished) {
-     try {
-       HandleMoveToMenu(LastViewedWished, 200);
-      setTimeout(() => {
-        setSelectedItem(null)
-      }, 3000);
-     } catch (error) {
-       console.log(error);
-     }
-   }
- },[wishlistData])
+  // useEffect(() => {
+  //   if (LastViewedWished) {
+  //     try {
+  //       HandleMoveToMenu(LastViewedWished, 200);
+  //       setTimeout(() => {
+  //         setSelectedItem(null)
+  //       }, 3000);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
+  // }, [wishlistData])
 
   const handelMenu = () => {
     let menudata = JSON.parse(sessionStorage.getItem('menuparams'));

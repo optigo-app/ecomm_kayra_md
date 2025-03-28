@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, CircularProgress, TextField } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
@@ -14,7 +14,10 @@ export default function ContimueWithMobile() {
     const [buttonFocused, setButtonFocused] = useState(false);
     const navigation = useNavigate();
     const location = useLocation();
-
+    const [storeInit, setStoreInit] = useState({});
+    useEffect(() => {
+        setStoreInit(JSON.parse(sessionStorage.getItem('storeInit')));
+    }, [])
 
     const search = location?.search
     const redirectMobileUrl = `/LoginWithMobileCode/${search}`;
@@ -77,8 +80,13 @@ export default function ContimueWithMobile() {
                 navigation(redirectMobileUrl, { state: { mobileNo: mobileNo } });
                 sessionStorage.setItem('registerMobile', mobileNo)
             } else {
-                navigation(redirectSignUpUrl, { state: { mobileNo: mobileNo } });
-                sessionStorage.setItem('registerMobile', mobileNo)
+                if (storeInit?.IsEcomOtpVerification != 0) {
+                    navigation(redirectSignUpUrl, { state: { mobileNo: mobileNo } });
+                    sessionStorage.setItem('registerMobile', mobileNo)
+                } else {
+                    navigation(redirectSignUpUrl, { state: { mobileNo: mobileNo } });
+                    sessionStorage.setItem('registerMobile', mobileNo)
+                }
             }
         }).catch((err) => console.log(err))
 
