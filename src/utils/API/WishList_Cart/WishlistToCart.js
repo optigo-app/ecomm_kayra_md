@@ -17,6 +17,7 @@ export const handleWishlistToCartAPI = async (param, item, visiterId) => {
                 FrontEnd_RegNo: `${FrontEnd_RegNo}`,
                 Customerid: `${customerId ?? 0}`,
                 WebDiscount: islogin ? `${data?.WebDiscount ?? 0}` : `${0}`,
+                IsZeroPriceProductShow: `${storeInit?.IsZeroPriceProductShow ?? 0}`,
             });
         } else {
             combinedValue = JSON.stringify({
@@ -25,6 +26,7 @@ export const handleWishlistToCartAPI = async (param, item, visiterId) => {
                 FrontEnd_RegNo: `${FrontEnd_RegNo}`,
                 Customerid: `${customerId ?? 0}`,
                 WebDiscount: islogin ? `${data?.WebDiscount ?? 0}` : `${0}`,
+                IsZeroPriceProductShow: `${storeInit?.IsZeroPriceProductShow ?? 0}`,
             });
         }
 

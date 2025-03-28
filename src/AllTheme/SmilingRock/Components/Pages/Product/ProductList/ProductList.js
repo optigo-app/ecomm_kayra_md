@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./productlist.scss";
 import ProductListApi from "../../../../../../utils/API/ProductListAPI/ProductListApi";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { CartAndWishListAPI } from "../../../../../../utils/API/CartAndWishList/CartAndWishListAPI";
 import { RemoveCartAndWishAPI } from "../../../../../../utils/API/RemoveCartandWishAPI/RemoveCartAndWishAPI";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { CartCount, DiamondRangeArr, WishCount } from "../../../Recoil/atom";
+import { CartCount, DiamondRangeArr, smr_loginState, WishCount } from "../../../Recoil/atom";
 import pako from "pako";
 import { SearchProduct } from "../../../../../../utils/API/SearchProduct/SearchProduct";
 import { MetalTypeComboAPI } from "../../../../../../utils/API/Combo/MetalTypeComboAPI";
@@ -46,13 +46,20 @@ import EditablePagination from "../../../ReusableComponent/EditablePagination/Ed
 
 const ProductList = () => {
 
+  let location = useLocation();
   const { HandleMoveToMenu } = useBackNavigation();
+  const islogin = useRecoilValue(smr_loginState);
+  const [storeInit, setStoreInit] = useState({});
 
   const loginUserDetail = JSON.parse(sessionStorage.getItem("loginUserDetail"));
 
   useEffect(() => {
     let storeinit = JSON.parse(sessionStorage.getItem("storeInit"));
-    setStoreInit(storeinit)
+    if (storeinit) {
+      setStoreInit(storeinit);
+    } else {
+      console.log("StoreInit not found in sessionStorage.");
+    }
 
     let mtCombo = JSON.parse(sessionStorage.getItem("metalTypeCombo"));
     setMetalTypeCombo(mtCombo)
@@ -62,10 +69,9 @@ const ProductList = () => {
 
     let CsQcCombo = JSON.parse(sessionStorage.getItem("ColorStoneQualityColorCombo"));
     setCsQcCombo(CsQcCombo)
-  }, [])
+  }, [location?.key])
 
 
-  let location = useLocation();
   let navigate = useNavigate();
   let minwidth1201px = useMediaQuery('(min-width:1201px)')
   let maxwidth1674px = useMediaQuery('(max-width:1674px)')
@@ -77,7 +83,6 @@ const ProductList = () => {
   const [finalProductListData, setFinalProductListData] = useState([]);
   const [isProdLoading, setIsProdLoading] = useState(true);
   const [isOnlyProdLoading, setIsOnlyProdLoading] = useState(true);
-  const [storeInit, setStoreInit] = useState({});
   const [filterData, setFilterData] = useState([])
   const [filterChecked, setFilterChecked] = useState({})
   const [afterFilterCount, setAfterFilterCount] = useState();
@@ -91,9 +96,9 @@ const ProductList = () => {
   const [metalTypeCombo, setMetalTypeCombo] = useState([]);
   const [diaQcCombo, setDiaQcCombo] = useState([]);
   const [csQcCombo, setCsQcCombo] = useState([]);
-  const [selectedMetalId, setSelectedMetalId] = useState(loginUserDetail?.MetalId);
-  const [selectedDiaId, setSelectedDiaId] = useState(loginUserDetail?.cmboDiaQCid);
-  const [selectedCsId, setSelectedCsId] = useState(loginUserDetail?.cmboCSQCid);
+  const [selectedMetalId, setSelectedMetalId] = useState(storeInit?.MetalId ?? loginUserDetail?.MetalId);
+  const [selectedDiaId, setSelectedDiaId] = useState(storeInit?.cmboDiaQCid ?? loginUserDetail?.cmboDiaQCid);
+  const [selectedCsId, setSelectedCsId] = useState(storeInit?.cmboCSQCid ?? loginUserDetail?.cmboCSQCid);
   const [IsBreadCumShow, setIsBreadcumShow] = useState(false);
   const [loginInfo, setLoginInfo] = useState();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -116,6 +121,7 @@ const ProductList = () => {
   const [inputPage, setInputPage] = useState(currPage);
   const [dstCount, setDstCount] = useState();
 
+  const isEditablePage = 0;
 
   const setCSSVariable = () => {
     const storeInit = JSON.parse(sessionStorage.getItem("storeInit"));
@@ -129,17 +135,18 @@ const ProductList = () => {
   useEffect(() => {
     setCSSVariable();
     const storeInitInside = JSON.parse(sessionStorage.getItem("storeInit"));
+    console.log('storeInitInside: ', storeInitInside);
     const loginUserDetailInside = JSON.parse(sessionStorage.getItem("loginUserDetail"));
 
-    let mtid = loginUserDetailInside?.MetalId ?? storeInitInside?.MetalId
+    let mtid = storeInitInside?.MetalId ?? loginUserDetailInside?.MetalId
     setSelectedMetalId(mtid)
 
-    let diaid = loginUserDetailInside?.cmboDiaQCid ?? storeInitInside?.cmboDiaQCid
+    let diaid = storeInitInside?.cmboDiaQCid ?? loginUserDetailInside?.cmboDiaQCid
     setSelectedDiaId(diaid)
 
-    let csid = loginUserDetailInside?.cmboCSQCid ?? storeInitInside?.cmboCSQCid;
+    let csid = storeInitInside?.cmboCSQCid ?? loginUserDetailInside?.cmboCSQCid;
     setSelectedCsId(csid)
-  }, [])
+  }, [location?.key])
 
   // useLayoutEffect(() => {
   //   setTimeout(() => {
@@ -149,8 +156,8 @@ const ProductList = () => {
 
 
   useEffect(() => {
-    setSelectedMetalId(loginUserDetail?.MetalId ?? storeInit?.MetalId);
-    setSelectedDiaId(loginUserDetail?.cmboDiaQCid ?? storeInit?.cmboDiaQCid);
+    // setSelectedMetalId(storeInit?.MetalId ?? loginUserDetail?.MetalId);
+    // setSelectedDiaId(storeInit?.cmboDiaQCid ?? loginUserDetail?.cmboDiaQCid);
     setSortBySelect('Recommended')
   }, [location?.key])
 
@@ -899,7 +906,7 @@ const ProductList = () => {
     const isGross = JSON.stringify(sliderValue2) !== JSON.stringify([diafilter2?.Min, diafilter2?.Max]);
 
     //  if(location?.state?.SearchVal === undefined && Object.keys(filterChecked)?.length > 0){
-    if (location?.key === locationKey) {
+    if (location?.key === locationKey && Object.keys(filterChecked)?.length > 0) {
 
       setIsOnlyProdLoading(true)
       let DiaRange = { DiaMin: isDia ? sliderValue[0] : "", DiaMax: isDia ? sliderValue[1] : "" };
@@ -1241,7 +1248,10 @@ const ProductList = () => {
         grossMax: isGross ? sliderValue2[1] ?? "" : ""
       };
 
-      // DiaRange, netRange ,grossRange
+      // DiaRange, netRange ,grossRange`
+
+      setCurrPage(1);
+      setInputPage(1);
 
       ProductListApi(output, 1, obj, prodListType, cookie, sortBySelect, DiaRange, netRange, grossRange)
         .then((res) => {
@@ -1262,21 +1272,27 @@ const ProductList = () => {
   }
 
   useEffect(() => {
+    const obj = { mt: selectedMetalId, dia: selectedDiaId, cs: selectedCsId };
+    const loginInfo = JSON.parse(sessionStorage.getItem("loginUserDetail"));
 
-    let obj = { mt: selectedMetalId, dia: selectedDiaId, cs: selectedCsId }
+    sessionStorage.setItem("short_cutCombo_val", JSON.stringify(obj));
 
-    let loginInfo = JSON.parse(sessionStorage.getItem("loginUserDetail"));
-
-    sessionStorage.setItem("short_cutCombo_val", JSON?.stringify(obj))
-
-    if (customFlag || (loginInfo?.MetalId !== selectedMetalId || loginInfo?.cmboDiaQCid !== selectedDiaId || loginInfo?.cmboCSQCid !== selectedCsId)) {
-      if (selectedMetalId !== "" || selectedDiaId !== "" || selectedCsId !== "") {
-        handelCustomCombo(obj)
+    if (loginInfo) {
+      if (loginInfo.MetalId != selectedMetalId || loginInfo.cmboDiaQCid != selectedDiaId || loginInfo.cmboCSQCid != selectedCsId) {
+        if (selectedMetalId !== "" || selectedDiaId !== "" || selectedCsId !== "") {
+          handelCustomCombo(obj);
+        }
+      }
+    } else {
+      if (storeInit) {
+        console.log("mimi", storeInit?.MetalId != selectedMetalId, storeInit?.cmboDiaQCid != selectedDiaId, storeInit?.cmboCSQCid != selectedCsId)
+        if (storeInit?.MetalId != selectedMetalId || storeInit?.cmboDiaQCid != selectedDiaId || storeInit?.cmboCSQCid != selectedCsId) {
+          handelCustomCombo(obj);
+        }
       }
     }
+  }, [selectedMetalId, selectedDiaId, selectedCsId, storeInit]);
 
-
-  }, [selectedMetalId, selectedDiaId, selectedCsId])
 
   const generateImageList = useCallback((product) => {
     let storeInitX = JSON.parse(sessionStorage.getItem("storeInit"));
@@ -1521,8 +1537,6 @@ const ProductList = () => {
       grossMax: isGross ? sliderValue2[1] ?? "" : ""
     };
 
-
-    sessionStorage.setItem('listingPageNo', JSON.stringify(1));
     setCurrPage(1)
     setInputPage(1);
     await ProductListApi(output, 1, obj, prodListType, cookie, sortby, DiaRange, netRange, grossRange)
@@ -2434,7 +2448,7 @@ const ProductList = () => {
                           className="pSkelton"
                         />
                       ) :
-                        <span>{`Product Found: ${afterFilterCount}`}</span>
+                        <span style={{ cursor: "pointer" }}>{`Product Found: ${afterFilterCount}`}</span>
                       }
                       </>
                     }
@@ -2444,6 +2458,7 @@ const ProductList = () => {
                       handelFilterClearAll();
                       setsetFilterClearAll(true)
                     }}
+                    style={{ cursor: 'pointer' }}
                   >
                     {showClearAllButton()
                       ? "Clear All"
@@ -3287,7 +3302,7 @@ const ProductList = () => {
                                         className="pSkelton"
                                       />
                                     ) :
-                                      <span>{`Product Found: ${afterFilterCount}`}</span>
+                                      <span style={{ cursor: "pointer" }}>{`Product Found: ${afterFilterCount}`}</span>
                                     }
                                     </>}
                                 </span>
@@ -3296,6 +3311,7 @@ const ProductList = () => {
                                     handelFilterClearAll();
                                     setsetFilterClearAll(true)
                                   }}
+                                  style={{ cursor: 'pointer' }}
                                 >
                                   {showClearAllButton()
                                     ? "Clear All"
@@ -4167,55 +4183,62 @@ const ProductList = () => {
                                     })}
                                   </div>
                                 </div>
-                                {/* {storeInit?.IsProductListPagination == 1 &&
-                                  Math.ceil(afterFilterCount / storeInit.PageSize)
-                                  > 1 && (
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        marginTop: "5%",
-                                        width: '100%'
-                                      }}
-                                      className="smr_pagination_portion"
-                                    >
-                                      <Pagination
-                                        count={Math.ceil(afterFilterCount / storeInit.PageSize)}
-                                        size={maxwidth464px ? "small" : "large"}
-                                        shape="circular"
-                                        onChange={handelPageChange}
-                                        page={currPage}
-                                        showFirstButton
-                                        showLastButton
-                                        disabled={false}
-                                        renderItem={(item) => (
-                                          <PaginationItem
-                                            {...item}
-                                            sx={{
-                                              pointerEvents: item.page === currPage ? 'none' : 'auto',
-                                            }}
+                                {isEditablePage === 1 ? (
+                                  <>
+                                    {storeInit?.IsProductListPagination == 1 &&
+                                      Math.ceil(afterFilterCount / storeInit.PageSize)
+                                      > 1 && (
+                                        <EditablePagination
+                                          currentPage={currPage}
+                                          totalItems={afterFilterCount}
+                                          itemsPerPage={storeInit.PageSize}
+                                          onPageChange={handelPageChange}
+                                          inputPage={inputPage}
+                                          setInputPage={setInputPage}
+                                          handlePageInputChange={handlePageInputChange}
+                                          maxwidth464px={maxwidth464px}
+                                          totalPages={totalPages}
+                                          currPage={currPage}
+                                          isShowButton={false}
+                                        />
+                                      )}
+                                  </>
+                                ) : (
+                                  <>
+                                    {storeInit?.IsProductListPagination == 1 &&
+                                      Math.ceil(afterFilterCount / storeInit.PageSize)
+                                      > 1 && (
+                                        <div
+                                          style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            marginTop: "5%",
+                                            width: '100%'
+                                          }}
+                                          className="smr_pagination_portion"
+                                        >
+                                          <Pagination
+                                            count={Math.ceil(afterFilterCount / storeInit.PageSize)}
+                                            size={maxwidth464px ? "small" : "large"}
+                                            shape="circular"
+                                            onChange={handelPageChange}
+                                            page={currPage}
+                                            showFirstButton
+                                            showLastButton
+                                            disabled={false}
+                                            renderItem={(item) => (
+                                              <PaginationItem
+                                                {...item}
+                                                sx={{
+                                                  pointerEvents: item.page === currPage ? 'none' : 'auto',
+                                                }}
+                                              />
+                                            )}
                                           />
-                                        )}
-                                      />
-                                    </div>
-                                  )} */}
-                                {storeInit?.IsProductListPagination == 1 &&
-                                  Math.ceil(afterFilterCount / storeInit.PageSize)
-                                  > 1 && (
-                                    <EditablePagination
-                                      currentPage={currPage}
-                                      totalItems={afterFilterCount}
-                                      itemsPerPage={storeInit.PageSize}
-                                      onPageChange={handelPageChange}
-                                      inputPage={inputPage}
-                                      setInputPage={setInputPage}
-                                      handlePageInputChange={handlePageInputChange}
-                                      maxwidth464px={maxwidth464px}
-                                      totalPages={totalPages}
-                                      currPage={currPage}
-                                      isShowButton={false}
-                                    />
-                                  )}
+                                        </div>
+                                      )}
+                                  </>
+                                )}
                               </>
                             )}
                           </div>

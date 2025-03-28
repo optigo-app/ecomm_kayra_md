@@ -128,6 +128,8 @@ const Lookbook = () => {
   const LookLastProductId = sessionStorage.getItem('LookbookLastViewed');
   let LookBookLastPageNo = JSON.parse(sessionStorage.getItem('lookbookPage'));
 
+  const isEditablePage = 0;
+
   useEffect(() => {
     setCurrentPage(LookBookLastPageNo)
     setInputPage(LookBookLastPageNo);
@@ -203,10 +205,24 @@ const Lookbook = () => {
     }
   };
 
+  const prevFilterChecked = useRef();
+
   useEffect(() => {
     setImageLoadError({});
     const storeInit = JSON?.parse(sessionStorage.getItem("storeInit"));
     const loginUserDetail = JSON?.parse(sessionStorage.getItem("loginUserDetail"));
+
+    // Store the previous filterChecked state
+    const previousChecked = prevFilterChecked.current;
+    prevFilterChecked.current = filterChecked;
+
+    const isFilterChanged = JSON.stringify(previousChecked) !== JSON.stringify(filterChecked);
+
+    // If the filter has changed (or its length is > 0), reset page to 1, otherwise keep the current page
+    if (isFilterChanged) {
+      setCurrentPage(1);
+      setInputPage(1);
+    }
 
     setStoreInit(storeInit);
     setImageUrl(storeInit?.DesignSetImageFol);
@@ -221,12 +237,12 @@ const Lookbook = () => {
 
     const output = FilterValueWithCheckedOnly();
 
-    if (Object.keys(filterChecked)?.length >= 0) {
+    if (Object?.keys(filterChecked)?.length >= 0) {
       setIsProdLoading(true);
       setIsPgLoading(true);
       // API call
       console.log(LookBookLastPageNo, "LookBookLastPageNo")
-      Get_Tren_BestS_NewAr_DesigSet_Album("GETDesignSet_List", finalID, output, LookBookLastPageNo, itemsPerPage)
+      Get_Tren_BestS_NewAr_DesigSet_Album("GETDesignSet_List", finalID, output, isFilterChanged ? 1 : currentPage, itemsPerPage)
         .then((response) => {
           if (response?.Data?.rd) {
             setDesignSetListData(response?.Data?.rd);
@@ -256,7 +272,7 @@ const Lookbook = () => {
           setIsPgLoading(false);
         });
     }
-  }, [filterChecked, LookBookLastPageNo, currentPage, islogin]); // Dependency array ensures this runs only when dependencies change
+  }, [filterChecked, islogin]); // Dependency array ensures this runs only when dependencies change
 
 
   // useEffect(() => {
@@ -581,13 +597,16 @@ const Lookbook = () => {
 
   const handleCheckboxChangeNew = (e, categoryId) => {
     const isChecked = e.target.checked;
-    if (isChecked) {
-      setSelectedCategories((prevSelected) => [...prevSelected, categoryId]);
-    } else {
-      setSelectedCategories((prevSelected) =>
-        prevSelected.filter((id) => id !== categoryId)
-      );
-    }
+
+    setSelectedCategories((prevSelected) => {
+      const updatedSelected = isChecked
+        ? [...prevSelected, categoryId]
+        : prevSelected.filter((id) => id !== categoryId);
+
+      handelPageChange("", 1)
+
+      return updatedSelected;
+    });
   };
 
   const filterDesignSetsByCategory = (designSetLstData, selectedCategories) => {
@@ -756,7 +775,7 @@ const Lookbook = () => {
 
   const totalPages = Math.ceil(dstCount / itemsPerPage);
 
-  // const handelPageChange = (event, value) => {
+  // const handelPageChange1 = (event, value) => {
   //   setCurrentPage(value);
   //   setInputPage(value);
   //   setThumbsSwiper(null);
@@ -787,7 +806,7 @@ const Lookbook = () => {
       setIsProdLoading(true);
       setIsPgLoading(true);
       // API call
-      Get_Tren_BestS_NewAr_DesigSet_Album("GETDesignSet_List", finalID, output, LookBookLastPageNo, itemsPerPage)
+      Get_Tren_BestS_NewAr_DesigSet_Album("GETDesignSet_List", finalID, output, value, itemsPerPage)
         .then((response) => {
           if (response?.Data?.rd) {
             setDesignSetListData(response?.Data?.rd);
@@ -2618,39 +2637,46 @@ const Lookbook = () => {
           {storeInit?.IsProductListPagination == 1 &&
             Math.ceil(dstCount / itemsPerPage)
             > 1 && (
-              <div className="lpDiv">
-                {/* <MuiPagination
-              count={Math.ceil(dstCount / itemsPerPage)}
-              size={maxwidth464px ? "small" : "large"}
-              shape="circular"
-              onChange={handelPageChange}
-              page={currentPage}
-              // showFirstButton
-              // showLastButton
-              disabled={false}
-              renderItem={(item) => (
-                <PaginationItem
-                  {...item}
-                  sx={{
-                    pointerEvents: item.page === currentPage ? 'none' : 'auto',
-                  }}
-                />
-              )}
-            /> */}
-                <EditablePagination
-                  currentPage={currentPage}
-                  totalItems={dstCount}
-                  itemsPerPage={itemsPerPage}
-                  onPageChange={handelPageChange}
-                  inputPage={inputPage}
-                  setInputPage={setInputPage}
-                  handlePageInputChange={handlePageInputChange}
-                  maxwidth464px={maxwidth464px}
-                  totalPages={totalPages}
-                  currPage={currentPage}
-                  isShowButton={false}
-                />
-              </div>
+              <>
+                {isEditablePage === 1 ? (
+                  <div className="lpDiv">
+                    <EditablePagination
+                      currentPage={currentPage}
+                      totalItems={dstCount}
+                      itemsPerPage={itemsPerPage} 
+                      onPageChange={handelPageChange}
+                      inputPage={inputPage}
+                      setInputPage={setInputPage}
+                      handlePageInputChange={handlePageInputChange}
+                      maxwidth464px={maxwidth464px}
+                      totalPages={totalPages}
+                      currPage={currentPage}
+                      isShowButton={false}
+                    />
+                  </div>
+                ) : (
+                  <div className="lpDiv">
+                    <MuiPagination
+                      count={Math.ceil(dstCount / itemsPerPage)}
+                      size={maxwidth464px ? "small" : "large"}
+                      shape="circular"
+                      onChange={handelPageChange}
+                      page={currentPage}
+                      // showFirstButton
+                      // showLastButton
+                      disabled={false}
+                      renderItem={(item) => (
+                        <PaginationItem
+                          {...item}
+                          sx={{
+                            pointerEvents: item.page === currentPage ? 'none' : 'auto',
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+                )}
+              </>
             )}
         </div>
       )}

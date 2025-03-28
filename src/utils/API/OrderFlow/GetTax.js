@@ -11,6 +11,7 @@ export const fetchEstimateTax = async () => {
         const combinedValue = JSON.stringify({
             FrontEnd_RegNo: `${FrontEnd_RegNo}`, Customerid: `${storedData.id}`, TaxId: `${estimatedTaxId}`,
             WebDiscount: islogin ? `${storedData?.WebDiscount ?? 0}` : `${0}`,
+            IsZeroPriceProductShow : `${storeInit?.IsZeroPriceProductShow ?? 0}`,
         });
         const encodedCombinedValue = btoa(combinedValue);
         const body = {

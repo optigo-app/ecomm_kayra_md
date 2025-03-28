@@ -11,6 +11,7 @@ export default function ContinueWithEmail() {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [storeInit, setStoreInit] = useState({});
     const navigation = useNavigate();
     const location = useLocation();
 
@@ -19,7 +20,9 @@ export default function ContinueWithEmail() {
     const redirectSignUpUrl = `/register/${search}`;
     const cancelRedireactUrl = `/LoginOption/${search}`;
 
-    
+    useEffect(() => {
+        setStoreInit(JSON.parse(sessionStorage.getItem('storeInit')));
+    }, [])
 
     // const validateEmail = (email) => {
     //     const regex = /^[a-zA-Z][\w@$&#]*@[a-zA-Z]+\.[a-zA-Z]+(\.[a-zA-Z]+)?$/;
@@ -28,7 +31,7 @@ export default function ContinueWithEmail() {
 
     useEffect(() => {
         setCSSVariable();
-    },[])
+    }, [])
     const validateEmail = (email) => {
         // const regex = /^[a-zA-Z][\w@$&#]*@[a-zA-Z]+\.[a-zA-Z]+(\.[a-zA-Z]+)?$/;
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -52,10 +55,10 @@ export default function ContinueWithEmail() {
         const storeInit = JSON.parse(sessionStorage.getItem("storeInit"));
         const backgroundColor = storeInit?.IsPLW == 1 ? "#c4cfdb" : "#c0bbb1";
         document.documentElement.style.setProperty(
-          "--background-color",
-          backgroundColor
+            "--background-color",
+            backgroundColor
         );
-      };
+    };
 
 
 
@@ -80,7 +83,11 @@ export default function ContinueWithEmail() {
                     sessionStorage.setItem("registerEmail", trimmedEmail);
                 }
             } else {
-                navigation(redirectSignUpUrl, { state: { email: trimmedEmail } });
+                if (storeInit?.IsEcomOtpVerification != 0) {
+                    navigation(redirectSignUpUrl, { state: { email: trimmedEmail } });
+                } else {
+                    navigation(redirectSignUpUrl, { state: { email: trimmedEmail } });
+                }
             }
         }).catch((err) => console.log(err))
 
