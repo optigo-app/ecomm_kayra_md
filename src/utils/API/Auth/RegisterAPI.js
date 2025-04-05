@@ -12,7 +12,7 @@ export const RegisterAPI = async (firstName, lastName, email, mobileNo, hashedPa
         const domainForNo = storeInit?.DomainForNo ?? "";
         const { FrontEnd_RegNo, IsB2BWebsite } = storeInit;
         const combinedValue = JSON.stringify({
-            firstname: `${firstName}`, lastname: `${lastName}`, userid: `${(email).toLocaleLowerCase()}`, country_code: '91', mobileno: `${mobileNo}`, pass: `${hashedPassword}`, IsB2BWebsite: `${IsB2BWebsite}`, FrontEnd_RegNo: `${FrontEnd_RegNo}`, Customerid: '0', DomainForNo: domainForNo,
+            firstname: `${firstName}`, lastname: `${lastName}`, userid: `${(email).toLocaleLowerCase()}`, country_code: '', mobileno: `${mobileNo}`, pass: `${hashedPassword}`, IsB2BWebsite: `${IsB2BWebsite}`, FrontEnd_RegNo: `${FrontEnd_RegNo}`, Customerid: '0', DomainForNo: domainForNo,
             "domainname": domainname
         });
         const encodedCombinedValue = btoa(combinedValue);
