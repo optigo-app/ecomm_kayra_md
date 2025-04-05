@@ -31,7 +31,7 @@ const WishlistItems = ({
   handleMoveToDetail,
 }) => {
   const [imageSrc, setImageSrc] = useState();
-  const {selectedItem} = Usewishlist()
+  const selectedItem = sessionStorage?.getItem("LastViewedWishlist") ?? "";
 
   const setWishCountVal = useSetRecoilState(WishCount);
   const setCartCountVal = useSetRecoilState(CartCount);
@@ -49,7 +49,7 @@ const WishlistItems = ({
       setImageSrc(noImageFound);
     }
   }, [item]);
-  
+
 
   const handleWishlistToCartFun = async (item) => {
     const returnValue = await handleWishlistToCart(item);
@@ -84,19 +84,19 @@ const WishlistItems = ({
           <Card className="smr_WlListCard"
             sx={{
               width: "100%",
-                border: selectedItem == item?.autocode ? "1px solid lightgray" : "none",
+              border: selectedItem == item?.autocode ? "1px solid lightgray" : "none",
               bgcolor: selectedItem == item?.autocode ? '#eaeaea' : "none"
             }}
             Product-last-location={item?.autocode}
           >
             <div className="cardContent"
-            style={{
-              width: "100%"
-            }}
+              style={{
+                width: "100%"
+              }}
             >
               {imageSrc === undefined ? (
                 <CardMedia
-                  style={{ width: "100%"   }}
+                  style={{ width: "100%" }}
                   className="smr_WlListImage"
                 >
                   <Skeleton
@@ -240,7 +240,7 @@ const WishlistItems = ({
               border: selectedItem == item?.autocode ? "1px solid lightgray" : "none",
               bgcolor: selectedItem == item?.autocode ? '#eaeaea' : "none"
             }}
-                  >
+          >
             <div className="cardContent">
               <CardMedia
                 component="img"

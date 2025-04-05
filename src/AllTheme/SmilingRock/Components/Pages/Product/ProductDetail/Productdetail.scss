@@ -23,21 +23,22 @@
   width: 100%;
 }
 
-.mobile_backbuton_smr_nav{
-    border: none;
-    color: #49473f;
-    background-color: transparent;
-    border-radius: 50%;
-    padding: 10px;
-    margin: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    z-index: 9999;
-    @media screen and (min-width:1200px) {
-      display: none;
-    }
+.mobile_backbuton_smr_nav {
+  border: none;
+  color: #49473f;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 9999;
+
+  @media screen and (min-width:1200px) {
+    display: none;
+  }
 }
 
 .backbuton_smr_nav {
@@ -50,6 +51,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
   @media screen and (max-width:1200px) {
     display: none;
   }
@@ -127,6 +129,7 @@
   max-height: 620px;
   overflow-x: hidden;
   overflow-y: auto;
+
   @media screen and (max-width: 1600px) {
     left: -64px;
   }
@@ -799,4 +802,39 @@
     width: 100%;
     margin: 70px 20px;
   }
+}
+
+
+.smrt_prod_description {
+  position: relative;
+}
+
+.smrt_description-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-align: justify;
+  transition: height 0.3s ease;
+  margin: 0;
+  color: #7d7f85;
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: -2px;
+}
+
+.smrt_show-more .smrt_description-text {
+  -webkit-line-clamp: unset;
+  height: none;
+}
+
+.smrt_toggle-text {
+  display: block;
+  cursor: pointer;
+  color: #7d7f85;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  font-size: 13px !important;
 }

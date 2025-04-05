@@ -1,4 +1,4 @@
-import  { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Header.modul.scss";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -86,7 +86,7 @@ const Header = () => {
       .catch((err) => {
         if (err) {
           console.warn(
-         "getCountApiErr", err
+            "getCountApiErr", err
           )
         }
       });
@@ -163,15 +163,20 @@ const Header = () => {
   //   }
   // }, [islogin]);
 
+  const [isApiCalled, setIsApiCalled] = useState(false);
+
   useEffect(() => {
     let storeinit = JSON.parse(sessionStorage.getItem("storeInit"));
     let isUserLogin = JSON.parse(sessionStorage.getItem("LoginUser"));
+
     if (
-      storeinit?.IsB2BWebsite === 0 ||
-      (storeinit?.IsB2BWebsite === 1 && isUserLogin === true)) {
+      (storeinit?.IsB2BWebsite === 0 || (storeinit?.IsB2BWebsite === 1 && isUserLogin === true)) &&
+      isApiCalled === false
+    ) {
       getMenuApi();
+      setIsApiCalled(true); 
     }
-  }, [islogin]);
+  }, [islogin, isApiCalled]);
 
 
   useEffect(() => {
@@ -201,18 +206,20 @@ const Header = () => {
     const { IsB2BWebsite } = storeInit;
     const visiterID = Cookies.get("visiterId");
     let finalID;
-    if (IsB2BWebsite == 0) {
+
+    if (IsB2BWebsite === 0) {
       finalID = islogin === false ? visiterID : loginUserDetail?.id || "0";
     } else {
       finalID = loginUserDetail?.id || "0";
     }
 
-    await GetMenuAPI(finalID)
-      .then((response) => {
-        setMenuData(response?.Data?.rd);
-      })
-      .catch((err) => console.warn(err));
-  };
+    try {
+      const response = await GetMenuAPI(finalID);
+      setMenuData(response?.Data?.rd);
+    } catch (err) {
+      console.log("Error fetching menu data:", err);
+    }
+  }
 
   const handleLogout = () => {
     navigation("/");
@@ -324,7 +331,7 @@ const Header = () => {
       handleDropdownClose();
       sessionStorage.setItem('listingPageNo', JSON.stringify(1))
       sessionStorage.setItem("checkboxes", JSON.stringify({}));
-      sessionStorage.setItem("SortingOptions","Recommended")
+      sessionStorage.setItem("SortingOptions", "Recommended")
       navigate(url);
     }
   };
@@ -408,8 +415,8 @@ const Header = () => {
         setSerachShowOverlay(false);
         setDrawerShowOverlay(false);
         sessionStorage.setItem("checkboxes", JSON.stringify({}));
-      sessionStorage.setItem('listingPageNo', JSON.stringify(1))
-      sessionStorage.setItem("SortingOptions","Recommended")
+        sessionStorage.setItem('listingPageNo', JSON.stringify(1))
+        sessionStorage.setItem("SortingOptions", "Recommended")
 
 
       }
@@ -437,7 +444,7 @@ const Header = () => {
       setSerachShowOverlay(false);
       sessionStorage.setItem("checkboxes", JSON.stringify({}));
       sessionStorage.setItem('listingPageNo', JSON.stringify(1))
-      sessionStorage.setItem("SortingOptions","Recommended")
+      sessionStorage.setItem("SortingOptions", "Recommended")
 
 
     }
@@ -577,7 +584,7 @@ const Header = () => {
               <div className="smr_mobileHeader_top_div2_web">
                 <a href="/">
                   <img
-                  alt="smr_mobileHeader_top_div2_web"
+                    alt="smr_mobileHeader_top_div2_web"
                     src={compnyLogo}
                     loading="lazy"
                     className="smr_logo_header"
@@ -588,11 +595,11 @@ const Header = () => {
               <div className="smr_mobileHeader_top_div2_mobile">
                 <a href="/">
                   <img
-                  alt="smr_mobileHeader_top_div2_mobile"
+                    alt="smr_mobileHeader_top_div2_mobile"
                     src={compnyLogoM}
                     loading="lazy"
                     className="smr_logo_header"
-                    
+
                   />
                 </a>
               </div>
@@ -660,47 +667,47 @@ const Header = () => {
               </div>
             </div>
             <div className="smr_mobileMenuSubDivMain">
-            {islogin && (
-              <div
-                style={{
-                  display: "flex",
-                  border: "1px solid white",
-                  alignItems: "center",
-                  marginBottom: "20px"
-                }}
-              >
-                <input
-                  type="text"
-                  placeholder="Search"
-                  value={searchText}
+              {islogin && (
+                <div
                   style={{
-                    width: "100%",
-                    borderBottom: "1px solid white",
-                    border: "none",
-                    outline: "none",
-                    backgroundColor: "transparent",
-                    fontWeight: 500,
-                    color: "white",
-                    fontSize: "17px",
-                    padding: "8px"
+                    display: "flex",
+                    border: "1px solid white",
+                    alignItems: "center",
+                    marginBottom: "20px"
                   }}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  className="mobileSideBarSearch"
-                  onKeyDown={searchDataFucn}
-                />
-                <IoSearchOutline
-                  onClick={() => clickSearch()}
-                  style={{
-                    color: 'white',
-                    height: '25px',
-                    cursor: 'pointer',
-                    width: '25px',
-                    marginInline: '5px',
-                    marginBottom: '4px',
-                  }}
-                />
-              </div>
-            )}
+                >
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchText}
+                    style={{
+                      width: "100%",
+                      borderBottom: "1px solid white",
+                      border: "none",
+                      outline: "none",
+                      backgroundColor: "transparent",
+                      fontWeight: 500,
+                      color: "white",
+                      fontSize: "17px",
+                      padding: "8px"
+                    }}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    className="mobileSideBarSearch"
+                    onKeyDown={searchDataFucn}
+                  />
+                  <IoSearchOutline
+                    onClick={() => clickSearch()}
+                    style={{
+                      color: 'white',
+                      height: '25px',
+                      cursor: 'pointer',
+                      width: '25px',
+                      marginInline: '5px',
+                      marginBottom: '4px',
+                    }}
+                  />
+                </div>
+              )}
               <List
                 className="smr_ListMenuSiderMobile"
                 sx={{ paddingTop: "0", marginBottom: "0px", marginTop: "15px" }}
@@ -1692,11 +1699,11 @@ const Header = () => {
             onMouseEnter={handleDropdownOpen}
             onMouseLeave={handleDropdownClose}
           >
-          {/* Navbar Old Code Under */}
+            {/* Navbar Old Code Under */}
           </div>
         </div>
       </div>
-      {IsB2BWebsiteChek === 1 ? (islogin ? <TopNavBar menuItems={menuItems} handelMenu={handelMenu} /> : "" ) : <TopNavBar menuItems={menuItems} handelMenu={handelMenu} /> }
+      {IsB2BWebsiteChek === 1 ? (islogin ? <TopNavBar menuItems={menuItems} handelMenu={handelMenu} /> : "") : <TopNavBar menuItems={menuItems} handelMenu={handelMenu} />}
       {IsCartNo == 2 &&
         <CartDrawer open={isCartOpen} />
       }
@@ -1707,7 +1714,7 @@ const Header = () => {
 export default Header;
 
 
-const NewMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
+const NewMenuBar = ({ menuItems = [], handelMenu = () => { } }) => {
   const SliderbannerImages = [
     storImagePath() + "/1.png",
     storImagePath() + "/2.png",
@@ -1765,11 +1772,10 @@ const NewMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
                       >
                         <a
                           className="smr_menu_level_1_title"
-                          href={`/p/${menuItem?.menuname}/${
-                            menuItem?.param0dataname
-                          }/${subMenuItem.param1dataname}/?M=${btoa(
-                            `${menuItem?.param0dataname},${subMenuItem.param1dataname}/${menuItem?.param0name},${subMenuItem.param1name}`
-                          )}`}
+                          href={`/p/${menuItem?.menuname}/${menuItem?.param0dataname
+                            }/${subMenuItem.param1dataname}/?M=${btoa(
+                              `${menuItem?.param0dataname},${subMenuItem.param1dataname}/${menuItem?.param0name},${subMenuItem.param1name}`
+                            )}`}
                         >
                           {subMenuItem.param1dataname}
                         </a>
@@ -1800,13 +1806,11 @@ const NewMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
                             >
                               <a
                                 className="smr_menu_level_2_title"
-                                href={`/p/${menuItem?.menuname}/${
-                                  menuItem?.param0dataname
-                                }/${subMenuItem.param1dataname}/${
-                                  subSubMenuItem.param2dataname
-                                }/?M=${btoa(
-                                  `${menuItem?.param0dataname},${subMenuItem.param1dataname},${subSubMenuItem.param2dataname}/${menuItem?.param0name},${subMenuItem.param1name},${subSubMenuItem.param2name}`
-                                )}`}
+                                href={`/p/${menuItem?.menuname}/${menuItem?.param0dataname
+                                  }/${subMenuItem.param1dataname}/${subSubMenuItem.param2dataname
+                                  }/?M=${btoa(
+                                    `${menuItem?.param0dataname},${subMenuItem.param1dataname},${subSubMenuItem.param2dataname}/${menuItem?.param0name},${subMenuItem.param1name},${subSubMenuItem.param2name}`
+                                  )}`}
                               >
                                 {" "}
                                 <p>{subSubMenuItem.param2dataname}</p>
@@ -1848,7 +1852,7 @@ const NewMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
   );
 };
 
-const OldMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
+const OldMenuBar = ({ menuItems = [], handelMenu = () => { } }) => {
   if (menuItems?.length == 0) {
     return;
   }
@@ -1885,13 +1889,13 @@ const OldMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
                   `${menuItem?.param0dataname}/${menuItem?.param0name}`
                 )}`}
                 className="smr_menuSubTitle"
-                // onClick={() =>
-                //   handelMenu({
-                //     menuname: menuItem?.menuname,
-                //     key: menuItem?.param0name,
-                //     value: menuItem?.param0dataname,
-                //   })
-                // }
+              // onClick={() =>
+              //   handelMenu({
+              //     menuname: menuItem?.menuname,
+              //     key: menuItem?.param0name,
+              //     value: menuItem?.param0dataname,
+              //   })
+              // }
               >
                 <p className="muilistMenutext">{menuItem.menuname}</p>
               </a>
@@ -1934,14 +1938,13 @@ const OldMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
                     >
                       {/* <a href='#' className='smr_menuSubTitle'> */}
                       <a
-                        href={`/p/${menuItem?.menuname}/${
-                          menuItem?.param0dataname
-                        }/${subMenuItem.param1dataname}/?M=${btoa(
-                          `${menuItem?.param0dataname},${subMenuItem.param1dataname}/${menuItem?.param0name},${subMenuItem.param1name}`
-                        )}`}
+                        href={`/p/${menuItem?.menuname}/${menuItem?.param0dataname
+                          }/${subMenuItem.param1dataname}/?M=${btoa(
+                            `${menuItem?.param0dataname},${subMenuItem.param1dataname}/${menuItem?.param0name},${subMenuItem.param1name}`
+                          )}`}
                         className="smr_menuSubTitle"
 
-                        // onClick={() => handelMenu({ "menuname": menuItem?.menuname, "key": menuItem?.param0name, "value": menuItem?.param0dataname }, { "key": subMenuItem.param1name, "value": subMenuItem.param1dataname })}
+                      // onClick={() => handelMenu({ "menuname": menuItem?.menuname, "key": menuItem?.param0name, "value": menuItem?.param0dataname }, { "key": subMenuItem.param1name, "value": subMenuItem.param1dataname })}
                       >
                         <p
                           style={{
@@ -1985,31 +1988,29 @@ const OldMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
                             }
                           >
                             <a
-                              href={`/p/${menuItem?.menuname}/${
-                                menuItem?.param0dataname
-                              }/${subMenuItem.param1dataname}/${
-                                subSubMenuItem.param2dataname
-                              }/?M=${btoa(
-                                `${menuItem?.param0dataname},${subMenuItem.param1dataname},${subSubMenuItem.param2dataname}/${menuItem?.param0name},${subMenuItem.param1name},${subSubMenuItem.param2name}`
-                              )}`}
+                              href={`/p/${menuItem?.menuname}/${menuItem?.param0dataname
+                                }/${subMenuItem.param1dataname}/${subSubMenuItem.param2dataname
+                                }/?M=${btoa(
+                                  `${menuItem?.param0dataname},${subMenuItem.param1dataname},${subSubMenuItem.param2dataname}/${menuItem?.param0name},${subMenuItem.param1name},${subSubMenuItem.param2name}`
+                                )}`}
                               className="smr_menuSubTitle"
-                              // onClick={() =>
-                              //   handelMenu(
-                              //     {
-                              //       menuname: menuItem?.menuname,
-                              //       key: menuItem?.param0name,
-                              //       value: menuItem?.param0dataname,
-                              //     },
-                              //     {
-                              //       key: subMenuItem.param1name,
-                              //       value: subMenuItem.param1dataname,
-                              //     },
-                              //     {
-                              //       key: subSubMenuItem.param2name,
-                              //       value: subSubMenuItem.param2dataname,
-                              //     }
-                              //   )
-                              // }
+                            // onClick={() =>
+                            //   handelMenu(
+                            //     {
+                            //       menuname: menuItem?.menuname,
+                            //       key: menuItem?.param0name,
+                            //       value: menuItem?.param0dataname,
+                            //     },
+                            //     {
+                            //       key: subMenuItem.param1name,
+                            //       value: subMenuItem.param1dataname,
+                            //     },
+                            //     {
+                            //       key: subSubMenuItem.param2name,
+                            //       value: subSubMenuItem.param2dataname,
+                            //     }
+                            //   )
+                            // }
                             >
                               {/* <ListItem key={subSubMenuItem.param2dataid} style={{ paddingLeft: '0px', paddingTop: '0px', paddingBottom: '0px' }}> */}
                               <p
@@ -2049,7 +2050,7 @@ const OldMenuBar = ({ menuItems = [], handelMenu = () => {} }) => {
   );
 };
 
-const TopNavBar = ({ menuItems = [], handelMenu = () => {} }) => {
+const TopNavBar = ({ menuItems = [], handelMenu = () => { } }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [expandedMenu, setExpandedMenu] = useState(null);
   const [selectedData, setSelectedData] = useState([]);
@@ -2073,23 +2074,23 @@ const TopNavBar = ({ menuItems = [], handelMenu = () => {} }) => {
       setExpandedMenu(null);
       setSelectedData([]);
       document.body.style.overflow = "auto";
-    }, 100); 
+    }, 100);
   };
 
   const handleMouseLeaveWithDelay = (e) => {
-    e.stopPropagation(); 
-      setExpandedMenu(null);
-      setSelectedData([]);
-      document.body.style.overflow = "auto";
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current); 
-      }
+    e.stopPropagation();
+    setExpandedMenu(null);
+    setSelectedData([]);
+    document.body.style.overflow = "auto";
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
   };
 
   return (
     <>
       <div className="TopNavBar"
-           onMouseLeave={handleMouseLeaveWithDelay} // Handle mouse leave from the parent container
+        onMouseLeave={handleMouseLeaveWithDelay} // Handle mouse leave from the parent container
       >
         <div className="smr_flat_view_menu">
           <HoverMenu
@@ -2104,12 +2105,12 @@ const TopNavBar = ({ menuItems = [], handelMenu = () => {} }) => {
             <div
               key={menuItem.menuid}
               className="menu_list_Smr"
-                       onMouseEnter={() => {
+              onMouseEnter={() => {
                 handleMouseEnter(index, menuItem);
               }}
-              // onMouseLeave={() => {
-              //   handleMouseLeave();
-              // }}
+            // onMouseLeave={() => {
+            //   handleMouseLeave();
+            // }}
             >
               <div
                 // component="div"
@@ -2169,18 +2170,17 @@ const TopNavBar = ({ menuItems = [], handelMenu = () => {} }) => {
                           >
                             <a
                               className="smr_menu_title_1"
-                              href={`/p/${menuItem?.menuname}/${
-                                menuItem?.param0dataname
-                              }/${subMenuItem.param1dataname}/?M=${btoa(
-                                `${menuItem?.param0dataname},${subMenuItem.param1dataname}/${menuItem?.param0name},${subMenuItem.param1name}`
-                              )}`}
+                              href={`/p/${menuItem?.menuname}/${menuItem?.param0dataname
+                                }/${subMenuItem.param1dataname}/?M=${btoa(
+                                  `${menuItem?.param0dataname},${subMenuItem.param1dataname}/${menuItem?.param0name},${subMenuItem.param1name}`
+                                )}`}
                             >
                               {subMenuItem.param1dataname}
                             </a>
                           </div>
                           <>
                             <div className="smr_menu_level1">
-                              {subMenuItem.param2.map((subSubMenuItem,i) => {
+                              {subMenuItem.param2.map((subSubMenuItem, i) => {
                                 if (
                                   subMenuItem?.param2 &&
                                   subMenuItem?.param2?.length > 0 &&
@@ -2190,7 +2190,7 @@ const TopNavBar = ({ menuItems = [], handelMenu = () => {} }) => {
                                 }
                                 return (
                                   <div
-                                  key={i}
+                                    key={i}
                                     component="div"
                                     onClick={(e) =>
                                       handelMenu(
@@ -2213,13 +2213,11 @@ const TopNavBar = ({ menuItems = [], handelMenu = () => {} }) => {
                                   >
                                     <a
                                       className="smr_menu_title_2"
-                                      href={`/p/${menuItem?.menuname}/${
-                                        menuItem?.param0dataname
-                                      }/${subMenuItem.param1dataname}/${
-                                        subSubMenuItem.param2dataname
-                                      }/?M=${btoa(
-                                        `${menuItem?.param0dataname},${subMenuItem.param1dataname},${subSubMenuItem.param2dataname}/${menuItem?.param0name},${subMenuItem.param1name},${subSubMenuItem.param2name}`
-                                      )}`}
+                                      href={`/p/${menuItem?.menuname}/${menuItem?.param0dataname
+                                        }/${subMenuItem.param1dataname}/${subSubMenuItem.param2dataname
+                                        }/?M=${btoa(
+                                          `${menuItem?.param0dataname},${subMenuItem.param1dataname},${subSubMenuItem.param2dataname}/${menuItem?.param0name},${subMenuItem.param1name},${subSubMenuItem.param2name}`
+                                        )}`}
                                     >
                                       {subSubMenuItem.param2dataname}
                                     </a>
@@ -2256,16 +2254,16 @@ const TopNavBar = ({ menuItems = [], handelMenu = () => {} }) => {
   );
 };
 
-const HoverMenu = ({  selectedData,  handelMenu,  expandedMenu,  hoveredIndex,  handleMouseEnter,  handleMouseLeave,}) => {
+const HoverMenu = ({ selectedData, handelMenu, expandedMenu, hoveredIndex, handleMouseEnter, handleMouseLeave, }) => {
   const SliderbannerImages = [
     storImagePath() + "/1.png",
     storImagePath() + "/2.png",
   ];
 
-  if (expandedMenu === null || expandedMenu === undefined || selectedData?.param1[0].param1dataname === "" ) {
+  if (expandedMenu === null || expandedMenu === undefined || selectedData?.param1[0].param1dataname === "") {
     return;
   }
-  
+
   return (
     <>
       <div
@@ -2276,7 +2274,7 @@ const HoverMenu = ({  selectedData,  handelMenu,  expandedMenu,  hoveredIndex,  
       >
         <div className="smr_left_list">
           <div
-          className="smr_menu_level_list"          >
+            className="smr_menu_level_list"          >
             {selectedData?.param1?.map((param1Item, param1Index) => {
               return (
                 <div key={param1Index}>
@@ -2301,18 +2299,17 @@ const HoverMenu = ({  selectedData,  handelMenu,  expandedMenu,  hoveredIndex,  
                     }}
                   >
                     <a
-                      href={`/p/${selectedData?.param0dataname}/${
-                        param1Item.param1dataname
-                      }/?M=${btoa(
-                        `${selectedData?.param0dataname},${param1Item?.param1dataname}/${selectedData?.param0name},${param1Item?.param1name}`
-                      )}`}
+                      href={`/p/${selectedData?.param0dataname}/${param1Item.param1dataname
+                        }/?M=${btoa(
+                          `${selectedData?.param0dataname},${param1Item?.param1dataname}/${selectedData?.param0name},${param1Item?.param1name}`
+                        )}`}
                       style={{ color: "black", textDecoration: "none" }}
                     >
                       {param1Item?.param1dataname}
                     </a>
                   </span>
                   <div
-                  className="level2menudata"
+                    className="level2menudata"
                     style={{
                       height: "27vh",
                       display: "flex",
@@ -2357,11 +2354,10 @@ const HoverMenu = ({  selectedData,  handelMenu,  expandedMenu,  hoveredIndex,  
                           }}
                         >
                           <a
-                            href={`/p/${selectedData?.param0dataname}/${
-                              param1Item.param1dataname
-                            }/${param2Item.param2dataname}/?M=${btoa(
-                              `${selectedData?.param0dataname},${param1Item.param1dataname},${param2Item.param2dataname}/${selectedData?.param0name},${param1Item.param1name},${param2Item.param2name}`
-                            )}`}
+                            href={`/p/${selectedData?.param0dataname}/${param1Item.param1dataname
+                              }/${param2Item.param2dataname}/?M=${btoa(
+                                `${selectedData?.param0dataname},${param1Item.param1dataname},${param2Item.param2dataname}/${selectedData?.param0name},${param1Item.param1name},${param2Item.param2name}`
+                              )}`}
                             style={{ color: "black", textDecoration: "none" }}
                           >
                             {param2Item?.param2dataname}

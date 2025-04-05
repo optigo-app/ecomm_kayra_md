@@ -7,19 +7,20 @@ import axios from "axios";
 
 let APIURL = '';
 
-const getApiUrl = async () => {
+const setApiUrl = async () => {
     try {
         const getApi = await fetchAPIUrlFromStoreInit();
-
         if (getApi?.ApiUrl) {
-            APIURL = getApi.ApiUrl;
+            APIURL = getApi.ApiUrl ?? "https://api.optigoapps.com/ReactStore/ReactStore.aspx";
+        } else {
+            throw new Error("API URL not found");
         }
     } catch (error) {
         console.error('Failed to fetch API URL:', error);
     }
 };
 
-getApiUrl();
+setApiUrl();
 
 // const isTesting = true;
 // const LIVE_BASE_URL = isTesting ? `https://api.optigoapps.com/ReactStoreTest/ReactStore.aspx` : 'https://api.optigoapps.com/ReactStore/ReactStore.aspx';
@@ -32,7 +33,7 @@ getApiUrl();
 //     || window.location.hostname === 'fgstore.plw'
 //     || window.location.hostname === 'malakan.web'
 //     || window.location.hostname === 'rpjewel.web'
-    
+
 //     || window.location.hostname === 'hdstore.web'
 //     || window.location.hostname === 'hdstore.mapp'
 //     || window.location.hostname === 'hdstore.pro'
@@ -44,8 +45,8 @@ getApiUrl();
 //     || window.location.hostname === 'diamondtine.web'
 //     || window.location.hostname === 'forevery.web'
 //     || window.location.hostname === 'hoq.web') ? 'http://zen/api/ReactStore.aspx' : LIVE_BASE_URL ;
-    // 'https://api.optigoapps.com/ReactStore/ReactStore.aspx';
-    // || window.location.hostname === 'hoq.web') ? 'http://zen/api/ReactStore.aspx' : 'https://api.optigoapps.com/test/ReactStore.aspx';
+// 'https://api.optigoapps.com/ReactStore/ReactStore.aspx';
+// || window.location.hostname === 'hoq.web') ? 'http://zen/api/ReactStore.aspx' : 'https://api.optigoapps.com/test/ReactStore.aspx';
 
 // const APIURL = 'https://api.optigoapps.com/test/store.aspx';
 // const NEWAPIURL = 'https://api.optigoapps.com/storev26/ReactStore.aspx';
@@ -53,10 +54,18 @@ getApiUrl();
 
 
 export const CommonFileAPI = async (body) => {
+    if (!APIURL) {
+        await setApiUrl();
+    }
+
     const storeInit = JSON.parse(sessionStorage.getItem('storeInit'));
+
+    if (!storeInit) {
+        throw new Error('StoreInit data not found in sessionStorage');
+    }
     try {
-        const YearCode = storeInit?.YearCode ?? '' ;
-        const version = storeInit?.version  ?? '';
+        const YearCode = storeInit?.YearCode ?? '';
+        const version = storeInit?.version ?? '';
         const token = storeInit?.token ?? '';
         const sv = storeInit?.sv ?? '';
 

@@ -55,6 +55,7 @@ const SmilingRock_App = () => {
   const [companyTitleLogo, setCompanyTitleLogo] = useRecoilState(smr_companyLogo);
   const [companyTitleLogoM, setCompanyTitleLogoM] = useRecoilState(smr_companyLogoM);
   const [htmlContent, setHtmlContent] = useState("");
+  const storeInit = JSON.parse(sessionStorage.getItem("storeInit"));
   const [localData, setLocalData] = useState();
 
   const setCSSVariable = () => {
@@ -77,12 +78,12 @@ const SmilingRock_App = () => {
     const shouldPreserveLookbook = location.pathname.startsWith('/Lookbook') || location.pathname.startsWith('/d');
 
     if (!shouldPreserveCheckboxes) {
-  
+
       sessionStorage.setItem("checkboxes", JSON.stringify({}));
       sessionStorage.setItem('listingPageNo', JSON.stringify(1))
       sessionStorage.setItem('checkboxes', JSON.stringify({}))
       sessionStorage.setItem('Sorting', JSON.stringify("Recommended"))
-      sessionStorage.setItem("SortingOptions","Recommended")
+      sessionStorage.setItem("SortingOptions", "Recommended")
     }
 
     if (!shouldPreserveLookbook) {
@@ -213,14 +214,17 @@ const SmilingRock_App = () => {
         {/* Maiora not needed */}
         {/* for kAYRA CRAETEION NEEDED */}
 
-        <Route
-          path="/ContimueWithMobile"
-          element={
-            <div className="smr_authFlowBakcColor">
-              <ContimueWithMobile />
-            </div>
-          }
-        />
+        {(!storeInit?.IsWebMobileLoginOff || storeInit?.IsWebMobileLoginOff === 0) && (
+          <Route
+            path="/ContimueWithMobile"
+            element={
+              <div className="smr_authFlowBakcColor">
+                <ContimueWithMobile />
+              </div>
+            }
+          />
+        )}
+
         <Route
           path="/LoginWithEmailCode"
           element={
@@ -232,14 +236,17 @@ const SmilingRock_App = () => {
         {/* Maiora not needed */}
         {/* for kAYRA CRAETEION NEEDED */}
 
-        <Route
-          path="/LoginWithMobileCode"
-          element={
-            <div className="smr_authFlowBakcColor">
-              <LoginWithMobileCode />
-            </div>
-          }
-        />
+        {(!storeInit?.IsWebMobileLoginOff || storeInit?.IsWebMobileLoginOff === 0) && (
+          <Route
+            path="/LoginWithMobileCode"
+            element={
+              <div className="smr_authFlowBakcColor">
+                <LoginWithMobileCode />
+              </div>
+            }
+          />
+        )}
+        
         <Route
           path="/ForgotPass"
           element={

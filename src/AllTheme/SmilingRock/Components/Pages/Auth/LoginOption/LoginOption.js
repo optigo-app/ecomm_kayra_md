@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./LoginOption.modul.scss";
 import { useNavigate, useLocation } from "react-router";
 
@@ -10,6 +10,11 @@ const LoginOption = () => {
   const navigation = useNavigate();
   const location = useLocation();
 
+  const [storeInit, setStoreInit] = useState({});
+  useEffect(() => {
+    setStoreInit(JSON.parse(sessionStorage.getItem('storeInit')));
+  }, [])
+
   const search = location?.search;
   const redirectEmailUrl = `/ContinueWithEmail/${search}`;
 
@@ -19,11 +24,11 @@ const LoginOption = () => {
     <div className="smr_Loginoption">
       <div className="loginDailog" >
         <div style={{
-        display:"flex",
-        alignContent:"center",
-        justifyContent:"center",
-        flexDirection:"column"
-      }}>
+          display: "flex",
+          alignContent: "center",
+          justifyContent: "center",
+          flexDirection: "column"
+        }}>
           <p className="loginDiTile">Log in or sign up in seconds</p>
           <p
             style={{
@@ -60,10 +65,12 @@ const LoginOption = () => {
                             <p style={{ margin: '0px', fontSize: '20px', fontWeight: 500, paddingLeft: '25px' }}>Log in with mobile</p>
                         </div> */}
             {/* for kAYRA CRAETEION NEEDED */}
-            <div className='loginMobile' onClick={() => navigation(redirectMobileUrl)}>
-              <FaMobileAlt className='FaMobileAlt_fg' style={{ height: '25px', width: '25px', marginRight: '10px' }} />
-              <p style={{ margin: '0px', fontSize: '20px', fontWeight: 500, paddingLeft: '25px' }}>Log in with mobile</p>
-            </div>
+            {(!storeInit?.IsWebMobileLoginOff || storeInit?.IsWebMobileLoginOff === 0) && (
+              <div className='loginMobile' onClick={() => navigation(redirectMobileUrl)}>
+                <FaMobileAlt className='FaMobileAlt_fg' style={{ height: '25px', width: '25px', marginRight: '10px' }} />
+                <p style={{ margin: '0px', fontSize: '20px', fontWeight: 500, paddingLeft: '25px' }}>Log in with mobile</p>
+              </div>
+            )}
           </div>
           <p
             style={{
