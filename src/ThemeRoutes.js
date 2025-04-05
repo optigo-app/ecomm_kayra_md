@@ -431,8 +431,8 @@ const Themes = ({ htmlContent }) => {
     <>
       <Suspense fallback={<></>}>
         {htmlContent?.rd[0]?.Themeno === 1 && <SmilingRock_App />}
-
-        {/* {htmlContent?.rd[0]?.Themeno === 2 && <DaimondTine_App />}
+{/* 
+        {htmlContent?.rd[0]?.Themeno === 2 && <DaimondTine_App />}
 
         {htmlContent?.rd[0]?.Themeno === 3 && <Elveester_App />}
 
