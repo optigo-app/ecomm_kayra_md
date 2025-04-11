@@ -204,6 +204,8 @@
   position: relative;
   z-index: 0;
   font-family: $primaryFontFamily;
+
+
 }
 
 .cart_and_wishlist_icon {
@@ -392,7 +394,8 @@
   flex-direction: column-reverse;
   gap: 3px;
   font-size: 14px;
-  width:60px
+  width:60px;
+  z-index: 99999;
 }
 
 .smrWeb_app_instock{
@@ -469,6 +472,23 @@
 .smr_ImgandVideoContainer{
   height: 412px;
   min-height: 412px;
+  position: relative;
+  .story-diamond {
+    display: block;
+    opacity: 0;
+    transform: translateY(5px); 
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  &:hover {
+    .story-diamond {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+
 }
 
 .smr_productCard_video{
