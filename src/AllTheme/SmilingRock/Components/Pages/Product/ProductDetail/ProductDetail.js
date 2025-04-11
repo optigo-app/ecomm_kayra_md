@@ -2145,10 +2145,7 @@ const ProductDetail = () => {
                                           className="smr_PriceBreakup_Price"
                                         >
                                           {formatter.format(
-                                            (singleProd1?.Metal_Cost
-                                              ? singleProd1?.Metal_Cost
-                                              : singleProd?.Metal_Cost
-                                            )?.toFixed(2)
+                                            ((singleProd1?.Metal_Cost ?? singleProd?.Metal_Cost ?? 0)?.toFixed(2))
                                           )}
                                         </Typography>
                                       </span>
@@ -2197,10 +2194,7 @@ const ProductDetail = () => {
                                           }}
                                         >
                                           {formatter.format(
-                                            (singleProd1?.Diamond_Cost
-                                              ? singleProd1?.Diamond_Cost
-                                              : singleProd?.Diamond_Cost
-                                            )?.toFixed(2)
+                                            (singleProd1?.Diamond_Cost ?? singleProd?.Diamond_Cost ?? 0)?.toFixed(2)
                                           )}
                                         </Typography>
                                       </span>
@@ -2249,10 +2243,7 @@ const ProductDetail = () => {
                                           }}
                                         >
                                           {formatter.format(
-                                            (singleProd1?.ColorStone_Cost
-                                              ? singleProd1?.ColorStone_Cost
-                                              : singleProd?.ColorStone_Cost
-                                            )?.toFixed(2)
+                                            (singleProd1?.ColorStone_Cost ?? singleProd?.ColorStone_Cost ?? 0)?.toFixed(2)
                                           )}
                                         </Typography>
                                       </span>
@@ -2301,10 +2292,7 @@ const ProductDetail = () => {
                                           }}
                                         >
                                           {formatter.format(
-                                            (singleProd1?.Misc_Cost
-                                              ? singleProd1?.Misc_Cost
-                                              : singleProd?.Misc_Cost
-                                            )?.toFixed(2)
+                                            (singleProd1?.Misc_Cost ?? singleProd?.Misc_Cost ?? 0)?.toFixed(2)
                                           )}
                                         </Typography>
                                       </span>
@@ -2354,10 +2342,7 @@ const ProductDetail = () => {
                                           }}
                                         >
                                           {formatter.format(
-                                            (singleProd1?.Labour_Cost
-                                              ? singleProd1?.Labour_Cost
-                                              : singleProd?.Labour_Cost
-                                            )?.toFixed(2)
+                                            (singleProd1?.Labour_Cost ?? singleProd?.Labour_Cost ?? 0)?.toFixed(2)
                                           )}
                                         </Typography>
                                       </span>
