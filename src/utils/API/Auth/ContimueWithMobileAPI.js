@@ -10,10 +10,10 @@ export const ContimueWithMobileAPI = async (mobileNo) => {
         const storeInit = JSON.parse(sessionStorage.getItem('storeInit'));
         const { FrontEnd_RegNo } = storeInit;
         const combinedValue = JSON.stringify({
-            country_code: '91', mobileno: `${mobileNo}`, FrontEnd_RegNo: `${FrontEnd_RegNo}` , domainname: domainname
+            country_code: '', mobileno: `${mobileNo}`, FrontEnd_RegNo: `${FrontEnd_RegNo}` , domainname: domainname
         });
         const encodedCombinedValue = btoa(combinedValue);
-        const body = {
+        const body = { 
             "con": "{\"id\":\"\",\"mode\":\"WEBVALDNMOBILE\"}",
             "f": "continueWithMobile (handleSubmit)",
             p: encodedCombinedValue,
