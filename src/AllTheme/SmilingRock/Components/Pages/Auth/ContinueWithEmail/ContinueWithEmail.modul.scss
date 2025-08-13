@@ -1,7 +1,8 @@
 .smr_continuemail {
   @import "../../../scss/variable.scss";
 
-  background-color: $backgroundColor;
+  // background-color: $backgroundColor;
+  background-color: $backgroundColordfine;
 
   .css-1wc848c-MuiFormHelperText-root {
     margin-right: 0px !important;
@@ -101,9 +102,10 @@
     .smr_continuEmailBox {
       width: 90%;
     }
+
     .submitBtnForgot {
       width: 90%;
-      padding: 16.5px 14px ;
+      padding: 16.5px 14px;
     }
 
     .AuthScreenSubTitle {

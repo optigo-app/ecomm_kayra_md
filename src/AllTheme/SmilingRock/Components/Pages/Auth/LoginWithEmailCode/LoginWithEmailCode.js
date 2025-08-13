@@ -108,15 +108,15 @@ export default function LoginWithEmailCode() {
     };
 
     return (
-        <div className='smr_loginwithemailCode' style={{ backgroundColor: '#c0bbb1', paddingTop: '10px' }}>
+        <div className='smr_loginwithemailCode' style={{ paddingTop: '10px' }}>
             <ToastContainer />
             {isLoading && (
                 <div className="loader-overlay">
                     <CircularProgress className='loadingBarManage' />
                 </div>
             )}
-            <div style={{ backgroundColor: '#c0bbb1' }}>
-                <div className='smling-forgot-main' >
+            <div>
+                <div className='smling-forgot-main' style={{ minHeight: "100%" }}>
                     <p style={{
                         textAlign: 'center',
                         paddingBlock: '60px',
@@ -137,7 +137,7 @@ export default function LoginWithEmailCode() {
                         className='AuthScreenSubTitle'
                     >Last step! To secure your account, enter the code we just sent to {email}.</p>
 
-                    <div className='fg_opt_div' style={{ display: 'flex',  flexDirection: 'column', alignItems: 'center',marginTop: '20px' }}>
+                    <div className='fg_opt_div' style={{ display: 'flex',  flexDirection: 'column', alignItems: 'center',marginTop: '20px', minHeight: "39.42vh" }}>
                         <OTP  separator={<span> </span>} value={otp} onChange={setOtp} length={6} onSubmit={handleSubmit}/>
                         {errors.otp && (
                             <p style={{ color: 'red', marginTop: '5px' }}>{errors.otp}</p>

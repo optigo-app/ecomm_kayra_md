@@ -1,7 +1,7 @@
 @import '../../../scss//variable.scss';
 
 .smr_confirMaindiv {
-    background-color: $backgroundColor;
+    background-color: $backgroundColordfine;
 }
 
 .smr_confirSecondMaindiv {
@@ -64,33 +64,34 @@
     height: 250px;
     width: 250px
 }
-.smr_plwlPrintDiv{
+
+.smr_plwlPrintDiv {
     // position: absolute;
     // top: 50px;
     // right: 50px;
 
-.icon-button {
-    display: inline-flex;
-    align-items: center;    
-    justify-content: center;
-    height: 40px;
-    width: 150px;
-    font-family: $homePageFontFamily !important;
-    font-size: $fontSize3;
-    color: $btn1hoverFontColor;
-    background-color: $btn1ActivebgColor;
-    border: 1px solid $btn1FontColor;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    .icon-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        width: 150px;
+        font-family: $homePageFontFamily !important;
+        font-size: $fontSize3;
+        color: $btn1hoverFontColor;
+        background-color: $btn1ActivebgColor;
+        border: 1px solid $btn1FontColor;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
 
-    &:hover {
-        background-color: #fff;
-        color: $titleColor;
-    }
+        &:hover {
+            background-color: #fff;
+            color: $titleColor;
+        }
 
-    .icon {
-        margin-right: 5px;
+        .icon {
+            margin-right: 5px;
+        }
     }
-}
 }

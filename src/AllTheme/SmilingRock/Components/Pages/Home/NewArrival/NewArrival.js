@@ -34,7 +34,8 @@ const NewArrival = () => {
         setStoreInit(storeinit)
 
         let data = JSON.parse(sessionStorage.getItem('storeInit'))
-        setImageUrl(data?.DesignImageFol);
+        // setImageUrl(data?.DesignImageFol);
+        setImageUrl(data?.DesignImageFolThumb);
 
         Get_Tren_BestS_NewAr_DesigSet_Album("GETNewArrival", finalID).then((response) => {
             if (response?.Data?.rd) {

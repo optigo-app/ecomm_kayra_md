@@ -247,7 +247,7 @@ export default function Register() {
           <CircularProgress className='loadingBarManage' />
         </div>
       )}
-      <div style={{ backgroundColor: '#c0bbb1' }}>
+      <div>
         <div className='smling-register-main'>
           <p style={{
             textAlign: 'center',

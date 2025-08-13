@@ -44,6 +44,13 @@ const MobileCartDetails = ({
   const [storeInitData, setStoreInitData] = useState();
   const loginInfo = JSON.parse(sessionStorage.getItem('loginUserDetail'))
 
+  const CDNDesignImageFolThumb = storeInitData?.CDNDesignImageFolThumb;
+  const fullImagePath = `${CDNDesignImageFolThumb}${selectedItem?.designno}~1.jpg`;
+  const CDNDesignImageFol = storeInitData?.CDNDesignImageFol;
+  const fullImagePath1 = `${CDNDesignImageFol}${selectedItem?.designno}~1.${selectedItem?.ImageExtension}`;
+
+  const isLoading = selectedItem?.loading;
+
   useEffect(() => {
     const storeinitData = JSON.parse(sessionStorage.getItem('storeInit'));
     setStoreInitData(storeinitData)
@@ -64,22 +71,47 @@ const MobileCartDetails = ({
     }
   }
 
-  useEffect(() => {
-    if (selectedItem?.ImageCount > 0) {
-      CartCardImageFunc(selectedItem).then((src) => {
-        setImageSrc(undefined);
-      });
-    } else {
-      setImageSrc(undefined);
-    }
-  }, [selectedItem]);
+  // useEffect(() => {
+  //   if (selectedItem?.ImageCount > 0) {
+  //     CartCardImageFunc(selectedItem).then((src) => {
+  //       setImageSrc(undefined);
+  //     });
+  //   } else {
+  //     setImageSrc(undefined);
+  //   }
+  // }, [selectedItem]);
 
+  const defaultUrl = selectedItem?.images?.replace("/Design_Thumb", "");
+  const firstPart = defaultUrl?.split(".")[0]
+  const secondPart = selectedItem?.ImageExtension;
+  const finalSelectedUrl = `${firstPart}.${secondPart}`;
+
+  const [imgSrc, setImgSrc] = useState('');
+
+  useEffect(() => {
+    let imageURL = selectedItem?.images
+      ? finalSelectedUrl
+      : selectedItem?.ImageCount > 1
+        ? `${storeInitData?.CDNDesignImageFol}${selectedItem?.designno}~1~${selectedItem?.metalcolorname}.${selectedItem?.ImageExtension}`
+        : `${storeInitData?.CDNDesignImageFol}${selectedItem?.designno}~1.${selectedItem?.ImageExtension}`;
+
+    const img = new Image();
+    img.onload = () => setImgSrc(imageURL);
+    img.onerror = () => {
+      if (selectedItem?.ImageCount > 0) {
+        setImgSrc(fullImagePath1 || noImageFound);
+      } else {
+        setImgSrc(noImageFound);
+      }
+    };
+    img.src = imageURL;
+  }, [selectedItem, storeInitData, finalSelectedUrl]);
 
   return (
     <Modal open={open} onClose={handleClose} className="smrMo_cart-modal" sx={{ height: '100%', overflow: 'auto' }}>
       <div className="smrMo_cart-container" style={{ background: "#fff", padding: '20px', position: "relative" }}>
         <div className="smrMo_Cart-imageDiv">
-          {imageSrc === undefined ? (
+          {isLoading === true ? (
             <CardMedia
               className="dtMo_cart-image"
               width="100%"
@@ -106,11 +138,21 @@ const MobileCartDetails = ({
             </CardMedia>
           ) : (
             <img
-              src={imageSrc}
-              alt="Cluster Diamond"
+              // src={selectedItem?.images}
+              src={imgSrc}
               className='smrMo_cartImage'
               onClick={() => handleMoveToDetail(selectedItem)}
-              style={{ border: 'none' }}
+              alt=' '
+              draggable={true}
+              onContextMenu={(e) => e.preventDefault()}
+              style={{
+                border: 'none',
+                outline: 'none',
+                boxShadow: 'none',
+                '&:focus': { outline: 'none' },
+                '&:active': { outline: 'none' },
+              }}
+              loading="eager"
             />
           )}
         </div>

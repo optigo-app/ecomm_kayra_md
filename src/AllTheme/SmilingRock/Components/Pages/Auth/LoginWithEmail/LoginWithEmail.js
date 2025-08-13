@@ -313,7 +313,7 @@ export default function LoginWithEmail() {
                 </div>
             )}
             <div>
-                <div className='smr_loginEmailD'>
+                <div className='smr_loginEmailD' style={{ minHeight: "100%" }}>
                     <p style={{
                         textAlign: 'center',
                         paddingBlock: '60px',
@@ -334,7 +334,7 @@ export default function LoginWithEmail() {
                         className='AuthScreenSubTitle'
                     >using {email}</p>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'  }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: "42.4vh" }}>
                         <TextField
                             autoFocus
                             id="outlined-confirm-password-input"
@@ -369,7 +369,7 @@ export default function LoginWithEmail() {
                         />
 
                         <button className='submitBtnForgot' style={{
-                            fontWeight:'600'
+                            fontWeight: '600'
                         }} onClick={handleSubmit}>Login</button>
                         <Button style={{ marginTop: '10px', color: 'gray' }} onClick={() => navigation(cancelRedireactUrl)}>CANCEL</Button>
 

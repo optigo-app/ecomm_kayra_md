@@ -123,8 +123,8 @@ export default function ForgotPass() {
                     <CircularProgress className='loadingBarManage' />
                 </div>
             )}
-            <div style={{ backgroundColor: '#c0bbb1' }}>
-                <div className='smr_forgotSubDiv'>
+            <div>
+                <div className='smr_forgotSubDiv' style={{ minHeight: "79.5vh" }}>
                     <p style={{
                         textAlign: 'center',
                         padding: '60px',
@@ -147,7 +147,7 @@ export default function ForgotPass() {
                         className='AuthScreenSubTitle'
                     >{ }</p>
 
-                    <div style={{ display: 'flex',  flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: "43vh" }}>
                         <TextField
                             autoFocus
                             id="outlined-password-input"

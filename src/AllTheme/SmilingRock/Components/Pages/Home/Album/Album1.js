@@ -7,8 +7,8 @@ import './Album1.scss';
 import { Get_Tren_BestS_NewAr_DesigSet_Album } from "../../../../../../utils/API/Home/Get_Tren_BestS_NewAr_DesigSet_Album/Get_Tren_BestS_NewAr_DesigSet_Album";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import { homeLoading,  smr_loginState } from "../../../Recoil/atom";
-import { useRecoilValue,  useSetRecoilState } from "recoil";
+import { homeLoading, smr_loginState } from "../../../Recoil/atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import imageNotFound from '../../../Assets/image-not-found.jpg';
 import Pako from 'pako';
 import Box from '@mui/material/Box';
@@ -32,36 +32,34 @@ const Album1 = () => {
     const [isloding, setIsloding] = useState(false);
     const [slideHeight, setSlideHeight] = useState(null);
     const swiperSlideRef = useRef(null);
+    const productRefs = useRef({});
 
-    useEffect(() => {
-        setLoadingHome(true);
-        let data = JSON?.parse(sessionStorage.getItem("storeInit"));
-        setImageUrl(data?.AlbumImageFol);
-        setStoreInit(data)
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        apiCall();
-                        observer.unobserve(entry.target);
-                    }
-                });
-            },
-            {
-                root: null,
-                threshold: 0.5,
-            }
-        );
+    // useEffect(() => {
+    //     setLoadingHome(true);
+    //     let data = JSON?.parse(sessionStorage.getItem("storeInit"));
+    //     setImageUrl(data?.AlbumImageFol);
+    //     setStoreInit(data);
 
-        if (albumRef.current) {
-            observer.observe(albumRef.current);
-        }
-        return () => {
-            if (albumRef.current) {
-                observer.unobserve(albumRef.current);
-            }
-        };
-    }, []);
+    //     const handleScroll = () => {
+    //         if (!albumRef.current) return;
+
+    //         const rect = albumRef.current.getBoundingClientRect();
+    //         const isInView = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
+
+    //         if (isInView) {
+    //             apiCall();
+    //             window.removeEventListener("scroll", handleScroll); // only trigger once
+    //         }
+    //     };
+
+    //     window.addEventListener("scroll", handleScroll);
+    //     // Also check immediately in case it's already in view
+    //     handleScroll();
+
+    //     return () => {
+    //         window.removeEventListener("scroll", handleScroll);
+    //     };
+    // }, []);
 
     const apiCall = () => {
         setIsloding(true);
@@ -87,6 +85,10 @@ const Album1 = () => {
             .catch((err) => console.log(err));
     }
 
+    useEffect(() => {
+        apiCall();
+    }, [])
+
     const compressAndEncode = (inputString) => {
         try {
             const uint8Array = new TextEncoder().encode(inputString);
@@ -102,7 +104,7 @@ const Album1 = () => {
         navigation(`/p/${album?.AlbumName}/?A=${btoa(`AlbumName=${album?.AlbumName}`)}`)
     }
 
-    const handleNavigation = (designNo, autoCode, titleLine) => {
+    const handleNavigation = (designNo, autoCode, titleLine, index) => {
         let obj = {
             a: autoCode,
             b: designNo,
@@ -111,9 +113,29 @@ const Album1 = () => {
             c: loginUserDetail?.cmboCSQCid,
             f: {}
         }
+        sessionStorage.setItem('scrollToProduct', `product-${index}`);
         let encodeObj = compressAndEncode(JSON.stringify(obj))
         navigation(`/d/${titleLine.replace(/\s+/g, `_`)}${titleLine?.length > 0 ? "_" : ""}${designNo}?p=${encodeObj}`)
     }
+
+    useEffect(() => {
+        const scrollToId = sessionStorage.getItem('scrollToProduct');
+        if (!scrollToId) {
+            return;
+        }
+
+        // Wait for albumData to load
+        if (scrollToId) {
+            const el = productRefs.current[scrollToId];
+            if (el) {
+                el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                });
+                sessionStorage.removeItem('scrollToProduct');
+            }
+        }
+    }, [albumData]);
 
     const handleChangeTab = (event, newValue) => {
         setTimeout(() => {
@@ -127,25 +149,25 @@ const Album1 = () => {
         return txt.value;
     }
 
-    const GenerateWidthBaseOnContent = useCallback(()=>{
-            const selectedAlbumDetails = albumData?.find((album) => album?.AlbumName === selectedAlbum);
-            const parsedDesignDetails = selectedAlbumDetails?.Designdetail 
-            ? JSON.parse(selectedAlbumDetails.Designdetail) 
+    const GenerateWidthBaseOnContent = useCallback(() => {
+        const selectedAlbumDetails = albumData?.find((album) => album?.AlbumName === selectedAlbum);
+        const parsedDesignDetails = selectedAlbumDetails?.Designdetail
+            ? JSON.parse(selectedAlbumDetails.Designdetail)
             : null;
-            const totalDesignDetails = Array.isArray(parsedDesignDetails) ? parsedDesignDetails.length : 0;
-            const length = totalDesignDetails ;
-            let w ; 
-            if (length === 1) {
-               w = '100%';
-            } else if (length === 2) {
-               w = '100%';
-            } else if (length === 3) {
-               w = '100%';
-            } else if (length > 3) {
-               w = '100%';
-            }
-            return {width:w , length : length}
-    },[selectedAlbum])
+        const totalDesignDetails = Array.isArray(parsedDesignDetails) ? parsedDesignDetails.length : 0;
+        const length = totalDesignDetails;
+        let w;
+        if (length === 1) {
+            w = '100%';
+        } else if (length === 2) {
+            w = '100%';
+        } else if (length === 3) {
+            w = '100%';
+        } else if (length > 3) {
+            w = '100%';
+        }
+        return { width: w, length: length }
+    }, [selectedAlbum])
 
     useEffect(() => {
         if (swiperSlideRef.current) {
@@ -171,8 +193,8 @@ const Album1 = () => {
                                 <span className='smr_albumtitle'>ALBUM</span>
                                 {/* <Link className='smr_designSetViewmoreBtn'      aria-label='Click Here to See More Products'
                           aria-live='assertive' onClick={() => navigation(`/p/AlbumName/?A=${btoa('AlbumName')}`)}>
-                    View more
-                </Link> */}
+                                    View more
+                                </Link> */}
                             </div>
                             <Box className="tabs"
                                 sx={{
@@ -208,9 +230,9 @@ const Album1 = () => {
                                 {albumData && albumData?.map((album) =>
                                     album?.AlbumName === selectedAlbum ? (
                                         <Swiper
-                                        style={{
-                                            width:"100%"
-                                        }}
+                                            style={{
+                                                width: "100%"
+                                            }}
                                             key={album?.Albumid}
                                             spaceBetween={10}
                                             slidesPerView={4}
@@ -232,22 +254,27 @@ const Album1 = () => {
                                             keyboard={{ enabled: true }}
                                         // pagination={false}
                                         >
-                                            {album &&  JSON?.parse(album?.Designdetail)?.map((design,index) => (
+                                            {album && JSON?.parse(album?.Designdetail)?.map((design, index) => (
                                                 <SwiperSlide
-                                                
-                                                style={{
-                                                    width:'300px'
-                                                }}
+
+                                                    style={{
+                                                        width: '300px'
+                                                    }}
                                                     ref={index === 0 ? swiperSlideRef : null}
                                                     key={`album1-new-${index}`} className="swiper-slide-custom">
-                                                    <div className="design-slide" onClick={() => handleNavigation(design?.designno, design?.autocode, design?.TitleLine)}>
+                                                    <div className="design-slide" onClick={() => handleNavigation(design?.designno, design?.autocode, design?.TitleLine, index)}>
                                                         <img
                                                             src={
                                                                 design?.ImageCount > 0
-                                                                    ? `${storeInit?.CDNDesignImageFol}${design?.designno}~1.${design?.ImageExtension}`
+                                                                    // ? `${storeInit?.CDNDesignImageFol}${design?.designno}~1.${design?.ImageExtension}`
+                                                                    ? `${storeInit?.CDNDesignImageFolThumb}${design?.designno}~1.jpg`
                                                                     : imageNotFound
                                                             }
                                                             alt={design?.TitleLine}
+                                                            id={`product-${index}`}
+                                                            draggable={true}
+                                                            onContextMenu={(e) => e.preventDefault()}
+                                                            ref={(el) => (productRefs.current[`product-${index}`] = el)}
                                                             loading="lazy"
                                                             onError={(e) => {
                                                                 e.target.src = imageNotFound;

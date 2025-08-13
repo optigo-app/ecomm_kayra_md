@@ -45,10 +45,10 @@ function TermsPolicy() {
                           style={
                             bgColor
                               ? {
-                                  backgroundColor: "aqua",
-                                  paddingInline: "2px",
-                                  paddingBlock: "1px",
-                                }
+                                backgroundColor: "aqua",
+                                paddingInline: "2px",
+                                paddingBlock: "1px",
+                              }
                               : {}
                           }
                         >
@@ -120,7 +120,7 @@ function TermsPolicy() {
             <Footer />
           </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', paddingBlock: '30px' ,backgroundColor:"#C0BBB1" ,color:"white" }}>
+        <div style={{ display: 'flex', justifyContent: 'center', paddingBlock: '30px', backgroundColor: "#C0BBB1", color: "white" }}>
           <p
             style={{
               margin: "0px",

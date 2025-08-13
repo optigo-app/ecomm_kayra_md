@@ -106,13 +106,24 @@ $borderColor: rgba(232, 232, 232, 1);
 
               &__image {
                 flex: 1;
-                max-height: 200px;
 
                 img {
                   width: 100%;
+                  height: 200px;
                   max-height: 200px;
-                  height: auto;
                   object-fit: cover;
+
+                  @media (max-width: 1700px) {
+                    height: 150px !important;
+                  }
+
+                  @media (max-width: 1000px) {
+                    height: 100px !important;
+                  }
+
+                  @media (max-width: 650px) {
+                    height: 200px !important;
+                  }
                 }
               }
 
@@ -896,6 +907,7 @@ $borderColor: rgba(232, 232, 232, 1);
                 .smr3_cart-item__details {
                   padding-left: 0;
                   text-align: center;
+
                   h3 {
                     font-size: $fontSize2;
                   }
@@ -903,7 +915,9 @@ $borderColor: rgba(232, 232, 232, 1);
                   p {
                     font-size: $fontSize1;
                   }
-                  .smr3_weightsContainer, .smr3_qtyDiv{
+
+                  .smr3_weightsContainer,
+                  .smr3_qtyDiv {
                     justify-content: center;
                     align-items: center;
                   }

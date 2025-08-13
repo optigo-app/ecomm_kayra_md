@@ -27,6 +27,8 @@ import pako from "pako";
 import CartDrawer from "../../Cart/CartPageB2c/Cart";
 import useCountdown from "../../CountDownTimer/CountDownTimer";
 import { storImagePath } from "../../../../../../utils/Glob_Functions/GlobalFunction";
+import { RiArrowDropDownLine } from "react-icons/ri";
+import useGlobalPreventSave from "../../../../../../utils/Glob_Functions/useGlobalPreventSave";
 
 const Header = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -51,6 +53,7 @@ const Header = () => {
   const [htmlContent, setHtmlContent] = useState("");
   const location = useLocation();
 
+  useGlobalPreventSave();
 
   let navigate = useNavigate();
   let cookie = Cookies.get("visiterId");
@@ -58,21 +61,21 @@ const Header = () => {
   const [serachsShowOverlay, setSerachShowOverlay] = useState(false);
   const navigation = useNavigate();
 
-  useEffect(() => {
-    fetch(`${storImagePath()}/ExtraFlag.txt`)
-      .then((response) => response.text())
-      .then((text) => {
-        try {
-          const jsonData = JSON.parse(text);
-          setHtmlContent(jsonData);
-        } catch (error) {
-          console.warn("Error parsing JSON:", error);
-        }
-      })
-      .catch((error) => {
-        console.warn("Error fetching the file:", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`${storImagePath()}/ExtraFlag.txt`)
+  //     .then((response) => response.text())
+  //     .then((text) => {
+  //       try {
+  //         const jsonData = JSON.parse(text);
+  //         setHtmlContent(jsonData);
+  //       } catch (error) {
+  //         console.warn("Error parsing JSON:", error);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.warn("Error fetching the file:", error);
+  //     });
+  // }, []);
 
   useEffect(() => {
     const visiterID = Cookies.get("visiterId");
@@ -174,7 +177,7 @@ const Header = () => {
       isApiCalled === false
     ) {
       getMenuApi();
-      setIsApiCalled(true); 
+      setIsApiCalled(true);
     }
   }, [islogin, isApiCalled]);
 
@@ -499,7 +502,7 @@ const Header = () => {
   // ref={searchOverlayRef}
 
   return (
-    <div className="smr_headerMain_div">
+    <div className="smr_headerMain_div" draggable={false} onContextMenu={(e) => { e.preventDefault() }}>
       {serachsShowOverlay && (
         <>
           <div className="smr_smlingSearchoverlay" >
@@ -581,25 +584,37 @@ const Header = () => {
                   onClick={toggleDrawerOverlay}
                 />
               </div>
-              <div className="smr_mobileHeader_top_div2_web">
-                <a href="/">
+              <div className="smr_mobileHeader_top_div2_web"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              >
+                <a href="/"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}>
                   <img
                     alt="smr_mobileHeader_top_div2_web"
                     src={compnyLogo}
                     loading="lazy"
                     className="smr_logo_header"
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                 </a>
               </div>
 
-              <div className="smr_mobileHeader_top_div2_mobile">
-                <a href="/">
+              <div className="smr_mobileHeader_top_div2_mobile"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              >
+                <a href="/" draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}>
                   <img
                     alt="smr_mobileHeader_top_div2_mobile"
                     src={compnyLogoM}
                     loading="lazy"
                     className="smr_logo_header"
-
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                 </a>
               </div>
@@ -657,7 +672,7 @@ const Header = () => {
                           className="nav_li_smining_Icone"
                         >
                           <ShoppingCartOutlinedIcon
-                            sx={{ height: "30px", width: "30px" }}
+                            sx={{ height: "20px", width: "20px" }}
                           />
                         </span>
                       </Tooltip>
@@ -994,7 +1009,7 @@ const Header = () => {
             <ul className="nav_ul_shop">
               {/* {IsB2BWebsiteChek == 1 ? (
                 islogin == true ? (
-                  <li
+                  <li 
                     className="nav_li_smining nav_li_smining_shop"
                     onMouseEnter={handleDropdownOpen}
                     onMouseLeave={handleDropdownClose}
@@ -1050,36 +1065,65 @@ const Header = () => {
                   SERVICE POLICY
                 </a>
               </li> */}
-              {htmlContent?.rd && htmlContent?.rd.length > 0 &&
+
+              {/* Define don't need this */}
+              {/* {htmlContent?.rd && htmlContent?.rd.length > 0 &&
                 (
                   htmlContent?.rd[0]?.ExtraMenu == 1 &&
-                  <>
-                    {/* No Need for sonasons */}
-                    <span
-                      className="nav_li_smining nav_li_smining_Mobile"
-                      style={{ cursor: "pointer" }}
-                      onClick={(event) => hanldeStaticPageNavigation(event, "/ExpertAdvice")}
-                    >
-                      <a href="/ExpertAdvice" className="smr_A_link">
-                        EXPERT ADVICE
-                      </a>
-                    </span>
+                  <> */}
+              {/* No Need for sonasons */}
+              <span
+                className="nav_li_smining nav_li_smining_Mobile"
+                style={{ cursor: "pointer" }}
+                onClick={(event) => hanldeStaticPageNavigation(event, "/ExpertAdvice")}
+              >
+                <a href="/ExpertAdvice" className="smr_A_link">
+                  EXPERT ADVICE
+                </a>
+              </span>
 
-                    {/* Maiora not needed fun facts */}
-                    {/* Kayra needed */}
-                    {/* No need for sonasons */}
+              {/* Maiora not needed fun facts */}
+              {/* Kayra needed */}
+              {/* No need for sonasons */}
 
-                    <span
-                      className="nav_li_smining nav_li_smining_Mobile"
-                      style={{ cursor: "pointer" }}
-                      onClick={(event) => hanldeStaticPageNavigation(event, "/FunFact")}
-                    >
-                      <a href="/FunFact" className="smr_A_link">
-                        FUN FACT
-                      </a>
-                    </span>
-                  </>
-                )}
+              <span
+                className="nav_li_smining nav_li_smining_Mobile"
+                style={{ cursor: "pointer" }}
+                onClick={(event) => hanldeStaticPageNavigation(event, "/FunFact")}
+              >
+                <a href="/FunFact" className="smr_A_link">
+                  FUN FACT
+                </a>
+              </span>
+              {/* </>
+                  )} */}
+
+              {/* Define needed */}
+              {/* {htmlContent?.rd && htmlContent?.rd.length > 0 &&
+                (
+                  htmlContent?.rd[0]?.ExtraMenu == 1 &&
+                  <> */}
+              {/* <span
+                className="nav_li_smining nav_li_smining_Mobile"
+                style={{ cursor: "pointer" }}
+                onClick={(event) => hanldeStaticPageNavigation(event, "/gallery")}
+              >
+                <a href="/gallery" className="smr_A_link">
+                  GALLERY
+                </a>
+              </span>
+              <span
+                className="nav_li_smining nav_li_smining_Mobile"
+                style={{ cursor: "pointer" }}
+                onClick={(event) => hanldeStaticPageNavigation(event, "/theteam")}
+              >
+                <a href="/theteam" className="smr_A_link">
+                  THE TEAM
+                </a>
+              </span> */}
+              {/* </>
+                )} */}
+
               {IsB2BWebsiteChek === 1 ? (
                 islogin === true ? (
                   <>
@@ -1124,23 +1168,37 @@ const Header = () => {
               />
             </ul>
           </div>
-          <div className="smiling_Top_header_div2_web">
-            <a href="/">
+          <div className="smiling_Top_header_div2_web"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}>
+            <a href="/"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+            >
               <img
                 src={compnyLogo}
                 loading="lazy"
                 className="smr_logo_header"
                 alt="smiling_Top_header_div2_web"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
               />
             </a>
           </div>
-          <div className="smiling_Top_header_div2_Mobile">
-            <a href="/">
+          <div className="smiling_Top_header_div2_Mobile"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}>
+            <a href="/"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+            >
               <img
                 src={compnyLogoM}
                 loading="lazy"
                 alt="smiling_Top_header_div2_Mobile"
                 className="smr_logo_header"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
               />
             </a>
           </div>
@@ -1190,6 +1248,15 @@ const Header = () => {
                   }
                 </>
               )}
+
+              {/* <span
+                className="nav_li_smining_Fixed nav_li_smining_Mobile"
+                style={{ cursor: "pointer" }}
+                onClick={() => navigation("/ContactUs")}
+              >
+                CONTACT US
+              </span> */}
+
               {islogin ? (
                 <li
                   className="nav_li_smining nav_li_smining_Mobile"
@@ -1260,7 +1327,7 @@ const Header = () => {
                         className="nav_li_smining_Icone"
                       >
                         <ShoppingCartOutlinedIcon
-                          sx={{ height: "30px", width: "30px" }}
+                          sx={{ height: "20px", width: "20px" }}
                         />
                       </span>
                     </Tooltip>
@@ -1317,7 +1384,7 @@ const Header = () => {
                           className="nav_li_smining_Icone"
                         >
                           <ShoppingCartOutlinedIcon
-                            sx={{ height: "30px", width: "30px" }}
+                            sx={{ height: "20px", width: "20px" }}
                           />
                         </span>
                       </Tooltip>
@@ -1398,38 +1465,65 @@ const Header = () => {
                   </a>
                 </li> */}
 
-                {htmlContent?.rd && htmlContent?.rd.length > 0 &&
+
+                {/* Define don't need this */}
+                {/* {htmlContent?.rd && htmlContent?.rd.length > 0 &&
                   (
                     htmlContent?.rd[0]?.ExtraMenu == 1 &&
-                    <>
-                      {/* no need for sonasons */}
+                    <> */}
+                {/* no need for sonasons */}
 
-                      <span
-                        className="nav_li_smining_Fixed nav_li_smining_Mobile"
-                        style={{ cursor: "pointer" }}
-                        onClick={(event) => hanldeStaticPageNavigation(event, "/ExpertAdvice")}
-                      >
-                        <a href="/ExpertAdvice" className="smr_A_linkFixed">
-                          EXPERT ADVICE
-                        </a>
-                      </span>
+                <span
+                  className="nav_li_smining_Fixed nav_li_smining_Mobile"
+                  style={{ cursor: "pointer" }}
+                  onClick={(event) => hanldeStaticPageNavigation(event, "/ExpertAdvice")}
+                >
+                  <a href="/ExpertAdvice" className="smr_A_linkFixed">
+                    EXPERT ADVICE
+                  </a>
+                </span>
 
 
-                      {/* Maiora not needed fun facts */}
-                      {/* Kayra needed */}
-                      {/* no need for sonasons */}
+                {/* Maiora not needed fun facts */}
+                {/* Kayra needed */}
+                {/* no need for sonasons */}
 
-                      <span
-                        className="nav_li_smining_Fixed nav_li_smining_Mobile"
-                        style={{ cursor: "pointer" }}
-                        onClick={(event) => hanldeStaticPageNavigation(event, "/FunFact")}
-                      >
-                        <a href="/FunFact" className="smr_A_linkFixed">
-                          FUN FACT
-                        </a>
-                      </span>
-                    </>
-                  )}
+                <span
+                  className="nav_li_smining_Fixed nav_li_smining_Mobile"
+                  style={{ cursor: "pointer" }}
+                  onClick={(event) => hanldeStaticPageNavigation(event, "/FunFact")}
+                >
+                  <a href="/FunFact" className="smr_A_linkFixed">
+                    FUN FACT
+                  </a>
+                </span>
+                {/* </>
+                  )} */}
+
+                {/* {htmlContent?.rd && htmlContent?.rd.length > 0 &&
+                  (
+                    htmlContent?.rd[0]?.ExtraMenu == 1 &&
+                    <> */}
+                {/* <span
+                  className="nav_li_smining nav_li_smining_Mobile"
+                  style={{ cursor: "pointer" }}
+                  onClick={(event) => hanldeStaticPageNavigation(event, "/gallery")}
+                >
+                  <a href="/gallery" className="smr_A_link">
+                    GALLERY
+                  </a>
+                </span>
+                <span
+                  className="nav_li_smining nav_li_smining_Mobile"
+                  style={{ cursor: "pointer" }}
+                  onClick={(event) => hanldeStaticPageNavigation(event, "/theteam")}
+                >
+                  <a href="/theteam" className="smr_A_link">
+                    THE TEAM
+                  </a>
+                </span> */}
+                {/* </>
+                  )} */}
                 {IsB2BWebsiteChek === 1 ? (
                   islogin === true ? (
                     <>
@@ -1476,24 +1570,37 @@ const Header = () => {
                 {/* } */}
               </ul>
             </div>
-            <div className="smiling_Top_header_div2_web">
-              <a href="/">
+            <div className="smiling_Top_header_div2_web"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}>
+              <a href="/"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              >
                 <img
                   src={compnyLogo}
                   loading="lazy"
                   className="smr_logo_header_Fixed"
                   alt="smr_logo_header_Fixed"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               </a>
             </div>
 
-            <div className="smiling_Top_header_div2_Mobile">
-              <a href="/">
+            <div className="smiling_Top_header_div2_Mobile" draggable={false}
+              onContextMenu={(e) => e.preventDefault()}>
+              <a href="/"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              >
                 <img
                   src={compnyLogoM}
                   loading="lazy"
                   className="smr_logo_header_Fixed"
                   alt="smr_logo_header_Fixed"
+                  draggable={false}
+                  onContextMenu={(e) => e.preventDefault()}
                 />
               </a>
             </div>
@@ -1526,7 +1633,7 @@ const Header = () => {
                   </>
                 ) : (
                   islogin && (
-                    <sp
+                    <span
                       className="nav_li_smining_Fixed nav_li_smining_Mobile"
                       style={{ cursor: "pointer" }}
                       // onClick={() => navigation("/LoginOption")}
@@ -1535,9 +1642,17 @@ const Header = () => {
                       {/* <a href="/account" className="smr_A_linkFixed"> */}
                       ACCOUNT
                       {/* </a> */}
-                    </sp>
+                    </span>
                   )
                 )}
+
+                {/* <span
+                  className="nav_li_smining_Fixed nav_li_smining_Mobile"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigation("/ContactUs")}
+                >
+                  CONTACT US
+                </span> */}
 
                 {islogin ? (
                   <li
@@ -1564,7 +1679,7 @@ const Header = () => {
                       max={1000}
                       overlap={"rectangular"}
                       color="secondary"
-                      className="badgeColor smr_mobileHideIcone"
+                      className="badgeColorFix smr_mobileHideIcone"
                     >
                       <Tooltip title="WishList">
                         <li
@@ -1599,7 +1714,7 @@ const Header = () => {
                       max={1000}
                       overlap={"rectangular"}
                       color="secondary"
-                      className="badgeColor"
+                      className="badgeColorFix"
                     >
                       <Tooltip title="Cart">
                         <li
@@ -1607,7 +1722,7 @@ const Header = () => {
                           className="nav_li_smining_Fixed_Icone"
                         >
                           <ShoppingCartOutlinedIcon
-                            sx={{ height: "30px", width: "30px" }}
+                            sx={{ height: "20px", width: "20px" }}
                           />
                         </li>
                       </Tooltip>
@@ -1621,7 +1736,7 @@ const Header = () => {
                         max={1000}
                         overlap={"rectangular"}
                         color="secondary"
-                        className="badgeColor smr_mobileHideIcone"
+                        className="badgeColorFix smr_mobileHideIcone"
                       >
                         <Tooltip title="WishList">
                           <li
@@ -1656,7 +1771,7 @@ const Header = () => {
                         max={1000}
                         overlap={"rectangular"}
                         color="secondary"
-                        className="badgeColor"
+                        className="badgeColorFix"
                       >
                         <Tooltip title="Cart">
                           <li
@@ -1664,7 +1779,7 @@ const Header = () => {
                             className="nav_li_smining_Fixed_Icone"
                           >
                             <ShoppingCartOutlinedIcon
-                              sx={{ height: "30px", width: "30px" }}
+                              sx={{ height: "20px", width: "20px" }}
                             />
                           </li>
                         </Tooltip>
@@ -1700,6 +1815,8 @@ const Header = () => {
             onMouseLeave={handleDropdownClose}
           >
             {/* Navbar Old Code Under */}
+            {/* <NewMenuBar handelMenu={handelMenu} menuItems={menuItems} /> */}
+            {/* <OldMenuBar handelMenu={handelMenu} menuItems={menuItems} /> */}
           </div>
         </div>
       </div>
@@ -1842,7 +1959,10 @@ const NewMenuBar = ({ menuItems = [], handelMenu = () => { } }) => {
           {SliderbannerImages?.map((image, index) => {
             return (
               <div className="image_box_s">
-                <img src={image} alt={`SliderbannerImages-${index}`} className="image_s" />
+                <img src={image} alt={`SliderbannerImages-${index}`} className="image_s"
+                  draggable={true}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
               </div>
             );
           })}
@@ -2376,7 +2496,10 @@ const HoverMenu = ({ selectedData, handelMenu, expandedMenu, hoveredIndex, handl
           {SliderbannerImages?.map((image, index) => {
             return (
               <div className="image_box_s">
-                <img src={image} alt={`Sliderbanner-${index}`} className="image_s" />
+                <img src={image} alt={`Sliderbanner-${index}`} className="image_s"
+                  draggable={true}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
               </div>
             );
           })}

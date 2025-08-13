@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import './Footer.modul.scss'
 import { useNavigate } from 'react-router';
 import { storImagePath } from '../../../../../../utils/Glob_Functions/GlobalFunction';
@@ -7,7 +7,7 @@ const Footer = ({ fromPage }) => {
 
   const [socialMediaData, setSocialMediaData] = useState([]);
   const navigation = useNavigate();
-  const [localData, setLocalData] = useState();
+  const [localData, setLocalData] = useState(JSON.parse(sessionStorage?.getItem("storeInit")));
   let storeinit = JSON.parse(sessionStorage?.getItem("storeInit"));
   const [htmlContent, setHtmlContent] = useState("");
 
@@ -28,10 +28,10 @@ const Footer = ({ fromPage }) => {
   }, []);
 
   useEffect(() => {
-    let localData = JSON?.parse(sessionStorage?.getItem("storeInit"));
-    if (localData) {
-      setLocalData(localData);
-    }
+    // let localData = JSON?.parse(sessionStorage?.getItem("storeInit"));
+    // if (localData) {
+    //   setLocalData(localData);
+    // }
 
     const companyInfoData = JSON?.parse(sessionStorage?.getItem("CompanyInfoData")) ?? "";
     if (companyInfoData?.SocialLinkObj) {
@@ -39,12 +39,6 @@ const Footer = ({ fromPage }) => {
       setSocialMediaData(parsedSocialMediaUrlData);
     }
   }, []);
-
-
-  useEffect(() => {
-    let localD = JSON?.parse(sessionStorage?.getItem('storeInit'));
-    setLocalData(localD);
-  }, [])
 
   return (
     <div>
@@ -73,11 +67,11 @@ const Footer = ({ fromPage }) => {
                         {/* no need in sonasons */}
 
                         <p className='footerMoreOptionData' onClick={() => { navigation('/ExpertAdvice'); window.scrollTo(0, 0); }}>EXPERT ADVICE</p>
-                        {/* no need in sonasons */}
+                        {/* no need in sonasons, need in dfine */}
                         {/* <p className='footerMoreOptionData' onClick={() => { navigation('/terms-and-conditions'); window.scrollTo(0, 0); }}>TERMS & CONDITIONS</p> */}
-                        {/* no need in sonasons */}
+                        {/* no need in sonasons, need in dfine */}
                         {/* <p className='footerMoreOptionData' onClick={() => { navigation('/privacyPolicy'); window.scrollTo(0, 0); }}>PRIVACY POLICY</p> */}
-                        {/* no need in sonasons */}
+                        {/* no need in sonasons, need in dfine */}
                         {/* <p className='footerMoreOptionData' onClick={() => { navigation('/aboutUs'); window.scrollTo(0, 0); }}>ABOUT US</p> */}
 
                         {/* Maiora not needed */}
@@ -96,7 +90,9 @@ const Footer = ({ fromPage }) => {
                     fontSize: '12px',
                     fontWeight: 500,
                     cursor: 'pointer'
-                  }} onClick={() => navigation('/TermsPolicy')}>Terms & Privacy</p>
+                  }}
+                  onClick={() => navigation('/TermsPolicy')}
+                  >Terms & Privacy</p>
                 </div>
               </div>
               {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -104,7 +100,7 @@ const Footer = ({ fromPage }) => {
               </div> */}
             </div>
           }
-
+          {/*  */}
           {localData?.Footerno === 2 &&
             <div className='smr_Footer2_main'>
               <div className='footerBottomMain' style={{ marginTop: fromPage === "ProdList" && '8%' }}>
@@ -120,11 +116,11 @@ const Footer = ({ fromPage }) => {
 
                         {/* no need in sonasons */}
                         <p className='footerMoreOptionData' onClick={() => { navigation('/ExpertAdvice'); window.scrollTo(0, 0); }}>EXPERT ADVICE</p>
-                        {/* no need in sonasons */}
+                        {/* no need in sonasons, need in dfine */}
                         {/* <p className='footerMoreOptionData' onClick={() => { navigation('/terms-and-conditions'); window.scrollTo(0, 0); }}>TERMS & CONDITIONS</p> */}
-                        {/* no need in sonasons */}
+                        {/* no need in sonasons, need in dfine */}
                         {/* <p className='footerMoreOptionData' onClick={() => { navigation('/privacyPolicy'); window.scrollTo(0, 0); }}>PRIVACY POLICY</p> */}
-                        {/* no need in sonasons */}
+                        {/* no need in sonasons, need in dfine */}
                         {/* <p className='footerMoreOptionData' onClick={() => { navigation('/aboutUs'); window.scrollTo(0, 0); }}>ABOUT US</p> */}
 
                         {/* Maiora not needed */}

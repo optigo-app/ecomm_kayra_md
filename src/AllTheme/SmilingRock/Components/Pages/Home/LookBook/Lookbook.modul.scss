@@ -18,7 +18,8 @@
 }
 
 .smr_LookBookMain {
-  background-color: $backgroundColor;
+  // background-color: $backgroundColor;
+  background-color: $backgroundColordfine;
 
 
   .smr_lookbookFilterMain {
@@ -47,13 +48,15 @@
     min-height: 800px;
     padding-top: 60px;
     position: relative;
-    .smr_lookBookMobileTopLine{
+
+    .smr_lookBookMobileTopLine {
       display: flex;
       justify-content: space-between;
       gap: 20px;
       padding: 0 8px;
+
       @media screen and (max-width: 420px) {
-      padding: 0 2px;
+        padding: 0 2px;
       }
     }
 
@@ -84,7 +87,8 @@
     align-items: center;
     font-weight: 500;
   }
-  .smr_filetr_right_menu{
+
+  .smr_filetr_right_menu {
     display: flex;
     margin-right: 8px;
   }
@@ -240,12 +244,14 @@
 
   .smr1_lookBookFilterSubDiv {
     margin: 10px 10px 0px 10px;
-    .smr_filter_text{
+
+    .smr_filter_text {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      .clear_All_options{
+
+      .clear_All_options {
         cursor: pointer;
       }
     }

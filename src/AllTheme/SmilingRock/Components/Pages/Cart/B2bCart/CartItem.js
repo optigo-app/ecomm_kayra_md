@@ -47,6 +47,12 @@ const CartItem = ({
   const [storeInitData, setStoreInitData] = useState();
   const visiterId = Cookies.get('visiterId');
 
+  const CDNDesignImageFolThumb = storeInitData?.CDNDesignImageFolThumb;
+  // const fullImagePath = `${CDNDesignImageFolThumb}${item?.designno}~1.${item?.ImageExtension}`;
+  const fullImagePath = `${CDNDesignImageFolThumb}${item?.designno}~1.jpg`;
+
+  const isLoading = item?.loading;
+
   const isLargeScreen = useMediaQuery('(min-width: 1600px)');
   const isMediumScreen = useMediaQuery('(min-width: 1038px) and (max-width: 1599px)');
   const isMobileScreen = useMediaQuery('(min-width: 320px) and (max-width: 1000px)');
@@ -58,7 +64,9 @@ const CartItem = ({
     setStoreInitData(storeinitData)
   }, [])
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true);
+  }
   const handleClose = () => setOpen(false);
 
   const handleRemarkChangeInternal = (e) => {
@@ -118,15 +126,15 @@ const CartItem = ({
     return text.substring(0, maxLength) + '...';
   }
 
-  useEffect(() => {
-    if (item?.ImageCount > 0) {
-      CartCardImageFunc(item).then((src) => {
-        setImageSrc(src);
-      });
-    } else {
-      setImageSrc(noImageFound);
-    }
-  }, [item]);
+  // useEffect(() => {
+  //   if (item?.ImageCount > 0) {
+  //     CartCardImageFunc(item).then((src) => {
+  //       setImageSrc(src);
+  //     });
+  //   } else {
+  //     setImageSrc(noImageFound);
+  //   }
+  // }, [item]);
 
   return (
     <Grid
@@ -138,8 +146,8 @@ const CartItem = ({
       xxl={itemLength <= 2 ? 6 : 3}
       className='smr_cartListCardGrid'>
       <Card
-       Product-last-location={item?.autocode}
-      className={itemLength <= 3 ? 'smr_cartListCard' : 'smr_cartListCard'}
+        Product-last-location={item?.autocode}
+        className={itemLength <= 3 ? 'smr_cartListCard' : 'smr_cartListCard'}
         key={item?.id}
         sx={{
           boxShadow: !multiSelect && !isMobileScreen && selectedItem?.id == item?.id && 'rgb(175 130 56 / 68%) 1px 1px 1px 0px, rgb(175 130 56 / 68%) 0px 0px 0px 1px !important',
@@ -155,7 +163,7 @@ const CartItem = ({
       >
         <Box className="smr_mui_CartBox" sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', position: 'relative' }}>
           {/* {imageSrc !== undefined && */}
-          {imageSrc === undefined ? (
+          {isLoading === true ? (
             <CardMedia
               sx={{
                 width: "13rem",
@@ -175,10 +183,26 @@ const CartItem = ({
           ) : (
             <CardMedia
               component="img"
-              image={imageSrc}
-              alt={item?.TitleLine}
+              image={item?.images}
+              alt=' '
+              sx={{
+                border: 'none',
+                outline: 'none',
+                boxShadow: 'none',
+                '&:focus': { outline: 'none' },
+                '&:active': { outline: 'none' },
+              }}
+              draggable={true}
+              onContextMenu={(e) => e.preventDefault()}
               className='smr_cartListImage'
               onClick={() => onSelect(item)}
+              onError={(e) => {
+                if (item?.ImageCount > 0) {
+                  e.target.src = fullImagePath ? fullImagePath : noImageFound;
+                } else {
+                  e.target.src = noImageFound;
+                }
+              }}
             />
           )}
           <div className='smr_rightContentDataDiv'>
@@ -255,12 +279,18 @@ const CartItem = ({
               )}
             </CardContent>
             <Box className="smr_cartbtngroupReRm">
-              <Link className='smr_ItemRemarkbtn' onClick={(e) => { e.stopPropagation(); handleOpen(); }} variant="body2">
+              <button
+                className='smr_ItemRemarkbtn'
+                onClick={() => handleOpen()}
+                style={{ border: 'none', background: 'none', cursor: 'pointer', textDecoration: 'underline' }}
+              >
                 {item?.Remarks ? "Update Remark" : "Add Remark"}
-              </Link>
-              <Link className='smr_ReomoveCartbtn' href="#" variant="body2" onClick={() => handleRemoveItem(item, index)} >
+              </button>
+              <button
+                style={{ border: 'none', background: 'none', cursor: 'pointer' }}
+                className='smr_ReomoveCartbtn' variant="body2" onClick={() => handleRemoveItem(item, index)} >
                 Remove
-              </Link>
+              </button>
             </Box>
           </div>
         </Box>

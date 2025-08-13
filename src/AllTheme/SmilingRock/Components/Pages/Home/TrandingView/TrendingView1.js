@@ -5,7 +5,7 @@ import { formatRedirectTitleLine, formatter, formatTitleLine, storImagePath } fr
 import { Get_Tren_BestS_NewAr_DesigSet_Album } from '../../../../../../utils/API/Home/Get_Tren_BestS_NewAr_DesigSet_Album/Get_Tren_BestS_NewAr_DesigSet_Album';
 import { useNavigate } from 'react-router-dom';
 import pako from "pako";
-import { useRecoilValue,  useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { homeLoading, smr_loginState } from '../../../Recoil/atom';
 import Cookies from 'js-cookie';
 
@@ -31,6 +31,7 @@ const TrendingView1 = () => {
     const [hoveredItem, setHoveredItem] = useState(null);
     const setLoadingHome = useSetRecoilState(homeLoading);
     const [validatedData, setValidatedData] = useState([]);
+    const productRefs = useRef({});
 
     const isOdd = (num) => num % 2 !== 0;
 
@@ -45,40 +46,37 @@ const TrendingView1 = () => {
         // nextArrow: false,
     };
 
-    useEffect(() => {
-        setLoadingHome(true);
+    // useEffect(() => {
+    //     setLoadingHome(true);
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        callAPI();
-                        observer.unobserve(entry.target);
-                    }
-                });
-            },
-            {
-                root: null,
-                threshold: 0.5,
-            }
-        );
+    //     const handleScroll = () => {
+    //         if (!trendingRef.current) return;
 
-        if (trendingRef.current) {
-            observer.observe(trendingRef.current);
-        }
-        return () => {
-            if (trendingRef.current) {
-                observer.unobserve(trendingRef.current);
-            }
-        };
-    }, [])
+    //         const rect = trendingRef.current.getBoundingClientRect();
+    //         const isInView = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
+
+    //         if (isInView) {
+    //             callAPI();
+    //             window.removeEventListener("scroll", handleScroll); // ensure it's called only once
+    //         }
+    //     };
+
+    //     window.addEventListener("scroll", handleScroll);
+    //     // Immediately check on mount
+    //     handleScroll();
+
+    //     return () => {
+    //         window.removeEventListener("scroll", handleScroll);
+    //     };
+    // }, []);
 
     const callAPI = () => {
         let storeinit = JSON.parse(sessionStorage.getItem("storeInit"));
         setStoreInit(storeinit)
 
         let data = JSON.parse(sessionStorage.getItem('storeInit'))
-        setImageUrl(data?.CDNDesignImageFol);
+        // setImageUrl(data?.CDNDesignImageFol);
+        setImageUrl(data?.CDNDesignImageFolThumb);
         const loginUserDetail = JSON.parse(sessionStorage.getItem('loginUserDetail'));
         const storeInit = JSON.parse(sessionStorage.getItem('storeInit'));
         const visiterID = Cookies.get('visiterId');
@@ -104,6 +102,10 @@ const TrendingView1 = () => {
 
     }
 
+    useEffect(() => {
+        callAPI();
+    }, [])
+
     const ProdCardImageFunc = (pd) => {
         let finalprodListimg;
         if (pd?.ImageCount > 0) {
@@ -128,7 +130,8 @@ const TrendingView1 = () => {
         if (!trandingViewData?.length) return;
         const validatedData = await Promise.all(
             trandingViewData.map(async (item) => {
-                const imageURL = `${imageUrl}${item?.designno}~1.${item?.ImageExtension}`;
+                // const imageURL = `${imageUrl}${item?.designno}~1.${item?.ImageExtension}`;
+                const imageURL = `${imageUrl}${item?.designno}~1.jpg`;
                 // const validatedURL = await checkImageAvailability(imageURL);
                 // return { ...item, validatedImageURL: validatedURL };
                 return { ...item, validatedImageURL: imageURL };
@@ -152,7 +155,7 @@ const TrendingView1 = () => {
             return null;
         }
     };
-    const handleNavigation = (designNo, autoCode, titleLine) => {
+    const handleNavigation = (designNo, autoCode, titleLine, index) => {
         const storeInit = JSON.parse(sessionStorage.getItem('storeInit')) ?? "";
         const { IsB2BWebsite } = storeInit;
 
@@ -164,10 +167,36 @@ const TrendingView1 = () => {
             c: loginUserDetail?.cmboCSQCid,
             f: {}
         }
+        sessionStorage.setItem('scrollToProduct3', `product-${index}`);
         let encodeObj = compressAndEncode(JSON.stringify(obj))
         // navigation(`/d/${titleLine.replace(/\s+/g, `_`)}${titleLine?.length > 0 ? "_" : ""}${designNo}?p=${encodeObj}`)
         navigation(`/d/${formatRedirectTitleLine(titleLine)}${designNo}?p=${encodeObj}`);
     }
+
+    useEffect(() => {
+        const scrollDataStr = sessionStorage.getItem('scrollToProduct3');
+        if (!scrollDataStr) return;
+
+        const maxRetries = 10;
+        let retries = 0;
+
+        const tryScroll = () => {
+            const el = productRefs.current[scrollDataStr];
+            if (el) {
+                el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                });
+                sessionStorage.removeItem('scrollToProduct3');
+            } else if (retries < maxRetries) {
+                retries++;
+                setTimeout(tryScroll, 200); // retry until ref is ready
+            }
+        };
+
+        tryScroll();
+
+    }, [trandingViewData]);
 
     const chunkedData = [];
     for (let i = 0; i < validatedData?.length; i += 3) {
@@ -177,7 +206,7 @@ const TrendingView1 = () => {
     return (
         <div ref={trendingRef}>
             {validatedData?.length != 0 &&
-                <div className='smr_mainTrending1Div' >
+                <div className='smr_mainTrending1Div' onContextMenu={(e) => e.preventDefault()}>
                     <div className='smr1_trending1TitleDiv'>
                         <span className='smr_trending1Title'>TRENDING</span>
                     </div>
@@ -189,14 +218,14 @@ const TrendingView1 = () => {
                             <div className="smr_lookbookImageRightDT">
                                 {/* <p>SHORESIDE COLLECTION</p>
                                 <h2>FOR LOVE OF SUN & SEA</h2> */}
-                                <button      aria-label='Click Here to See New Collection'
-                          aria-live='assertive' role='link' onClick={() => navigation(`/p/Trending/?T=${btoa('Trending')}`)}>SHOP COLLECTION</button>
+                                <button aria-label='Click Here to See New Collection'
+                                    aria-live='assertive' role='link' onClick={() => navigation(`/p/Trending/?T=${btoa('Trending')}`)}>SHOP COLLECTION</button>
                             </div>
                         </div>
                         <div className='smr_rightSideTR'>
                             {validatedData?.slice(0, 4).map((data, index) => (
                                 <div key={index} className="product-card">
-                                    <div className='smr_btimageDiv' onClick={() => handleNavigation(data?.designno, data?.autocode, data?.TitleLine)}>
+                                    <div className='smr_btimageDiv' onClick={() => handleNavigation(data?.designno, data?.autocode, data?.TitleLine, index)}>
                                         <img
                                             src={data?.ImageCount >= 1 ?
                                                 data?.validatedImageURL
@@ -207,6 +236,10 @@ const TrendingView1 = () => {
                                             onError={(e) => {
                                                 e.target.src = imageNotFound
                                             }}
+                                            draggable={true}
+                                            onContextMenu={(e) => e.preventDefault()}
+                                            id={`product-${index}`}
+                                            ref={(el) => (productRefs.current[`product-${index}`] = el)}
                                             alt={`TrendingViewBanner-${index}`}
                                             role='img'
                                         />

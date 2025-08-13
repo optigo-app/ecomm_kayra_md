@@ -40,15 +40,20 @@ const WishlistItems = ({
   const storeInit = JSON.parse(sessionStorage.getItem("storeInit"));
   const loginInfo = JSON.parse(sessionStorage.getItem("loginUserDetail"));
 
-  useEffect(() => {
-    if (item?.ImageCount > 0) {
-      WishCardImageFunc(item).then((src) => {
-        setImageSrc(src);
-      });
-    } else {
-      setImageSrc(noImageFound);
-    }
-  }, [item]);
+  const CDNDesignImageFolThumb = storeInit?.CDNDesignImageFolThumb;
+  const fullImagePath = `${CDNDesignImageFolThumb}${item?.designno}~1.jpg`;
+
+  const isLoading = item?.loading;
+
+  // useEffect(() => {
+  //   if (item?.ImageCount > 0) {
+  //     WishCardImageFunc(item).then((src) => {
+  //       setImageSrc(src);
+  //     });
+  //   } else {
+  //     setImageSrc(noImageFound);
+  //   }
+  // }, [item]);
 
 
   const handleWishlistToCartFun = async (item) => {
@@ -69,6 +74,19 @@ const WishlistItems = ({
       });
     }
   };
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = item?.images;
+    img.onload = () => setImageSrc(item?.images);
+    img.onerror = () => {
+      if (item?.ImageCount > 0 && fullImagePath) {
+        setImageSrc(fullImagePath);
+      } else {
+        setImageSrc(noImageFound);
+      }
+    };
+  }, [item]);
 
   return (
     <>
@@ -94,7 +112,7 @@ const WishlistItems = ({
                 width: "100%"
               }}
             >
-              {imageSrc === undefined ? (
+              {isLoading === true ? (
                 <CardMedia
                   style={{ width: "100%" }}
                   className="smr_WlListImage"
@@ -119,7 +137,16 @@ const WishlistItems = ({
                 <CardMedia
                   component="img"
                   image={imageSrc}
-                  alt={item?.TitleLine}
+                  alt=" "
+                  sx={{
+                    border: 'none',
+                    outline: 'none',
+                    boxShadow: 'none',
+                    '&:focus': { outline: 'none' },
+                    '&:active': { outline: 'none' },
+                  }}
+                  draggable={true}
+                  onContextMenu={(e) => e.preventDefault()}
                   className="smr_WlListImage"
                   onClick={() => handleMoveToDetail(item)}
                 />
@@ -242,13 +269,36 @@ const WishlistItems = ({
             }}
           >
             <div className="cardContent">
-              <CardMedia
-                component="img"
-                image={imageSrc}
-                alt={item?.TitleLine}
-                className="smr_WlListImage2"
-                onClick={() => handleMoveToDetail(item)}
-              />
+              {isLoading === true ? (
+                <CardMedia
+                  style={{ width: "100%", height: "100%" }}
+                  className="smr_WlListImage2"
+                >
+                  <Skeleton
+                    animation="wave"
+                    variant="rect"
+                    width="260px"
+                    height="250px"
+                  />
+                </CardMedia>
+              ) :
+                <CardMedia
+                  component="img"
+                  image={imageSrc}
+                  alt={` `}
+                  className="smr_WlListImage2"
+                  onClick={() => handleMoveToDetail(item)}
+                  draggable={true}
+                  onContextMenu={(e) => e.preventDefault()}
+                  sx={{
+                    border: 'none',
+                    outline: 'none',
+                    boxShadow: 'none',
+                    '&:focus': { outline: 'none' },
+                    '&:active': { outline: 'none' },
+                  }}
+                />
+              }
               <div className="smr_Wl-CartbtnDiv">
                 <button
                   className="smr_Wl-Cartbtn"

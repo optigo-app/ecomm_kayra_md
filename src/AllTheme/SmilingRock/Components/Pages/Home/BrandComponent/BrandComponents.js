@@ -10,14 +10,22 @@ const BrandsComponent = () => {
     "logo4.png",
     "logo5.png",
     "logo6.png",
+    // "logo8.png",
     "logo7.png",
+    "logo9.png",
+    "logo10.png",
+    "logo11.png",
     "logo1.png",
     "logo2.png",
     "logo3.png",
     "logo4.png",
     "logo5.png",
     "logo6.png",
+    // "logo8.png",
     "logo7.png",
+    "logo9.png",
+    "logo10.png",
+    "logo11.png",
   ];
   const mayrologo = [
     "logo1.png",
@@ -43,6 +51,24 @@ const BrandsComponent = () => {
     "logo3.png",
     "logo4.png",
     "logo6.png",
+  ];
+
+  const dfineLogo = [
+    "logo1.png",
+    "logo2.png",
+    "logo3.jpg",
+    "logo4.png",
+    "logo5.png",
+    "logo1.png",
+    "logo2.png",
+    "logo3.jpg",
+    "logo4.png",
+    "logo5.png",
+    "logo1.png",
+    "logo2.png",
+    "logo3.jpg",
+    "logo4.png",
+    "logo5.png",
   ];
   const KayralogoElements = kayralogo.map((logo, index) => (
     <img
@@ -74,6 +100,17 @@ const BrandsComponent = () => {
       loading="lazy"
       src={`${storImagePath()}/images/HomePage/BrandLogo/sonasons/${logo}`}
       alt={`Sonasonslogo-${index}`}
+      style={{ width: "130px", objectFit: "cover", marginRight: "90px" }}
+    />
+  ));
+  const dfinelogoElements = dfineLogo.map((logo, index) => (
+    <img
+      key={index}
+      className="smr_affilitionImg"
+      role="img"
+      loading="lazy"
+      src={`${storImagePath()}/images/HomePage/BrandLogo/dfine/${logo}`}
+      alt={`Dfinelogo-${index}`}
       style={{ width: "130px", objectFit: "cover", marginRight: "90px" }}
     />
   ));

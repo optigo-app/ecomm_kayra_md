@@ -26,33 +26,31 @@ const DesignSet2 = () => {
   const [swiper, setSwiper] = useState(null);
   const [imageUrlDesignSet, setImageUrlDesignSet] = useState();
   const setLoadingHome = useSetRecoilState(homeLoading);
+  const productRefs = useRef({});
 
-  useEffect(() => {
-    setLoadingHome(true);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            callAPI();
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        root: null,
-        threshold: 0.5,
-      }
-    );
+  // useEffect(() => {
+  //   setLoadingHome(true);
 
-    if (designSetRef.current) {
-      observer.observe(designSetRef.current);
-    }
-    return () => {
-      if (designSetRef.current) {
-        observer.unobserve(designSetRef.current);
-      }
-    };
-  }, []);
+  //   const handleScroll = () => {
+  //     if (!designSetRef.current) return;
+
+  //     const rect = designSetRef.current.getBoundingClientRect();
+  //     const isInView = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
+
+  //     if (isInView) {
+  //       callAPI();
+  //       window.removeEventListener("scroll", handleScroll); // ensure it's called only once
+  //     }
+  //   };
+
+  //   window.addEventListener("scroll", handleScroll);
+  //   // Immediately check on mount
+  //   handleScroll();
+
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   const callAPI = () => {
     const loginUserDetail = JSON.parse(sessionStorage.getItem('loginUserDetail'));
@@ -69,8 +67,10 @@ const DesignSet2 = () => {
     setStoreInit(storeinit);
 
     let data = JSON.parse(sessionStorage.getItem('storeInit'));
+    // setImageUrl(data?.CDNDesignImageFol);
+    // setImageUrlDesignSet(data?.CDNDesignImageFol);
     setImageUrl(data?.CDNDesignImageFol);
-    setImageUrlDesignSet(data?.CDNDesignImageFol);
+    setImageUrlDesignSet(data?.CDNDesignImageFolThumb);
 
     Get_Tren_BestS_NewAr_DesigSet_Album("GETDesignSet_List", finalID)
       .then((response) => {
@@ -81,6 +81,10 @@ const DesignSet2 = () => {
       })
       .catch((err) => console.log(err));
   }
+
+  useEffect(() => {
+    callAPI();
+  }, [])
 
   const ProdCardImageFunc = (pd) => {
     let finalprodListimg;
@@ -118,7 +122,7 @@ const DesignSet2 = () => {
     }
   };
 
-  const handleNavigation = (designNo, autoCode, titleLine) => {
+  const handleNavigation = (designNo, autoCode, titleLine, index) => {
     let obj = {
       a: autoCode,
       b: designNo,
@@ -127,9 +131,35 @@ const DesignSet2 = () => {
       c: loginUserDetail?.cmboCSQCid ?? storeInit?.cmboCSQCid,
       f: {},
     };
+    sessionStorage.setItem('scrollToProduct4', `product-${index}`);
     let encodeObj = compressAndEncode(JSON.stringify(obj));
     navigate(`/d/${titleLine?.replace(/\s+/g, `_`)}${titleLine?.length > 0 ? '_' : ''}${designNo}?p=${encodeObj}`);
   };
+
+  useEffect(() => {
+    const scrollDataStr = sessionStorage.getItem('scrollToProduct4');
+    if (!scrollDataStr) return;
+
+    const maxRetries = 10;
+    let retries = 0;
+
+    const tryScroll = () => {
+      const el = productRefs.current[scrollDataStr];
+      if (el) {
+        el.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+        sessionStorage.removeItem('scrollToProduct4');
+      } else if (retries < maxRetries) {
+        retries++;
+        setTimeout(tryScroll, 200); // retry until ref is ready
+      }
+    };
+
+    tryScroll();
+
+  }, [designSetList]);
 
   const decodeEntities = (html) => {
     var txt = document.createElement('textarea');
@@ -170,7 +200,7 @@ const DesignSet2 = () => {
 
   return (
     <>
-      <div className="smr_DesignSet2MainDiv" ref={designSetRef}>
+      <div className="smr_DesignSet2MainDiv" ref={designSetRef} onContextMenu={(e) => e.preventDefault()}>
         {designSetList?.length !== 0 && (
           <>
             <div className='smr_DesignSetTitleDiv'>
@@ -220,6 +250,10 @@ const DesignSet2 = () => {
                     src={`${storImagePath()}/images/HomePage/DesignSetBanner/BottomBannerDesignSet1.png`}
                     alt="BottomBannerDesignSet1"
                     className="imgBG"
+                    draggable={true}
+                    onContextMenu={(e) => e.preventDefault()}
+                    id={`product-${index}`}
+                    ref={(el) => (productRefs.current[`product-${index}`] = el)}
                   />
                 ) : (
                   <div
@@ -257,15 +291,19 @@ const DesignSet2 = () => {
                                 <div className="smr_ds2ImageDiv">
                                   <img
                                     loading="lazy"
-                                    src={`${imageUrlDesignSet}${detail?.designno}~1.${detail?.ImageExtension}`}
+                                    // src={`${imageUrlDesignSet}${detail?.designno}~1.${detail?.ImageExtension}`}
+                                    src={`${imageUrlDesignSet}${detail?.designno}~1.jpg`}
                                     alt={`Sub image ${subIndex} for slide ${index + 1}`}
                                     onClick={() =>
                                       handleNavigation(
                                         detail?.designno,
                                         detail?.autocode,
-                                        detail?.TitleLine ? detail?.TitleLine : ""
+                                        detail?.TitleLine ? detail?.TitleLine : "",
+                                        index
                                       )
                                     }
+                                    draggable={true}
+                                    onContextMenu={(e) => e.preventDefault()}
                                     onError={(e) => {
                                       e.target.src = imageNotFound;
                                       e.target.alt = "no-image-found";

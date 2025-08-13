@@ -9,7 +9,7 @@ const CartMain = () => {
     useEffect(() => {
         const storeInit = JSON?.parse(sessionStorage.getItem('storeInit'));
         const cartNo = storeInit?.CartNo ?? 1;
-        // const cartNo = 1;
+        // const cartNo = 2;
 
         switch (cartNo) {
             case 1:

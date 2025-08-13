@@ -17,16 +17,34 @@ const ExampleComponent = ({
     decodeEntities,
     handleDecrement,
     handleIncrement,
-    onRemove
-
+    onRemove,
+    key,
 }) => {
     const [imageSrc, setImageSrc] = useState();
+    const [isLoading, setisLoading] = useState(true);
     const setCartCountVal = useSetRecoilState(CartCount)
     const [storeInitData, setStoreInitData] = useState();
     const visiterId = Cookies.get('visiterId');
 
     const shipsDate = cartData?.shipsdate;
     const dayOfMonth = moment(shipsDate).format('D');
+
+    const CDNDesignImageFolThumb = storeInitData?.CDNDesignImageFolThumb;
+    // const fullImagePath = `${CDNDesignImageFolThumb}${item?.designno}~1.${item?.ImageExtension}`;
+    const fullImagePath = `${CDNDesignImageFolThumb}${cartData?.designno}~1.jpg`;
+
+    // const isLoading = cartData?.loading;
+
+    useEffect(() => {
+        const delay = (key + 1) * 200;
+
+        const timer = setTimeout(() => {
+            setisLoading(false);
+        }, delay);
+
+        return () => clearTimeout(timer);
+    }, [key]);
+
 
     const loginInfo = JSON.parse(sessionStorage.getItem("loginUserDetail"));
 
@@ -35,15 +53,15 @@ const ExampleComponent = ({
         setStoreInitData(storeinitData)
     }, [])
 
-    useEffect(() => {
-        if (cartData?.ImageCount > 0) {
-            CartCardImageFunc(cartData).then((src) => {
-                setImageSrc(src);
-            });
-        } else {
-            setImageSrc(noImageFound);
-        }
-    }, [cartData]);
+    // useEffect(() => {
+    //     if (cartData?.ImageCount > 0) {
+    //         CartCardImageFunc(cartData).then((src) => {
+    //             setImageSrc(src);
+    //         });
+    //     } else {
+    //         setImageSrc(noImageFound);
+    //     }
+    // }, [cartData]);
 
     // const handleRemovecartData = (cartData) => {
     //     onRemove(cartData)
@@ -66,12 +84,25 @@ const ExampleComponent = ({
         }
     };
 
+    useEffect(() => {
+        const img = new Image();
+        img.src = cartData?.images;
+        img.onload = () => setImageSrc(cartData?.images);
+        img.onerror = () => {
+            if (cartData?.ImageCount > 0 && fullImagePath) {
+                setImageSrc(fullImagePath);
+            } else {
+                setImageSrc(noImageFound);
+            }
+        };
+    }, [cartData]);
+
     return (
         <table className="smr_B2C-table smr_B2C-table-xs">
             <tbody>
                 <tr key={cartData.id} className="smr_B2C-cartData-row">
                     <td className='smr_b2cCartImagetd'>
-                        {imageSrc === undefined ? (
+                        {isLoading === true ? (
                             <CardMedia
                                 sx={{
                                     width: "10rem",
@@ -98,7 +129,17 @@ const ExampleComponent = ({
                             <img
                                 className='smr_b2ccartImage'
                                 src={imageSrc}
-                                alt={`cartData images`}
+                                alt={` `}
+                                draggable={true}
+                                onContextMenu={(e) => e.preventDefault()}
+                                style={{
+                                    border: 'none',
+                                    outline: 'none',
+                                    boxShadow: 'none',
+                                    '&:focus': { outline: 'none' },
+                                    '&:active': { outline: 'none' },
+                                }}
+                                loading='lazy'
                             />
                         )}
                     </td>

@@ -4,7 +4,8 @@ $generalColor : lightgray;
 
 
 .smr_authFlowBakcColor {
-    background-color: $backgroundColor;
+    // background-color: $backgroundColor;
+    background-color: $backgroundColordfine;
 }
 
 .Submain {
@@ -12,7 +13,8 @@ $generalColor : lightgray;
 }
 
 .smiling_home_index_main {
-    background-color: $backgroundColor;
+    // background-color: $backgroundColor;
+    background-color: $backgroundColordfine;
     padding-inline: 6%;
 }
 
@@ -70,4 +72,25 @@ $generalColor : lightgray;
     .smiling_home_index_main {
         padding-inline: 1% !important;
     }
+}
+
+.collection-section {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.collection-title {
+    font-size: clamp(24px, 6vw, 40px);
+    /* 24px is the min, 6vw is the dynamic value, 40px is the max */
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.collection-subtitle {
+    font-size: clamp(12px, 4vw, 18px);
+    /* 12px is the min, 4vw is the dynamic value, 18px is the max */
+    color: #444;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-inline: auto;
 }

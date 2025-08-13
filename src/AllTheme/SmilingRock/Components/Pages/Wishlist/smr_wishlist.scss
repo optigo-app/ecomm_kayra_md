@@ -12,7 +12,7 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        
+
     }
 
     .smr_WlListImage {
@@ -20,12 +20,29 @@
         // max-height: 400px;
         object-fit: contain;
         cursor: pointer;
-        // height: 300px;
+        min-height: 402px;
+
+        @media (max-width: 1550px) {
+            min-height: 340px;
+        }
+
+        @media (max-width: 1440px) {
+            min-height: 300px;
+        }
+
+        @media (max-width: 1300px) {
+            min-height: 250px;
+        }
+
+        @media (max-width: 768px) {
+            min-height: 200px;
+        }
     }
 
     .smr_WlListImage2 {
         width: 100%;
         max-height: 500px;
+        min-height: 250px;
         object-fit: cover;
         cursor: pointer;
         // height: 400px;
@@ -40,7 +57,8 @@
 }
 
 .smr_MainWlDiv {
-    background-color: $backgroundColor;
+    // background-color: $backgroundColor;
+    background-color: $backgroundColordfine;
     font-family: $primaryFontFamily;
 }
 

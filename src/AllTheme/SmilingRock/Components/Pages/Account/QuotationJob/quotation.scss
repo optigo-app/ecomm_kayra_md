@@ -24,6 +24,7 @@
 #demo-simple-select {
     padding: 5px 32px 9px 10px;
 }
+
 #demo-multiple-checkbox {
     padding: 12px 32px 9px 10px;
 }
@@ -56,9 +57,64 @@
 }
 
 .quotationFiltersText * {
-    font-size: 14px !important;
+    font-size: 13px !important;
     line-height: 120%;
 }
+
+.SalesReport * {
+    font-size: 12px !important;
+}
+
+.searchSalesReport svg,
+.SalesReport svg {
+    font-size: 20px !important;
+}
+
+.SalesProducts .SalesReportProduct {
+    transition: 0.4s ease;
+    position: relative;
+    z-index: 1;
+    background-color: #fff;
+    /* min-width: 250px !important; */
+}
+
+.SalesProducts .SalesReportProduct:hover {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    cursor: pointer;
+    scale: 1.05;
+    z-index: 2 !important;
+}
+
+.SalesInputRadio svg {
+    color: #7d7f85;
+}
+
+.reactPagination {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+}
+
+.reactPagination {
+    padding-top: 25px;
+}
+
+.reactPagination>li>a {
+    text-decoration: unset;
+    font-size: 22px !important;
+}
+
+.reactPagination>li {
+    padding: 0 10px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.reactPagination>li:hover,
+.reactPagination>li.active {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
 
 .selectLabel {
     font-size: 11px !important;
@@ -122,26 +178,30 @@
     color: #7d7f85 !important;
 }
 
-.sorticon_ma_span_SMR{
+.sorticon_ma_span_SMR {
     position: absolute !important;
     right: 5px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
 }
-.sorticon_ma_SMR{
+
+.sorticon_ma_SMR {
     position: absolute !important;
     right: 0px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
 }
+
 @media(max-width: 768px) {
-    .QuotationJobAllBtn  {
+    .QuotationJobAllBtn {
         margin-bottom: 20px !important;
     }
-    .QuotationJobAllBtnSec{
-        padding-bottom: 30px !important;
+
+    .QuotationJobAllBtnSec {
+        // padding-bottom: 30px !important;
     }
-    .QuotationJobAllBtnSecDate{
+
+    .QuotationJobAllBtnSecDate {
         padding-bottom: 20px !important;
     }
 
@@ -175,15 +235,16 @@
         padding-left: 5px;
     }
 
-    .smilingSavedAddressMain.quotationFiltersText{
+    .smilingSavedAddressMain.quotationFiltersText {
         padding: 10px 7px;
-    } 
+    }
 }
+
 @media (max-width: 576px) {
 
     .quotationJobSec {
         max-height: 450px !important;
-     
+
     }
 
     .QuoteJobtable table thead tr {
@@ -239,6 +300,7 @@
 
 
 }
+
 @media (max-width: 320px) {
 
     .quotationJobSec {
@@ -298,4 +360,5 @@
 
 
 }
+
 // }

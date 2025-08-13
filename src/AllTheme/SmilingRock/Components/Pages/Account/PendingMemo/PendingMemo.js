@@ -6,6 +6,7 @@ import {
   CircularProgress,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -278,6 +279,7 @@ const PendingMemo = () => {
   });
   const fromDateRef = useRef(null);
   const toDateRef = useRef(null);
+  const isBelow1300 = useMediaQuery('(max-width:1299px)');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -648,7 +650,7 @@ const PendingMemo = () => {
         >
           <Box
             className="salesReporttableWeb"
-            sx={{ paddingBottom: "5px", paddingRight: "15px" }}
+            sx={{ paddingBottom: "5px", paddingRight: "15px", marginBottom: isBelow1300 ? "25px" : "" }}
           >
             <table style={{ minWidth: '850px' }}>
               <tbody>
@@ -746,7 +748,10 @@ const PendingMemo = () => {
               {NumberWithCommas(total?.TotalAmount, 2)}
             </Typography>
           </Box> */}
-          <Box className="salesReportImgSec" sx={{ width: "135px", height: "135px", paddingBottom: "20px", overflow: "hidden", }} >
+          <Box className="salesReportImgSec" sx={{
+            width: "135px", height: "135px", paddingBottom: "20px", overflow: "hidden", display: isBelow1300 ? 'none' : 'block',
+            visibility: isBelow1300 ? 'visible' : 'hidden'
+          }} >
             <Box sx={{ border: "1px solid #d6d6d6", height: "117px", marginTop: "17px", }} >
               {hoverImg !== "" && (
                 <img src={hoverImg} alt="" style={{ width: "100%", objectFit: "contain", minHeight: "114px", maxHeight: "114px", }} />
