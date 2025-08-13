@@ -65,16 +65,16 @@ export default function LoginWithMobileCode() {
             errors.otp = 'Code is required';
             return;
         }
-        LoginWithEmailAPI('', mobileNo, enterOTP, 'otp_mobile_login', '',visiterId).then((response) => {
+        LoginWithEmailAPI('', mobileNo, enterOTP, 'otp_mobile_login', '', visiterId).then((response) => {
             if (response.Data.rd[0].stat === 1) {
                 sessionStorage.setItem('LoginUser', true)
                 setIsLoginState(true)
                 sessionStorage.setItem('loginUserDetail', JSON.stringify(response.Data.rd[0]));
                 sessionStorage.setItem('registerMobile', mobileNo);
 
-                if(redirectMobileUrl){
+                if (redirectMobileUrl) {
                     navigation(redirectMobileUrl);
-                }else{
+                } else {
                     navigation('/')
                 }
 
@@ -106,8 +106,8 @@ export default function LoginWithMobileCode() {
                 </div>
             )}
             <ToastContainer />
-            <div style={{ backgroundColor: '#c0bbb1' }}>
-                <div className='smling-forgot-main'>
+            <div>
+                <div className='smling-forgot-main' style={{ minHeight: 'calc(42 * (100vh / 100))' }}>
                     <p style={{
                         textAlign: 'center',
                         paddingBlock: '60px',
@@ -128,7 +128,7 @@ export default function LoginWithMobileCode() {
                         className='AuthScreenSubTitle'
                     >Last step! To secure your account, enter the code we just sent to {mobileNo}.</p>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' , marginTop: '20px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px', minHeight: 'calc(42 * (100vh / 100))' }}>
                         <TextField
                             autoFocus
                             id="outlined-basic"
@@ -156,6 +156,6 @@ export default function LoginWithMobileCode() {
             <div style={{ display: 'flex', justifyContent: 'center', paddingBlock: '30px' }}>
                 <p style={{ margin: '0px', fontWeight: 500, width: '100px', color: 'white', cursor: 'pointer' }} onClick={() => window.scrollTo(0, 0)}>BACK TO TOP</p>
             </div>
-        </div>
+        </div >
     );
 }

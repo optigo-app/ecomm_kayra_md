@@ -1,0 +1,172 @@
+@import '../../../scss/variable.scss';
+
+.smr_contactMain_div {
+    // background-color: #c0bbb1;
+    background-color: $backgroundColordfine;
+
+    .Fo-contactMain {
+        background-color: white;
+        margin-inline: 6%;
+    }
+}
+
+.contact-us-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+
+    @media screen and (max-width: 900px) {
+        flex-direction: column;
+        padding: 1rem;
+    }
+}
+
+.contact-left {
+    flex: 1;
+    max-width: 50%;
+
+    @media (max-width: 900px) {
+        max-width: 100%;
+    }
+
+    h2 {
+        color: #d9af4f;
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .contact-details {
+        border-radius: 16px;
+        color: #333;
+        max-width: 800px;
+        margin: 0 auto;
+
+        h4 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #111;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 0.5rem;
+        }
+
+        .office-block {
+            margin-bottom: 2rem;
+            background: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #1b3349;
+            border-right: 1px solid #1b3349;
+            border-top: 1px solid #1b3349;
+            border-bottom: 1px solid #1b3349;
+
+            .office-label {
+                font-weight: 700;
+                display: block;
+                margin-bottom: 0.5rem;
+                color: #1b3349;
+            }
+
+            p {
+                margin: 0.4rem 0;
+                font-size: 0.95rem;
+                line-height: 1.5;
+                display: flex;
+                align-items: center;
+
+                &:before {
+                    margin-right: 0.5rem;
+                }
+            }
+
+            .office-location {
+                display: flex;
+                flex-direction: column;
+
+                strong {
+                    font-size: 1rem;
+                    margin-bottom: 0.3rem;
+                }
+
+                .office-details {
+                    p {
+                        margin: 0.3rem 0;
+                    }
+                }
+            }
+        }
+
+        @media (max-width: 600px) {
+            padding: 1rem;
+
+            .office-block {
+                padding: 1rem;
+            }
+        }
+    }
+
+
+    .enquiry-form {
+        h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+
+            input {
+                flex: 1;
+                padding: 0.75rem;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 1rem;
+            }
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            resize: none;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+
+            &:hover {
+                background-color: #333;
+            }
+        }
+    }
+}
+
+.error {
+    color: red;
+}
+
+.contact-right {
+    flex: 1;
+
+    iframe {
+        border-radius: 5px;
+        width: 100%;
+        height: 100%;
+        min-height: 400px;
+    }
+}

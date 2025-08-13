@@ -1353,7 +1353,8 @@ const Lookbook = () => {
       {isProdLoading ? (
         // true ?
         <div style={{ marginInline: "6%", backgroundColor: "white" }}>
-          <ProductListSkeleton />
+          {/* <ProductListSkeleton /> */}
+          <LookbookSkelton param={1} />
         </div>
       ) : (
 
@@ -2643,7 +2644,7 @@ const Lookbook = () => {
                     <EditablePagination
                       currentPage={currentPage}
                       totalItems={dstCount}
-                      itemsPerPage={itemsPerPage} 
+                      itemsPerPage={itemsPerPage}
                       onPageChange={handelPageChange}
                       inputPage={inputPage}
                       setInputPage={setInputPage}

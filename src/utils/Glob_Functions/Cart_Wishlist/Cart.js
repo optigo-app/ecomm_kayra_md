@@ -14,7 +14,7 @@ import { useMediaQuery } from '@mui/material';
 import { toast } from 'react-toastify';
 import Cookies from "js-cookie";
 import { fetchSingleProdDT } from '../../API/CartAPI/SingleProdDtAPI';
-import useBackNavigation from '../../../AllTheme/SmilingRock/Components/hooks/useBackNavigation';
+import { formatRedirectTitleLine } from '../GlobalFunction';
 
 const useCart = () => {
   const navigate = useNavigate();
@@ -69,7 +69,7 @@ const useCart = () => {
   const [diaQua, setDiaQua] = useState();
   const [csColor, setCsColor] = useState();
   const [csQua, setCsQua] = useState();
-const {HandleMoveToMenu} = useBackNavigation()
+
   const [finalCartData, setFinalCartData] = useState([]);
   const [loadingIndex, setLoadingIndex] = useState(0)
 
@@ -78,8 +78,6 @@ const {HandleMoveToMenu} = useBackNavigation()
   const isLargeScreen = useMediaQuery('(min-width:1050px)');
   const isMaxWidth1050 = useMediaQuery('(max-width:1050px)');
   const cartStatus = sessionStorage.getItem('isCartDrawer')
-  const LastViewedCart = sessionStorage.getItem("LastViewedCart");
-
 
 
   useEffect(() => {
@@ -117,13 +115,9 @@ const {HandleMoveToMenu} = useBackNavigation()
 
       if (response?.Data?.rd[0]?.stat != 0) {
         setCartData(response?.Data?.rd);
+        setFinalCartData(response.Data?.rd);
         if (response?.Data?.rd?.length > 0) {
-          if(LastViewedCart){
-            const item = response?.Data?.rd?.find(item => item?.autocode === LastViewedCart);
-            setSelectedItem(item);
-          }else{
-            setSelectedItem(response?.Data?.rd[0]);
-          }
+          setSelectedItem(response?.Data?.rd[0]);
           let item = response?.Data?.rd[0]
           setQtyCount(item?.Quantity)
           handleCategorySize(item);
@@ -202,8 +196,14 @@ const {HandleMoveToMenu} = useBackNavigation()
   // remove
   const handleRemoveItem = async (item) => {
     let param = "Cart";
-    let cartfilter = cartData?.filter(cartItem => cartItem.id !== item.id);
-    setCartData(cartfilter);
+    let cartfilter;
+    if (storeInit?.Themeno === 1) {
+      cartfilter = finalCartData?.filter(cartItem => cartItem?.id !== item?.id);
+      setFinalCartData(cartfilter);
+    } else {
+      cartfilter = cartData?.filter(cartItem => cartItem?.id !== item?.id);
+      setCartData(cartfilter);
+    }
 
     setTimeout(() => {
       if (cartfilter && isMaxWidth1050) {
@@ -237,7 +237,7 @@ const {HandleMoveToMenu} = useBackNavigation()
         setSelectedItem([]);
         getCartData();
         setCartData([]);
-        setSelectedItem([]);
+        setFinalCartData([]);
         return resStatus;
       } else {
         console.log('Failed to remove product or product not found');
@@ -300,38 +300,85 @@ const {HandleMoveToMenu} = useBackNavigation()
     setSelectedItems([]);
     setMultiSelect(false);
     setOpenModal(false);
-    try {
-      const response = await updateCartAPI(updatedItems, metalID, metalCOLORID, diaIDData, colorStoneID, sizeId, markupData, finalPrice, finalPriceWithMarkup);
-      let resStatus = response?.Data.rd[0]
-      if (resStatus?.msg == "success") {
-        setOpenMobileModal(false);
-        setHandleUpdate(resStatus)
-        // toast.success('Cart Updated Successfully')
 
-        const Price = updatedItems?.UnitCostWithMarkUp * qtyCount;
-        const updatedCartData = cartData.map(cart =>
-          cart?.id === updatedItems?.id ? {
-            ...cart,
-            metaltypename: mtType ?? updatedItems?.metaltypename,
-            metalcolorname: mtColor ?? updatedItems?.metalcolorname,
-            diamondquality: diaQua ?? updatedItems?.diamondquality,
-            diamondcolor: diaColor ?? updatedItems?.diamondcolor,
-            colorstonecolor: csColor ?? updatedItems?.colorstonecolor,
-            colorstonequality: csQua ?? updatedItems?.colorstonequality,
-            FinalCost: Price ?? updatedItems?.FinalCost,
-            UnitCostWithMarkUp: finalPrice?.UnitCostWithMarkUp ?? updatedItems?.UnitCostWithMarkUp,
-            Quantity: qtyCount,
-            Size: sizeId
-          } : cart
-        );
-        setCartData(updatedCartData)
-        return resStatus;
-      } else {
-        console.log('Failed to update product or product not found');
+    if (storeInit?.Themeno === 1) {
+      const response1 = await updateQuantity(updatedItems.id, updatedItems?.Quantity, visiterId);
+      let resStatus1 = response1?.Data.rd[0];
+
+      if (resStatus1?.stat_msg == "success") {
+        try {
+          const response = await updateCartAPI(updatedItems, metalID, metalCOLORID, diaIDData, colorStoneID, sizeId, markupData, finalPrice, finalPriceWithMarkup);
+          let resStatus = response?.Data.rd[0];
+          const mtcCode = metalColorCombo?.find(option => option?.id === metalCOLORID);
+          if (resStatus?.msg == "success") {
+            setOpenMobileModal(false);
+            setHandleUpdate(resStatus)
+            // toast.success('Cart Updated Successfully')
+            let updatedCartData;
+
+            const Price = updatedItems?.UnitCostWithMarkUp * qtyCount;
+            updatedCartData = finalCartData.map(cart =>
+              cart?.id === updatedItems?.id ? {
+                ...cart,
+                metaltypename: mtType ?? updatedItems?.metaltypename,
+                metalcolorname: mtColor ?? updatedItems?.metalcolorname,
+                diamondquality: diaQua ?? updatedItems?.diamondquality,
+                diamondcolor: diaColor ?? updatedItems?.diamondcolor,
+                colorstonecolor: csColor ?? updatedItems?.colorstonecolor,
+                // images: `${storeInit?.CDNDesignImageFol}${updatedItems?.designno}~1~${mtcCode?.colorcode}.${updatedItems?.ImageExtension}`,
+                images: `${storeInit?.CDNDesignImageFolThumb}${updatedItems?.designno}~1~${mtcCode?.colorcode}.${updatedItems?.ImageExtension}`,
+                loading: false,
+                colorstonequality: csQua ?? updatedItems?.colorstonequality,
+                FinalCost: Price ?? updatedItems?.FinalCost,
+                UnitCostWithMarkUp: finalPrice?.UnitCostWithMarkUp ?? updatedItems?.UnitCostWithMarkUp,
+                Quantity: qtyCount,
+                Size: sizeId
+              } : cart
+            );
+            setFinalCartData(updatedCartData)
+            return resStatus;
+          } else {
+            console.log('Failed to update product or product not found');
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
       }
-    } catch (error) {
-      console.error("Error:", error);
+    } else {
+      try {
+        const response = await updateCartAPI(updatedItems, metalID, metalCOLORID, diaIDData, colorStoneID, sizeId, markupData, finalPrice, finalPriceWithMarkup);
+        let resStatus = response?.Data.rd[0]
+        if (resStatus?.msg == "success") {
+          setOpenMobileModal(false);
+          setHandleUpdate(resStatus)
+          // toast.success('Cart Updated Successfully')
+
+          const Price = updatedItems?.UnitCostWithMarkUp * qtyCount;
+          const updatedCartData = cartData.map(cart =>
+            cart?.id === updatedItems?.id ? {
+              ...cart,
+              metaltypename: mtType ?? updatedItems?.metaltypename,
+              metalcolorname: mtColor ?? updatedItems?.metalcolorname,
+              diamondquality: diaQua ?? updatedItems?.diamondquality,
+              diamondcolor: diaColor ?? updatedItems?.diamondcolor,
+              colorstonecolor: csColor ?? updatedItems?.colorstonecolor,
+              colorstonequality: csQua ?? updatedItems?.colorstonequality,
+              FinalCost: Price ?? updatedItems?.FinalCost,
+              UnitCostWithMarkUp: finalPrice?.UnitCostWithMarkUp ?? updatedItems?.UnitCostWithMarkUp,
+              Quantity: qtyCount,
+              Size: sizeId
+            } : cart
+          );
+          setCartData(updatedCartData)
+          return resStatus;
+        } else {
+          console.log('Failed to update product or product not found');
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
+
   };
 
   const handleCancelUpdateCart = () => {
@@ -357,10 +404,18 @@ const {HandleMoveToMenu} = useBackNavigation()
       const response = await handleProductRemark(data, productRemark, visiterId);
       let resStatus = response?.Data?.rd[0]
       if (resStatus?.stat == 1) {
-        const updatedCartData = cartData.map(cart =>
-          cart.id == data.id ? { ...cart, Remarks: resStatus?.design_remark } : cart
-        );
-        setCartData(updatedCartData);
+        let updatedCartData;
+        if (storeInit?.Themeno === 1) {
+          updatedCartData = finalCartData.map(cart =>
+            cart.id == data.id ? { ...cart, Remarks: resStatus?.design_remark } : cart
+          );
+          setFinalCartData(updatedCartData);
+        } else {
+          updatedCartData = cartData.map(cart =>
+            cart.id == data.id ? { ...cart, Remarks: resStatus?.design_remark } : cart
+          );
+          setCartData(updatedCartData);
+        }
         // setProductRemark("");
       }
     } catch (error) {
@@ -374,27 +429,39 @@ const {HandleMoveToMenu} = useBackNavigation()
 
   // for quantity
   const updateCartAndSelectedItem = (item, quantity, priceQty) => {
-    const updatedCartData = cartData.map(cart =>
-      cart.id === item.id ? { ...cart, Quantity: quantity } : cart
-    );
-    setCartData(updatedCartData);
+    let updatedCartData;
+
+    if (storeInit?.Themeno === 1) {
+      updatedCartData = finalCartData.map(cart =>
+        cart.id === item.id ? { ...cart, Quantity: quantity } : cart
+      );
+      setFinalCartData(updatedCartData);
+    } else {
+      updatedCartData = cartData.map(cart =>
+        cart.id === item.id ? { ...cart, Quantity: quantity } : cart
+      );
+      setCartData(updatedCartData);
+    }
 
     const updatedSelectedItem = selectedItem.id === item.id ? { ...selectedItem, Quantity: quantity, FinalCost: priceQty } : selectedItem;
     setSelectedItem(updatedSelectedItem);
   };
 
   const handleIncrement = async (item) => {
+    console.log("TCL: handleIncrement -> item", item)
     const newQuantity = (item?.Quantity || 0) + 1;
     const priceQty = (item?.UnitCostWithMarkUp) * newQuantity;
 
     updateCartAndSelectedItem(item, newQuantity, priceQty);
     setQtyCount(prevCount => prevCount + 1);
 
-    try {
-      const response = await updateQuantity(item.id, newQuantity, visiterId);
-      // console.log("Quantity updated successfully:", response);
-    } catch (error) {
-      console.error("Failed to update quantity:", error);
+    if (storeInit?.Themeno != 3) {
+      try {
+        const response = await updateQuantity(item.id, newQuantity, visiterId);
+        // console.log("Quantity updated successfully:", response);
+      } catch (error) {
+        console.error("Failed to update quantity:", error);
+      }
     }
   };
 
@@ -406,15 +473,16 @@ const {HandleMoveToMenu} = useBackNavigation()
       updateCartAndSelectedItem(item, newQuantity, priceQty);
       setQtyCount(prevCount => (prevCount > 1 ? prevCount - 1 : 1));
 
-      try {
-        const response = await updateQuantity(item.id, newQuantity, visiterId);
-        // console.log("Quantity updated successfully:", response);
-      } catch (error) {
-        console.error("Failed to update quantity:", error);
+      if (storeInit?.Themeno != 3) {
+        try {
+          const response = await updateQuantity(item.id, newQuantity, visiterId);
+          // console.log("Quantity updated successfully:", response);
+        } catch (error) {
+          console.error("Failed to update quantity:", error);
+        }
       }
     }
   };
-
 
   // for dropdown changes
   const handleMetalTypeChange = async (event) => {
@@ -436,16 +504,20 @@ const {HandleMoveToMenu} = useBackNavigation()
     }
   };
 
-  const handleMetalColorChange = (event) => {
+  const handleMetalColorChange = (event, selectedId) => {
     const selectedTypeName = event.target.value;
-    const selectedID = event.target.name;
-    setMtColor(selectedTypeName)
-    setSelectedItem(prevItem => ({ ...prevItem, metalcolorname: selectedTypeName }));
-
-    // const updatedMTCData = cartData?.map(cart =>
-    //   cart.id == selectedID ? { ...cart, metalcolorname: selectedTypeName } : cart
-    // );
-    // setCartData(updatedMTCData);
+    // const selectedID = event.target.name;
+    setMtColor(selectedTypeName);
+    if (storeInit?.Themeno === 1) {
+      setSelectedItem(prevItem => ({
+        ...prevItem, metalcolorname: selectedTypeName,
+        // images: `${storeInit?.CDNDesignImageFol}${selectedItem?.designno}~1~${selectedTypeName}.${selectedItem?.ImageExtension}`,
+        images: `${storeInit?.CDNDesignImageFolThumb}${selectedItem?.designno}~1~${selectedTypeName}.${selectedItem?.ImageExtension}`,
+        loading: false
+      }));
+    } else {
+      setSelectedItem(prevItem => ({ ...prevItem, metalcolorname: selectedTypeName }));
+    }
 
     const selectedMetal = metalColorCombo.find(option => option.metalcolorname === selectedTypeName);
     if (selectedMetal) {
@@ -453,6 +525,7 @@ const {HandleMoveToMenu} = useBackNavigation()
       setMetalCOLORID(selectedMetalId);
     }
   };
+
 
   const handleDiamondChange = (event) => {
     const value = event.target.value;
@@ -575,61 +648,77 @@ const {HandleMoveToMenu} = useBackNavigation()
   }
 
   const CartCardImageFunc = (pd) => {
-    return new Promise((resolve) => {
-      const loadImage = (src) => {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.src = src;
-          img.onload = () => resolve(src);
-          img.onerror = () => reject(src);
-        });
-      };
-
+    if (storeInit?.Themeno === 1) {
       const mtcCode = metalColorCombo?.find(option => option?.metalcolorname === pd?.metalcolorname);
-      let primaryImage, secondaryImage;
+      let primaryImage;
 
       if (pd?.ImageCount > 0) {
-        primaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1~${mtcCode?.colorcode}.${pd?.ImageExtension}`;
-        secondaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1.${pd?.ImageExtension}`;
+        // primaryImage = `${storeInit?.CDNDesignImageFolThumb}${pd?.designno}~1~${mtcCode?.colorcode}.${pd?.ImageExtension}`;
+        primaryImage = `${storeInit?.CDNDesignImageFolThumb}${pd?.designno}~1~${mtcCode?.colorcode}.jpg`;
+      } else {
+        primaryImage = imageNotFound; 
       }
-      else {
-        primaryImage = secondaryImage = imageNotFound;
-      }
-      // if (pd?.ImageCount > 0) {
-      //   primaryImage = `${storeInit?.DesignImageFol}${pd?.designno}_1_${mtcCode?.colorcode}.${pd?.ImageExtension}`;
-      //   secondaryImage = `${storeInit?.DesignImageFol}${pd?.designno}_1.${pd?.ImageExtension}`;
-      // } 
-      // else {
-      //   primaryImage = secondaryImage = imageNotFound;
-      // }
+      return primaryImage;
+    } else {  
+      return new Promise((resolve) => {
+        const loadImage = (src) => {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => resolve(src);
+            img.onerror = () => reject(src);
+          });
+        };
 
-      loadImage(primaryImage)
-        .then((imgSrc) => {
-          resolve(imgSrc);
-        })
-        .catch(() => {
-          loadImage(secondaryImage)
-            .then((imgSrc) => {
-              resolve(imgSrc);
-            })
-            .catch(() => {
-              resolve(imageNotFound);
-            });
-        });
-    });
+        const mtcCode = metalColorCombo?.find(option => option?.metalcolorname === pd?.metalcolorname);
+        let primaryImage, secondaryImage;
+
+        if (pd?.ImageCount > 0) {
+          primaryImage = `${storeInit?.CDNDesignImageFolThumb}${pd?.designno}~1~${mtcCode?.colorcode}.jpg`;
+          secondaryImage = `${storeInit?.CDNDesignImageFolThumb}${pd?.designno}~1.jpg`;
+          // primaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1~${mtcCode?.colorcode}.${pd?.ImageExtension}`;
+          // secondaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1.${pd?.ImageExtension}`;
+        }
+        else {
+          primaryImage = secondaryImage = imageNotFound;
+        }
+        // if (pd?.ImageCount > 0) {
+        //   primaryImage = `${storeInit?.DesignImageFol}${pd?.designno}_1_${mtcCode?.colorcode}.${pd?.ImageExtension}`;
+        //   secondaryImage = `${storeInit?.DesignImageFol}${pd?.designno}_1.${pd?.ImageExtension}`;
+        // } 
+        // else {
+        //   primaryImage = secondaryImage = imageNotFound;
+        // }
+
+        loadImage(primaryImage)
+          .then((imgSrc) => {
+            resolve(imgSrc);
+          })
+          .catch(() => {
+            loadImage(secondaryImage)
+              .then((imgSrc) => {
+                resolve(imgSrc);
+              })
+              .catch(() => {
+                resolve(imageNotFound);
+              });
+          });
+      });
+    }
+
   };
 
   // const CartCardImageFunc = (pd) => {
   //   const mtcCode = metalColorCombo?.find(option => option?.metalcolorname === pd?.metalcolorname);
   //   let primaryImage, secondaryImage;
-  
+
   //   if (pd?.ImageCount > 0) {
   //     primaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1~${mtcCode?.colorcode}.${pd?.ImageExtension}`;
   //     secondaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1.${pd?.ImageExtension}`;
   //   } else {
   //     primaryImage = secondaryImage = imageNotFound; // Fallback image if no valid images are found
   //   }
-  
+
   //   // Return the primary or secondary image directly
   //   return primaryImage || secondaryImage;
   // };  
@@ -643,18 +732,7 @@ const {HandleMoveToMenu} = useBackNavigation()
 
     setFinalCartData(initialProducts)
     setLoadingIndex(0)
-  }, [cartData])
-
-  //  useEffect(() => {
-  //   if ( LastViewedCart ) {
-  //     try {
-  //       HandleMoveToMenu(LastViewedCart,100);
-  //     } catch (error) {
-  //       console.log(error);
-  //       console.log('Error during scrolling: ' + error);
-  //     }
-  //   }
-  // }, [ LastViewedCart]);
+  }, [cartData, cartStatus])
 
   useEffect(() => {
     if (loadingIndex >= finalCartData?.length) return
@@ -667,26 +745,20 @@ const {HandleMoveToMenu} = useBackNavigation()
           images: CartCardImageFunc(newData[loadingIndex]),
           loading: false
         }
-        console.log(prevData,"cart Items")
         return newData
       })
- 
-      if (LastViewedCart) {
-        try {
-          HandleMoveToMenu(LastViewedCart,100);
-        } catch (error) {
-          console.log(error);
-          console.log('Error during scrolling: ' + error);
-        }
-      }
 
       setLoadingIndex(prevIndex => prevIndex + 1)
     }
-
-    const timer = setTimeout(loadNextProductImages, 20)
-    return () => clearTimeout(timer)
+    if (storeInit?.Themeno === 1) {
+      const timer = setTimeout(loadNextProductImages, 100)
+      return () => clearTimeout(timer)
+    }
+    else {
+      const timer = setTimeout(loadNextProductImages, 20)
+      return () => clearTimeout(timer)
+    }
   }, [loadingIndex, finalCartData, CartCardImageFunc])
-
 
   const compressAndEncode = (inputString) => {
     try {
@@ -706,9 +778,10 @@ const {HandleMoveToMenu} = useBackNavigation()
     const logindata = JSON.parse(sessionStorage.getItem("loginUserDetail"));
     const createAndNavigate = (obj) => {
       const encodedObj = compressAndEncode(JSON.stringify(obj));
-      navigate(`/d/${cartData?.TitleLine ? cartData?.TitleLine.replace(/\s+/g, `_`) + (cartData?.TitleLine?.length > 0 ? "_" : "") : ""}${cartData?.designno}?p=${encodedObj}`);
+      // navigate(`/d/${ ? cartData?.TitleLine.replace(/\s+/g, `_`) + (cartData?.TitleLine?.length > 0 ? "_" : "") : ""}${}?p=${}`);
+      navigate(`/d/${formatRedirectTitleLine(cartData?.TitleLine)}${cartData?.designno}?p=${encodedObj}`);
     }
-  
+
     if (cartData?.StockNo !== "") {
       let obj = {
         a: cartData?.autocode,
@@ -732,11 +805,9 @@ const {HandleMoveToMenu} = useBackNavigation()
       };
       createAndNavigate(obj);
     }
-    sessionStorage.setItem("LastViewedCart", cartData?.autocode);
   };
 
 
- 
   // browse our collection
   const handelMenu = () => {
     let menudata = JSON.parse(sessionStorage.getItem('menuparams'));

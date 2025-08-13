@@ -53,7 +53,8 @@ const BestSellerSection = () => {
         setStoreInit(storeinit)
 
         let data = JSON.parse(sessionStorage.getItem('storeInit'))
-        setImageUrl(data?.DesignImageFol);
+        // setImageUrl(data?.DesignImageFol);
+        setImageUrl(data?.DesignImageFolThumb);
 
         Get_Tren_BestS_NewAr_DesigSet_Album("GETBestSeller" , finalID).then((response) => {
             if (response?.Data?.rd) {
@@ -88,8 +89,10 @@ const BestSellerSection = () => {
         if (!bestSellerData?.length) return;
         const validatedData = await Promise.all(
             bestSellerData.map(async (item) => {
-                const defaultImageURL = `${imageUrl}${item?.designno}~1.${item?.ImageExtension}`;
-                const RollOverImageURL = `${imageUrl}${item?.designno}~2.${item?.ImageExtension}`;
+                // const defaultImageURL = `${imageUrl}${item?.designno}~1.${item?.ImageExtension}`;
+                // const RollOverImageURL = `${imageUrl}${item?.designno}~2.${item?.ImageExtension}`;
+                const defaultImageURL = `${imageUrl}${item?.designno}~1.jpg`;
+                const RollOverImageURL = `${imageUrl}${item?.designno}~2.jpg`;
                 // const validatedURL1 = await checkImageAvailability(defaultImageURL);
                 // const validatedURL2 = await checkImageAvailability(RollOverImageURL);
                 // return { ...item, defaultImageURL: validatedURL1, RollOverImageURL: validatedURL2 };

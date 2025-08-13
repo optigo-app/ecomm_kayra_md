@@ -13,18 +13,18 @@ const Confirmation = () => {
     const navigate = useNavigate();
     const [orderNo, setOrderNo] = useState();
     const [storeInit, setStoreInit] = useState();
-    const setCartCountVal = useSetRecoilState(CartCount); 
+    const setCartCountVal = useSetRecoilState(CartCount);
 
     const setCSSVariable = () => {
         const storeInit = JSON.parse(sessionStorage.getItem("storeInit"));
         const backgroundColor = storeInit?.IsPLW == 1 ? "#c4cfdb" : "#c0bbb1";
         document.documentElement.style.setProperty(
-          "--background-color",
-          backgroundColor
+            "--background-color",
+            backgroundColor
         );
-      };
-    
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         const fetchCartCount = async () => {
             try {
                 const cartCount = await GetCountAPI();
@@ -33,7 +33,7 @@ const Confirmation = () => {
                 console.error("Error fetching cart count:", error);
             }
         };
-    
+
         fetchCartCount();
     }, []);
 
@@ -42,7 +42,7 @@ const Confirmation = () => {
     useEffect(() => {
 
         setCSSVariable();
-        
+
         const storeInit = JSON.parse(sessionStorage.getItem("storeInit"));
         setStoreInit(storeInit);
         let orderNo = sessionStorage.getItem('orderNumber')
@@ -58,7 +58,7 @@ const Confirmation = () => {
         }
         sessionStorage.removeItem("TotalPriceData");
     }
-    
+
     function scrollToTop() {
         window.scrollTo({
             top: 0,
@@ -77,9 +77,9 @@ const Confirmation = () => {
 
     return (
         <div className='smr_confirMaindiv'>
-            <div className='smr_confirSecondMaindiv'>
-                <div className="thankYouContainer">
-                    <div className="thankYouContent">
+            <div className='smr_confirSecondMaindiv' style={{ minHeight: "75.2vh" }}>
+                <div className="thankYouContainer" >
+                    <div className="thankYouContent" style={{ minHeight: "45vh" }}>
                         <div className="thankYouMessage">
                             <img src={ThankYouImage} className='smr_orderCnfThankyouImage' />
                         </div>

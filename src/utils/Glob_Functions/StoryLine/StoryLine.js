@@ -5,14 +5,20 @@ import './StoryLine.scss';
 const ReactStoriesConfig = {
     storyInnerContainerStyles: {
         backgroundColor: "#fff",
-        filter: 'none'
+        filter: 'none',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+        width: "100%",
     },
     progressWrapperStyles: {
         height: "3px",
         borderRadius: "15px",
         backgroundColor: "#8f8f8f69",
         boxShadow: "none", // Remove any shadow
-        filter: 'none'
+        filter: 'none',
+
     },
     progressStyles: {
         height: "3px",
@@ -68,7 +74,7 @@ const getStoryContent = (isStory, selectedProduct) => {
     return storyContent;
 };
 
-const StoryLine = ({ resetKey, selectedProduct, storeInit  }) => {
+const StoryLine = ({ resetKey, selectedProduct, storeInit }) => {
     const isStory = storeInit?.RollOverNo;
     const storyContent = selectedProduct ? getStoryContent(isStory || 1, selectedProduct) : [];
     if (!selectedProduct || storyContent.length === 0) {

@@ -31,6 +31,7 @@
 
         @media (max-width: 1200px) {
             flex-direction: column-reverse;
+            justify-content: center;
         }
 
         .smr_leftSideBestSeler {
@@ -152,6 +153,7 @@
 
             .smr_leftSideBestSeler {
                 width: 100%;
+                justify-content: center;
 
                 .product-card {
                     width: calc(50% - 10px);
@@ -161,6 +163,7 @@
             .smr_rightSideBestSeler {
                 width: 100%;
                 margin-top: 20px;
+                justify-content: center;
             }
         }
 
@@ -208,6 +211,7 @@
             .smr_rightSideBestSeler {
                 width: 100%;
                 margin-top: 10px;
+                justify-content: center;
 
                 .product-card {
                     width: calc(50% - 10px) !important;

@@ -4,11 +4,14 @@
   .TopNavBar {
     width: 100%;
     transition: 0.3s ease-in-out;
+
     @media screen and (max-width: 1200px) {
       display: none;
     }
+
     .smr_flat_view_menu {
-      background-color: $backgroundColor;
+      // background-color: $backgroundColor;
+      background-color: $backgroundColordfine;
       width: 100%;
       height: 100%;
       padding-inline: 6%;
@@ -19,6 +22,7 @@
       z-index: 788;
       gap: 1rem;
       position: relative;
+
       .new_hover_banner {
         width: 100%;
         position: absolute;
@@ -47,12 +51,15 @@
             @media screen and (max-width: 1600px) {
               max-width: 60rem;
             }
+
             @media screen and (max-width: 1400px) {
               max-width: 50rem;
             }
+
             @media screen and (max-width: 1336px) {
               max-width: 45rem;
             }
+
             .level1MenuData {
               font-size: 14px;
               text-decoration: underline;
@@ -65,6 +72,7 @@
               white-space: nowrap;
             }
           }
+
           .smr_menu_level_list::-webkit-scrollbar {
             width: 12px !important;
             height: 5px;
@@ -88,6 +96,7 @@
             background: #b4b4b4c4 !important;
           }
         }
+
         .smr_right_side_banner {
           flex: 0.6;
           height: 40vh;
@@ -95,8 +104,10 @@
           align-items: center;
           gap: 1rem;
           padding: 45px;
+
           .image_box_s {
             width: 50%;
+
             img {
               width: 100%;
               height: 100%;
@@ -105,6 +116,7 @@
           }
         }
       }
+
       .menu_list_Smr {
         display: flex;
         align-items: center;
@@ -112,18 +124,22 @@
         gap: 1rem;
         padding: 15px 15px;
         position: relative;
+
         @media screen and (max-width: 1390px) {
           padding: 12px 15px;
           gap: 0.6rem;
         }
+
         &:hover {
           transition: 0.3s ease-in-out;
+
           .child_menu_hover {
             display: flex;
             flex-wrap: wrap;
             transition: 0.3s ease-in-out;
           }
         }
+
         .menu_list_Smr_0_title {
           font-size: 16px;
           font-weight: 600;
@@ -131,6 +147,7 @@
           text-transform: uppercase;
           text-decoration: none;
           position: relative;
+
           &::after {
             content: "";
             position: absolute;
@@ -142,15 +159,18 @@
             border-radius: 4px;
             transition: 0.3s ease-in-out;
           }
-          &:hover{
+
+          &:hover {
             &::after {
               width: 100%;
             }
           }
+
           @media screen and (max-width: 1390px) {
             font-size: 14px;
           }
         }
+
         .child_menu_hover {
           transition: 0.3s ease-in-out;
           position: absolute;
@@ -165,11 +185,13 @@
           min-height: auto;
           height: auto;
           padding: 10px;
+
           .smr_menu_menu {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(40%, 1fr));
             width: 100%;
             gap: 0.4rem;
+
             .smr_view_more_button {
               background-color: transparent;
               border: none;
@@ -181,6 +203,7 @@
               font-size: 13px;
               text-transform: capitalize;
             }
+
             .smr_menu_title_1 {
               font-size: 15.5px;
               font-weight: 600;
@@ -192,6 +215,7 @@
               cursor: pointer;
               line-height: 15px;
             }
+
             .smr_menu_level1 {
               .smr_menu_title_2 {
                 font-size: 13.8px;
@@ -210,6 +234,7 @@
       }
     }
   }
+
   //   .smiling_Top_header {
   //     height: 110px;
   //     background-color: $navbarbg;
@@ -234,6 +259,8 @@
     padding-inline: 6%;
     display: flex;
     height: 100%;
+    justify-content: space-between;
+    background-color: $backgroundColordfine;
   }
 
   .smiling_Top_header_div1 {
@@ -243,19 +270,40 @@
   }
 
   .smiling_Top_header_div2_web {
-    width: 30%;
+    // width: 30%;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    a {
+      cursor: pointer;
+    }
   }
 
-  .smr_mobileMenuSubDivMain{
+  .smiling_Top_header_div2_Mobile {
+    a {
+      cursor: pointer;
+    }
+  }
+
+  .smr_mobileMenuSubDivMain {
     margin-inline: 15px;
   }
 
   .smr_logo_header {
     object-fit: contain;
     max-width: 1000px;
+    user-select: none;
+    -webkit-user-select: none;
+    /* For Safari */
+    -moz-user-select: none;
+
+    a {
+      user-select: none;
+      -webkit-user-select: none;
+      /* For Safari */
+      -moz-user-select: none;
+    }
   }
 
   .smiling_Top_header_div3 {
@@ -318,7 +366,9 @@
   }
 
   .nav_li_smining_Fixed_Icone {
-    color: #7d7f85;
+    // color: #7d7f85;
+    // dfine
+    color: #fff;
     font-size: 13px;
     font-weight: 500;
     position: relative;
@@ -326,7 +376,9 @@
   }
 
   .nav_li_smining_Fixed {
-    color: #7d7f85;
+    // color: #7d7f85;
+    // dfine
+    color: #fff;
     font-size: 13px;
     font-weight: 500;
     position: relative;
@@ -373,7 +425,8 @@
     z-index: 1000;
     transform: translateY(0px);
     transition: all 0.4s ease;
-    height: 60px;
+    // height: 60px;
+    height: 80px;
   }
 
   .smr_A_link {
@@ -383,7 +436,9 @@
 
   .smr_A_linkFixed {
     text-decoration: none;
-    color: #7d7f85;
+    // color: #7d7f85;
+    // dfine
+    color: #fff;
   }
 
   /// open dropdownList
@@ -469,7 +524,8 @@
     left: 0;
     width: 100%;
     height: 150%;
-    background-color: rgba(192, 187, 177, 1.8);
+    // background-color: rgba(192, 187, 177, 1.8);
+    background-color: $backgroundColordfine;
     z-index: 999999999999;
     transition: all 0.9s ease-in-out;
   }

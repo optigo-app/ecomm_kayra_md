@@ -32,7 +32,9 @@ const Usewishlist = () => {
   const [metalColorCombo, setMetalColorCombo] = useState([]);
   const matchDataSet = useRecoilValue(for_MatchDiamonds)
   const filterDia = useRecoilValue(for_filterDiamond)
+  const [finalWishData, setFinalWishData] = useState([]);
   const LastViewedWished = sessionStorage.getItem("LastViewedWishlist");
+  const [loadingIndex, setLoadingIndex] = useState(0)
 
   useEffect(() => {
     const storeInit = JSON.parse(sessionStorage.getItem("storeInit"));
@@ -115,7 +117,11 @@ const Usewishlist = () => {
     console.log('isdiamond: ', isdiamond);
     const visiterId = Cookies.get('visiterId');
     let param = "wish";
-    setWishlistData(wishlistData.filter(cartItem => cartItem.id !== item.id));
+    if (storeInit?.Themeno === 1) {
+      setFinalWishData(finalWishData.filter(cartItem => cartItem.id !== item.id));
+    } else {
+      setWishlistData(wishlistData.filter(cartItem => cartItem.id !== item.id));
+    }
     setDiamondWishData(diamondWishData?.filter(diaItem =>
       !matchDataSet.some((diamond) => diamond?.stockno === diaItem?.stockno)
     ))
@@ -146,6 +152,7 @@ const Usewishlist = () => {
       let resStatus = response.Data.rd[0];
       if (resStatus?.msg == "success") {
         setWishlistData([]);
+        setFinalWishData([]);
         setDiamondWishData([]);
         return resStatus;
       } else {
@@ -166,10 +173,17 @@ const Usewishlist = () => {
         let resStatus = response?.Data?.rd[0];
 
         if (resStatus?.msg === "success") {
-          const updatedWishlistData = wishlistData.map(wish =>
-            wish.id === item.id ? { ...wish, IsInCart: 1 } : wish
-          );
-          setWishlistData(updatedWishlistData);
+          if (storeInit?.Themeno === 1) {
+            const updatedWishlistData = finalWishData.map(wish =>
+              wish.id === item.id ? { ...wish, IsInCart: 1 } : wish
+            );
+            setFinalWishData(updatedWishlistData);
+          } else {
+            const updatedWishlistData = wishlistData.map(wish =>
+              wish.id === item.id ? { ...wish, IsInCart: 1 } : wish
+            );
+            setWishlistData(updatedWishlistData);
+          }
         }
         return resStatus;
       } catch (error) {
@@ -257,48 +271,103 @@ const Usewishlist = () => {
   // };
 
   const WishCardImageFunc = (pd) => {
-    return new Promise((resolve) => {
-      const loadImage = (src) => {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.src = src;
-          img.onload = () => resolve(src);
-          img.onerror = () => reject(src);
-        });
-      };
-
+    if (storeInit?.Themeno === 1) {
       const mtcCode = metalColorCombo?.find(option => option?.metalcolorname === pd?.metalcolorname);
-      let primaryImage, secondaryImage;
+      let primaryImage;
 
       if (pd?.ImageCount > 0) {
-        primaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1~${mtcCode?.colorcode}.${pd?.ImageExtension}`;
-        secondaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1.${pd?.ImageExtension}`;
+        // primaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1~${mtcCode?.colorcode}.${pd?.ImageExtension}`;
+        primaryImage = `${storeInit?.CDNDesignImageFolThumb}${pd?.designno}~1~${mtcCode?.colorcode}.jpg`;
       } else {
-        primaryImage = secondaryImage = imageNotFound;
+        primaryImage = imageNotFound;
       }
-      // if (pd?.ImageCount > 0) {
-      //   primaryImage = `${storeInit?.DesignImageFol}${pd?.designno}_1_${mtcCode?.colorcode}.${pd?.ImageExtension}`;
-      //   secondaryImage = `${storeInit?.DesignImageFol}${pd?.designno}_1.${pd?.ImageExtension}`;
-      // } else {
-      //   primaryImage = secondaryImage = imageNotFound;
-      // }
+      return primaryImage;
+    } else {
+      return new Promise((resolve) => {
+        const loadImage = (src) => {
+          return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => resolve(src);
+            img.onerror = () => reject(src);
+          });
+        };
 
-      loadImage(primaryImage)
-        .then((imgSrc) => {
-          resolve(imgSrc);
-        })
-        .catch(() => {
-          loadImage(secondaryImage)
-            .then((imgSrc) => {
-              resolve(imgSrc);
-            })
-            .catch(() => {
-              resolve(imageNotFound);
-            });
-        });
-    });
+        const mtcCode = metalColorCombo?.find(option => option?.metalcolorname === pd?.metalcolorname);
+        let primaryImage, secondaryImage;
+
+        if (pd?.ImageCount > 0) {
+          primaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1~${mtcCode?.colorcode}.${pd?.ImageExtension}`;
+          secondaryImage = `${storeInit?.CDNDesignImageFol}${pd?.designno}~1.${pd?.ImageExtension}`;
+        } else {
+          primaryImage = secondaryImage = imageNotFound;
+        }
+        // if (pd?.ImageCount > 0) {
+        //   primaryImage = `${storeInit?.DesignImageFol}${pd?.designno}_1_${mtcCode?.colorcode}.${pd?.ImageExtension}`;
+        //   secondaryImage = `${storeInit?.DesignImageFol}${pd?.designno}_1.${pd?.ImageExtension}`;
+        // } else {
+        //   primaryImage = secondaryImage = imageNotFound;
+        // }
+
+        loadImage(primaryImage)
+          .then((imgSrc) => {
+            resolve(imgSrc);
+          })
+          .catch(() => {
+            loadImage(secondaryImage)
+              .then((imgSrc) => {
+                resolve(imgSrc);
+              })
+              .catch(() => {
+                resolve(imageNotFound);
+              });
+          });
+      });
+    }
   };
 
+
+  useEffect(() => {
+    if (!wishlistData) return;
+
+    // Initialize finalWishData if it's not already populated (default values)
+    if (finalWishData.length === 0) {
+      const initialProducts = wishlistData.map(data => ({
+        ...data,
+        images: [],
+        loading: true
+      }));
+      setFinalWishData(initialProducts);
+      setLoadingIndex(0); // Start with the first item
+    }
+
+    if (loadingIndex >= finalWishData?.length) return;
+
+    // Step 2: Load images sequentially for each product
+    const loadNextProductImages = () => {
+      setFinalWishData(prevData => {
+        const newData = [...prevData];
+        newData[loadingIndex] = {
+          ...newData[loadingIndex],
+          images: WishCardImageFunc(newData[loadingIndex]),
+          loading: false
+        };
+        return newData;
+      });
+
+      setLoadingIndex(prevIndex => prevIndex + 1);
+    };
+
+    if (storeInit?.Themeno === 1) {
+      const timer = setTimeout(loadNextProductImages, 100)
+      return () => clearTimeout(timer)
+    }
+    else {
+      const timer = setTimeout(loadNextProductImages, 20)
+      return () => clearTimeout(timer)
+    }
+
+  }, [wishlistData, loadingIndex, finalWishData, WishCardImageFunc]);
 
   const compressAndEncode = (inputString) => {
     try {
@@ -392,6 +461,7 @@ const Usewishlist = () => {
     itemInCart,
     updateCount,
     countDataUpdted,
+    finalWishData,
     decodeEntities,
     WishCardImageFunc,
     handleRemoveItem,

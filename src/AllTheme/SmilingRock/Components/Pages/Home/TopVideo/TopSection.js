@@ -7,108 +7,94 @@ const TopSection = () => {
   const [videoStarted, setVideoStarted] = useState(false);
   const videoRef = useRef(null);
   const [localData, setLocalData] = useState();
-  const [showControls, setShowControls] = useState(false); 
+  const [showControls, setShowControls] = useState(false);
 
   useEffect(() => {
     let localData = JSON.parse(sessionStorage.getItem("storeInit"));
-    if(localData){
+    if (localData) {
       setLocalData(localData);
     }
   }, []);
 
   const handleVideoLoad = () => {
-    setLoading(false); 
-    setShowControls(true); 
+    setLoading(false);
+    setShowControls(true);
   };
 
   const handleVideoPlay = () => {
-    setVideoStarted(true); 
+    setVideoStarted(true);
   };
 
   const handleVideoCanPlay = () => {
     if (videoRef.current) {
-      videoRef.current.play(); 
+      videoRef.current.play();
     }
   };
-  
 
   return (
-    <div className="smr_topVideoMain" style={{ minHeight: "550px" }}>
-        <video
-          ref={videoRef}
-          width="500"
-          autoPlay
-          muted
-          controls={false} 
-          loop
-          style={{ height: "auto", width: "100%" }}
-          preload="auto"
-          onLoadedData={handleVideoLoad} // Video has finished loading data
-          onPlay={handleVideoPlay} // Video has started playing
-          onCanPlay={handleVideoCanPlay} // Trigger playback once the video is fully read
-        >
-          <source
-          
-            src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`}
-            type="video/mp4"
-          />
-          <track src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`} kind="subtitles" srcLang="en" label="english"/>
-        </video>
-      {/* {localData?.Blockno === 2 && (
-        <div>
-          <img
-            src={`${storImagePath()}/images/HomePage/Banner/HomeBanner.png`}
-            style={{ width: "100%" }}
-          />
-        </div>
-      )}
+    <div className="smr_topVideoMain" style={{ minHeight: "550px" }} onContextMenu={(e) => { e.preventDefault() }}>
+      {/* {Kayra} */}
+      <video
+        ref={videoRef}
+        width="500"
+        autoPlay
+        muted
+        controls={false}
+        loop
+        style={{ height: "auto", width: "100%" }}
+        preload="auto"
+        poster={`${storImagePath()}/images/HomePage/TopSection/poster1.webp`}
+        onLoadedData={handleVideoLoad} // Video has finished loading data
+      >
+        <source
 
-      {localData?.Blockno === 1 &&
-        <video
-          ref={videoRef}
-          width="500"
-          autoPlay
-          muted
-          controls={!videoStarted}
-          loop
-          style={{ height: "auto", width: "100%" }}
-          onLoadedData={handleVideoLoad}
-          onPlay={handleVideoPlay}
-        >
-          <source
-            src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`}
-            type="video/mp4"
-          />
-        </video>
-      } */}
-      {/* 
-{localData?.Blockno === 1 && storeInit?.IsPLW == 1 ? (
-        <div>
-          <img
-            src={`${storImagePath()}/images/HomePage/MainBanner/mainTopBanner2.webp`}
-            style={{ width: "100%" }}
-          />
-        </div>
-      ) : (
-        <video
-          ref={videoRef}
-          width="500"
-          autoPlay
-          muted
-          controls={!videoStarted}
-          loop
-          style={{ height: "auto", width: "100%" }}
-          onLoadedData={handleVideoLoad}
-          onPlay={handleVideoPlay}
-        >
-          <source
-            src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`}
-            type="video/mp4"
-          />
-        </video>
-      )} */}
+          src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`}
+          type="video/mp4"
+        />
+        <track src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`} kind="subtitles" srcLang="en" label="english" />
+      </video>
 
+      {/* {Define} */}
+      {/* <video
+        ref={videoRef}
+        width="500"
+        autoPlay
+        muted
+        controls={false}
+        loop
+        style={{ height: "auto", width: "100%" }}
+        preload="auto"
+        poster={`${storImagePath()}/Banner/homepageVideoPoster.webp`}
+        onLoadedData={handleVideoLoad} // Video has finished loading data
+      >
+        <source
 
+          src={`${storImagePath()}/Banner/homepagemainvideo.webm`}
+          type="video/mp4"
+        />
+        <track src={`${storImagePath()}/Banner/homepagemainvideo.webm`} kind="subtitles" srcLang="en" label="english" />
+      </video> */}
+
+      {/* {Miora} */}
+      {/* <video
+        ref={videoRef}
+        width="500"
+        autoPlay
+        muteda
+        controls={false}
+        loop
+        style={{ height: "auto", width: "100%" }}
+        preload="auto"
+        poster={`${storImagePath()}/images/HomePage/TopSection/poster1.webp`}
+        onLoadedData={handleVideoLoad} // Video has finished loading data
+      >
+        <source
+
+          src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`}
+          type="video/mp4"
+        />
+        <track src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`} kind="subtitles" srcLang="en" label="english" />
+      </video> */}
     </div>
   );
 };

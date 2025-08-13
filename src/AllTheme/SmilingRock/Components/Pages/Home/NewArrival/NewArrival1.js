@@ -28,54 +28,52 @@ const NewArrival = () => {
     const islogin = useRecoilValue(smr_loginState);
     const setLoadingHome = useSetRecoilState(homeLoading);
     const [validatedData, setValidatedData] = useState([]);
+    const productRefs = useRef({});
 
-    useEffect(() => {
-        setLoadingHome(true);
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        callAPI();
-                        observer.unobserve(entry.target);
-                    }
-                });
-            },
-            {
-                root: null,
-                threshold: 0.5,
-            }
-        );
+    // useEffect(() => {
+    //     setLoadingHome(true);
 
-        if (newArrivalRef.current) {
-            observer.observe(newArrivalRef.current);
-        }
-        return () => {
-            if (newArrivalRef.current) {
-                observer.unobserve(newArrivalRef.current);
-            }
-        };
+    //     const handleScroll = () => {
+    //         if (!newArrivalRef.current) return;
 
-        // const loginUserDetail = JSON.parse(sessionStorage.getItem('loginUserDetail'));
-        // const storeInit = JSON.parse(sessionStorage.getItem('storeInit'));
-        // const visiterID = Cookies.get('visiterId');
-        // let finalID;
-        // if (storeInit?.IsB2BWebsite == 0) {
-        //     finalID = islogin === false ? visiterID : (loginUserDetail?.id || '0');
-        // } else {
-        //     finalID = loginUserDetail?.id || '0';
-        // }
-        // let storeinit = JSON.parse(sessionStorage.getItem("storeInit"));
-        // setStoreInit(storeinit)
+    //         const rect = newArrivalRef.current.getBoundingClientRect();
+    //         const isInView = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
 
-        // let data = JSON.parse(sessionStorage.getItem('storeInit'))
-        // setImageUrl(data?.DesignImageFol);
+    //         if (isInView) {
+    //             callAPI();
+    //             window.removeEventListener("scroll", handleScroll); // ensure it's called only once
+    //         }
+    //     };
 
-        // Get_Tren_BestS_NewAr_DesigSet_Album("GETNewArrival", finalID).then((response) => {
-        //     if (response?.Data?.rd) {
-        //         setNewArrivalData(response?.Data?.rd);
-        //     }
-        // }).catch((err) => console.log(err))
-    }, [])
+    //     window.addEventListener("scroll", handleScroll);
+    //     // Immediately check on mount
+    //     handleScroll();
+
+    //     return () => {
+    //         window.removeEventListener("scroll", handleScroll);
+    //     };
+
+    //     // const loginUserDetail = JSON.parse(sessionStorage.getItem('loginUserDetail'));
+    //     // const storeInit = JSON.parse(sessionStorage.getItem('storeInit'));
+    //     // const visiterID = Cookies.get('visiterId');
+    //     // let finalID;
+    //     // if (storeInit?.IsB2BWebsite == 0) {
+    //     //     finalID = islogin === false ? visiterID : (loginUserDetail?.id || '0');
+    //     // } else {
+    //     //     finalID = loginUserDetail?.id || '0';
+    //     // }
+    //     // let storeinit = JSON.parse(sessionStorage.getItem("storeInit"));
+    //     // setStoreInit(storeinit)
+
+    //     // let data = JSON.parse(sessionStorage.getItem('storeInit'))
+    //     // setImageUrl(data?.DesignImageFol);
+
+    //     // Get_Tren_BestS_NewAr_DesigSet_Album("GETNewArrival", finalID).then((response) => {
+    //     //     if (response?.Data?.rd) {
+    //     //         setNewArrivalData(response?.Data?.rd);
+    //     //     }
+    //     // }).catch((err) => console.log(err))
+    // }, [])
 
     const callAPI = () => {
         const loginUserDetail = JSON.parse(sessionStorage.getItem('loginUserDetail'));
@@ -91,7 +89,8 @@ const NewArrival = () => {
         setStoreInit(storeinit)
 
         let data = JSON.parse(sessionStorage.getItem('storeInit'))
-        setImageUrl(data?.CDNDesignImageFol);
+        // setImageUrl(data?.CDNDesignImageFol);
+        setImageUrl(data?.CDNDesignImageFolThumb);
 
         Get_Tren_BestS_NewAr_DesigSet_Album("GETNewArrival", finalID).then((response) => {
             setLoadingHome(false);
@@ -100,6 +99,10 @@ const NewArrival = () => {
             }
         }).catch((err) => console.log(err))
     }
+
+    useEffect(() => {
+        callAPI();
+    }, [])
 
     const checkImageAvailability = (url) => {
         return new Promise((resolve) => {
@@ -114,7 +117,8 @@ const NewArrival = () => {
         if (!newArrivalData?.length) return;
         const validatedData = await Promise.all(
             newArrivalData.map(async (item) => {
-                const imageURL = `${imageUrl}${item?.designno}~1.${item?.ImageExtension}`;
+                // const imageURL = `${imageUrl}${item?.designno}~1.${item?.ImageExtension}`;
+                const imageURL = `${imageUrl}${item?.designno}~1.jpg`;
                 // const validatedURL = await checkImageAvailability(imageURL);
                 // return { ...item, validatedImageURL: validatedURL };
                 return { ...item, validatedImageURL: imageURL };
@@ -138,7 +142,7 @@ const NewArrival = () => {
         }
     };
 
-    const handleNavigation = (designNo, autoCode, titleLine) => {
+    const handleNavigation = (designNo, autoCode, titleLine, index) => {
         let obj = {
             a: autoCode,
             b: designNo,
@@ -147,10 +151,36 @@ const NewArrival = () => {
             c: loginUserDetail?.cmboCSQCid,
             f: {}
         }
+        sessionStorage.setItem('scrollToProduct2', `product-${index}`);
         let encodeObj = compressAndEncode(JSON.stringify(obj))
         // navigation(`/d/${titleLine.replace(/\s+/g, `_`)}${titleLine?.length > 0 ? "_" : ""}${designNo}?p=${encodeObj}`)
         navigation(`/d/${formatRedirectTitleLine(titleLine)}${designNo}?p=${encodeObj}`);
     }
+
+    useEffect(() => {
+        const scrollDataStr = sessionStorage.getItem('scrollToProduct2');
+        if (!scrollDataStr) return;
+
+        const maxRetries = 10;
+        let retries = 0;
+
+        const tryScroll = () => {
+            const el = productRefs.current[scrollDataStr];
+            if (el) {
+                el.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                });
+                sessionStorage.removeItem('scrollToProduct2');
+            } else if (retries < maxRetries) {
+                retries++;
+                setTimeout(tryScroll, 200); // retry until ref is ready
+            }
+        };
+
+        tryScroll();
+
+    }, [newArrivalData]);
 
     const decodeEntities = (html) => {
         var txt = document.createElement("textarea");
@@ -180,28 +210,28 @@ const NewArrival = () => {
     return (
         <div ref={newArrivalRef}>
             {validatedData?.length != 0 &&
-                <div className='smr_newwArr1MainDiv'>
+                <div className='smr_newwArr1MainDiv' onContextMenu={(e) => e.preventDefault()}>
                     <Typography variant='h4' className='smrN_NewArr1Title'>NEW ARRIVAL
-                        <Link 
-                        className='smr_designSetViewmoreBtn'
-                          style={{
-                            fontSize:"18px",
-                            color:"grey",
-                            textDecoration:"underline" ,
-                            marginLeft:"10px",
-                            textTransform:"lowercase"
-                          }}
-                          aria-label='Click Here to See More Products'
-                          aria-live='assertive'
-                          role="link"
-                        onClick={() => navigation(`/p/NewArrival/?N=${btoa('NewArrival')}`)}>
+                        <Link
+                            className='smr_designSetViewmoreBtn'
+                            style={{
+                                fontSize: "18px",
+                                color: "gray",
+                                textDecoration: "underline",
+                                marginLeft: "10px",
+                                textTransform: "lowercase"
+                            }}
+                            aria-label='Click Here to See More Products'
+                            aria-live='assertive'
+                            role="link"
+                            onClick={() => navigation(`/p/NewArrival/?N=${btoa('NewArrival')}`)}>
                             View more
                         </Link>
                     </Typography>
                     <Grid container spacing={1} className='smr_NewArrival1product-list'>
                         {validatedData?.slice(0, 4)?.map((product, index) => (
                             <Grid item xs={6} sm={4} md={3} lg={3} key={index}>
-                                <Card className='smr_NewArrproduct-card' onClick={() => handleNavigation(product?.designno, product?.autocode, product?.TitleLine)}>
+                                <Card className='smr_NewArrproduct-card' onClick={() => handleNavigation(product?.designno, product?.autocode, product?.TitleLine, index)}>
                                     <div className='smr_newArr1Image'>
                                         <CardMedia
                                             component="img"
@@ -211,7 +241,11 @@ const NewArrival = () => {
                                                 product?.validatedImageURL
                                                 // `${imageUrl}${newArrivalData && product?.designno}~1.${newArrivalData && product?.ImageExtension}`
                                                 : imageNotFound}
+                                            draggable={true}
+                                            onContextMenu={(e) => e.preventDefault()}
                                             alt={product?.TitleLine || `newArrivalData-${index}`}
+                                            id={`product-${index}`}
+                                            ref={(el) => (productRefs.current[`product-${index}`] = el)}
                                             onError={(e) => {
                                                 e.target.src = imageNotFound
                                             }}

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import './AboutUs.modul.scss'
 import { storImagePath } from '../../../../../utils/Glob_Functions/GlobalFunction';
 import Footer from '../Home/Footer/Footer';
+import Mission from '../Home/Mission/Mission';
 
 export default function AboutUs() {
 
@@ -29,8 +30,10 @@ export default function AboutUs() {
     const AboutLastBanner = `${storImagePath()}/about/22.jpg`;
 
     useEffect(() => {
-        // fetch(`${storImagePath()}/html/About.html`) c:\Users\User\Downloads\favicon_io (1)\MaioraAbout.html
-        fetch(`${storImagePath()}/html/MaioraAbout.html`)
+        // fetch(`${storImagePath()}/html/About.html`) //MaioraAbout.html
+        // fetch(`${storImagePath()}/html/MaioraAbout.html`) // miora 
+        fetch(`${storImagePath()}/html/KayraAbout.html`) // kayra 
+        // fetch(`${storImagePath()}/html/dfine/About.html`) // dfine
             .then((response) => response.text())
             .then((html) => {
                 setHtmlContent(html);
@@ -44,8 +47,14 @@ export default function AboutUs() {
         <div className='smr_about_mainDiv'>
             <div className='daimondsEveryAbout'>
                 <div className='smr_daimondsEveryAbout_sub' style={{ paddingBottom: '80px', minHeight: '400px' }}>
-                {/* Old sonasons about us */}
+                    {/* Old sonasons about us */}
                     <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+
+
+                    {/* Dfine needed */}
+                    {/* <Mission /> */}
+
+
                     {/* <div className="stam_about_l">
                         <div className="bgimage_banner_stam">
                             <img src={AboutBanner} alt="" />

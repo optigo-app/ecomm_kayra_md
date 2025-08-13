@@ -4,6 +4,8 @@ $backgroundColor: var(--background-color);
 // $backgroundColor:  storeInit?.IsPLW == 1 ? #c4cfdb :#c0bbb1 ;
 $btn1bgColor: #fff;
 $btn1ActivebgColor: #7d7f85;
+// $backgroundColordfine: #1B3349;
+$backgroundColordfine: #c0bbb1;
 
 //fontcolors
 $primaryfontcolor: #8f8c8be6;
@@ -23,6 +25,20 @@ $primaryFontFamily: "TT Commons Regular";
 // $primaryFontFamily:"Roboto", sans-serif;
 $primaryFontFamilyMedium: "TT Commons Medium";
 // $primaryFontFamilyMedium:"Roboto", sans-serif;
+
+@keyframes scaleUpDown {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
 
 //fontSize
 $fontSize0: 10px;

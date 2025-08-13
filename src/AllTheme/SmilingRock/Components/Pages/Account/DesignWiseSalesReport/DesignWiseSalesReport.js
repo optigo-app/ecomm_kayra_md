@@ -387,6 +387,10 @@ const DesignWiseSalesReport = () => {
         let selected = data.selected;
         let offset = Math.ceil(selected * perPage);
         setOffset(offset);
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     };
 
     const fetchData = async () => {
@@ -1056,58 +1060,63 @@ const DesignWiseSalesReport = () => {
                     <Box sx={{ display: "flex", justifyContent: "center", paddingTop: "10px", margin: "0 auto" }}><CircularProgress className='loadingBarManage' /></Box> :
                     <>
                         {filterData?.length > 0 ? <Box sx={{ display: "grid", gap: "15px", paddingTop: "10px", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", }} className="designWiseSalesProducts">
-                            {filteredDataPaginated?.map((products, i) => (
-                                <div
-                                    style={{
-                                        minWidth: "100%",
-                                        border: "1px solid #e1e1e1",
-                                        textAlign: "center",
-                                        color: "#7d7f85",
-                                        position: "relative",
-                                        zIndex: 0,
-                                        background: "#c0bbb133",
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between'
-                                    }}
-                                    className="smilingProductImageBox designWiseSalesReportProduct"
-                                >
-                                    <Box sx={{ paddingBottom: "10px" }}>
-                                        <Box sx={{ minheight: "271px" }}>
-                                            {products?.imgsrc ? (
-                                                <img className="prod_img" src={products?.imgsrc} onError={(e) => e.target.src = imageNotFound} alt='' style={{ objectFit: "contain", height: "100%", minheight: "271px", maxHeight: "271px" }} />
-                                            ) : (
-                                                <Skeleton variant="rectangular" width={"100%"} style={{ marginBottom: '76px', height: '310px' }} />
-                                            )}
+                            {filteredDataPaginated?.map((products, i) => {
+                                return (
+                                    <div
+                                        style={{
+                                            minWidth: "100%",
+                                            border: "1px solid #e1e1e1",
+                                            textAlign: "center",
+                                            color: "#7d7f85",
+                                            position: "relative",
+                                            zIndex: 0,
+                                            background: "#c0bbb133",
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'space-between'
+                                        }}
+                                        className="smilingProductImageBox designWiseSalesReportProduct"
+                                    >
+                                        <Box sx={{ paddingBottom: "10px" }}>
+                                            <Box sx={{ minheight: "271px" }}>
+                                                {isLoading === false ? (
+                                                    <img className="prod_img"
+                                                        draggable={true}
+                                                        onContextMenu={(e) => e.preventDefault()}
+                                                        src={products?.imgsrc} onError={(e) => e.target.src = imageNotFound} alt='' style={{ objectFit: "contain", height: "100%", minheight: "271px", maxHeight: "271px" }} />
+                                                ) : (
+                                                    <Skeleton variant="rectangular" width={"100%"} style={{ marginBottom: '76px', height: '310px' }} />
+                                                )}
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                    <Box>
-                                        <Box sx={{ padding: "0 5px", display: "flex", justifyContent: "space-between" }}>
-                                            <Typography style={{ fontSize: "13px", textTransform: "uppercase", cursor: "pointer", fontWeight: "bold", textAlign: "start" }} >
-                                                {products?.designno}
-                                            </Typography>
-                                            <Typography style={{ fontSize: "13px", textTransform: "uppercase", cursor: "pointer", fontWeight: "bold", textAlign: "start" }} >
-                                                NetWt: {products?.DesignNetWt?.toFixed(3)}
-                                            </Typography>
-                                        </Box>
-                                        <Box sx={{ padding: "0 5px", display: "flex", justifyContent: "space-between" }}>
-                                            <Typography style={{ fontSize: "12px", textAlign: "start", }}>
-                                                Dia Pcs/Wt: {NumberWithCommas(products?.diamondpcs, 0)} / {NumberWithCommas(products?.diamondwt, 3)}
-                                            </Typography>
-                                            <Typography style={{ fontSize: "12px", textAlign: "start", }}>
-                                                Cs Pcs/Wt: {NumberWithCommas(products?.colorstonepcs, 0)} / {NumberWithCommas(products?.colorstonewt, 0)}
-                                            </Typography>
-                                        </Box>
-                                        <Box sx={{ padding: "0 5px 5px", display: "flex", justifyContent: "space-between" }}>
-                                            <Typography style={{ fontSize: "12px", textAlign: "start", }}>
-                                                Purchase Count: {NumberWithCommas(products?.salescount, 0)}
-                                            </Typography>
+                                        <Box>
+                                            <Box sx={{ padding: "0 5px", display: "flex", justifyContent: "space-between" }}>
+                                                <Typography style={{ fontSize: "13px", textTransform: "uppercase", cursor: "pointer", fontWeight: "bold", textAlign: "start" }} >
+                                                    {products?.designno}
+                                                </Typography>
+                                                <Typography style={{ fontSize: "13px", textTransform: "uppercase", cursor: "pointer", fontWeight: "bold", textAlign: "start" }} >
+                                                    NetWt: {products?.DesignNetWt?.toFixed(3)}
+                                                </Typography>
+                                            </Box>
+                                            <Box sx={{ padding: "0 5px", display: "flex", justifyContent: "space-between" }}>
+                                                <Typography style={{ fontSize: "12px", textAlign: "start", }}>
+                                                    Dia Pcs/Wt: {NumberWithCommas(products?.diamondpcs, 0)} / {NumberWithCommas(products?.diamondwt, 3)}
+                                                </Typography>
+                                                <Typography style={{ fontSize: "12px", textAlign: "start", }}>
+                                                    Cs Pcs/Wt: {NumberWithCommas(products?.colorstonepcs, 0)} / {NumberWithCommas(products?.colorstonewt, 0)}
+                                                </Typography>
+                                            </Box>
+                                            <Box sx={{ padding: "0 5px 5px", display: "flex", justifyContent: "space-between" }}>
+                                                <Typography style={{ fontSize: "12px", textAlign: "start", }}>
+                                                    Purchase Count: {NumberWithCommas(products?.salescount, 0)}
+                                                </Typography>
 
+                                            </Box>
                                         </Box>
-                                    </Box>
 
-                                </div>
-                            ))}
+                                    </div>
+                                )
+                            })}
                         </Box> : <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'grey', fontWeight: 'bold', marginTop: '3%' }}>Data Not Present</div>}
                     </>
 

@@ -49,7 +49,8 @@ const TrendingView = () => {
         setStoreInit(storeinit)
 
         let data = JSON.parse(sessionStorage.getItem('storeInit'))
-        setImageUrl(data?.DesignImageFol);
+        // setImageUrl(data?.DesignImageFol);
+        setImageUrl(data?.DesignImageFolThumb);
         const loginUserDetail = JSON.parse(sessionStorage.getItem('loginUserDetail'));
         const storeInit = JSON.parse(sessionStorage.getItem('storeInit'));
         const { IsB2BWebsite } = storeInit;
@@ -133,8 +134,10 @@ const TrendingView = () => {
         if (!trandingViewData?.length) return;
         const validatedData = await Promise.all(
             trandingViewData.map(async (item) => {
-                const defaultImageURL = `${imageUrl}${item?.designno}~1.${item?.ImageExtension}`;
-                const RollOverImageURL = `${imageUrl}${item?.designno}~2.${item?.ImageExtension}`;
+                // const defaultImageURL = `${imageUrl}${item?.designno}~1.${item?.ImageExtension}`;
+                // const RollOverImageURL = `${imageUrl}${item?.designno}~2.${item?.ImageExtension}`;
+                const defaultImageURL = `${imageUrl}${item?.designno}~1.jpg`;
+                const RollOverImageURL = `${imageUrl}${item?.designno}~2.jpg`;
                 // const validatedURL1 = await checkImageAvailability(defaultImageURL);
                 // const validatedURL2 = await checkImageAvailability(RollOverImageURL);
                 // return { ...item, defaultImageURL: validatedURL1, RollOverImageURL: validatedURL2 };

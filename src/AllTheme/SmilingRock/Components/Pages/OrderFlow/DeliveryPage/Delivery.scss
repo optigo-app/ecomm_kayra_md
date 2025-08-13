@@ -1,7 +1,7 @@
 @import '../../../scss/variable.scss';
 
 .smr_DeliverMainDiv {
-  background-color: $backgroundColor;
+  background-color: $backgroundColordfine;
 }
 
 .smr_secondMaindivAdd {
@@ -18,7 +18,7 @@
   margin-bottom: 40px;
 }
 
-.smr_TitleDetailMainDiv{
+.smr_TitleDetailMainDiv {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,7 +47,7 @@
   font-family: $homePageFontFamily !important;
   color: $titleColor !important;
 
-  .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root{
+  .css-md26zr-MuiInputBase-root-MuiOutlinedInput-root {
     border-radius: 0px !important;
   }
 }
@@ -92,7 +92,7 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-.smr_defualt_addrSelectedHide{
+.smr_defualt_addrSelectedHide {
   display: none !important;
 }
 
@@ -129,31 +129,32 @@
   }
 }
 
-.smr_dialogTitle{
+.smr_dialogTitle {
   color: $titleColor;
   font-weight: 500 !important;
   text-align: center;
 }
 
-.smr_AddNewAddrModalbtn{
-    margin-right: 20px;
-    height: 40px;
-    width: 150px;
-    font-family: $homePageFontFamily !important;
-    font-size: $fontSize3;
+.smr_AddNewAddrModalbtn {
+  margin-right: 20px;
+  height: 40px;
+  width: 150px;
+  font-family: $homePageFontFamily !important;
+  font-size: $fontSize3;
+  color: $btn1hoverFontColor;
+  background-color: $btn1ActivebgColor;
+  border: 1px solid $btn1FontColor;
+  border-radius: 0px !important;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
     color: $btn1hoverFontColor;
     background-color: $btn1ActivebgColor;
-    border: 1px solid $btn1FontColor;
-    border-radius: 0px !important;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-
-    &:hover {
-      color: $btn1hoverFontColor;
-      background-color: $btn1ActivebgColor;
-    }
+  }
 }
-.smr_Cancelbtn{
+
+.smr_Cancelbtn {
   margin-right: 20px;
   height: 40px;
   width: 150px;
@@ -172,16 +173,18 @@
   }
 }
 
-.smr_editDeleteBtngroup{
+.smr_editDeleteBtngroup {
   display: flex;
   justify-content: space-around;
   align-items: center;
   margin-bottom: 10px;
-  .smr_editIcon{
+
+  .smr_editIcon {
     font-size: 20px;
     color: $titleColor;
   }
-  .smr_DeleteIcon{
+
+  .smr_DeleteIcon {
     font-size: 20px;
     color: $titleColor
   }

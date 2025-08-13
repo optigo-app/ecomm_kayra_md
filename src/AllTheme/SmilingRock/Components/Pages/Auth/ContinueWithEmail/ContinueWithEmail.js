@@ -11,7 +11,7 @@ export default function ContinueWithEmail() {
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [storeInit, setStoreInit] = useState({});
+    const [storeInit, setStoreInit] = useState(JSON.parse(sessionStorage.getItem('storeInit')));
     const navigation = useNavigate();
     const location = useLocation();
 
@@ -19,10 +19,6 @@ export default function ContinueWithEmail() {
     const redirectEmailUrl = `/LoginWithEmail/${search}`;
     const redirectSignUpUrl = `/register/${search}`;
     const cancelRedireactUrl = `/LoginOption/${search}`;
-
-    useEffect(() => {
-        setStoreInit(JSON.parse(sessionStorage.getItem('storeInit')));
-    }, [])
 
     // const validateEmail = (email) => {
     //     const regex = /^[a-zA-Z][\w@$&#]*@[a-zA-Z]+\.[a-zA-Z]+(\.[a-zA-Z]+)?$/;
@@ -121,15 +117,15 @@ export default function ContinueWithEmail() {
     };
 
     return (
-        <div className='smr_continuemail' >
+        <div className='smr_continuemail'>
             <ToastContainer />
             {isLoading && (
                 <div className="loader-overlay">
                     <CircularProgress className='loadingBarManage' />
                 </div>
             )}
-            <div >
-                <div className='smling-forgot-main'>
+            <div>
+                <div className='smling-forgot-main' style={{ minHeight: "100%" }}>
                     <p style={{
                         textAlign: 'center',
                         paddingBlock: '60px',
@@ -151,7 +147,7 @@ export default function ContinueWithEmail() {
                         className='AuthScreenSubTitle'
                     >We'll check if you have an account, and help create one if you don't.</p>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: "40.3vh" }}>
                         <TextField
                             autoFocus
                             id="outlined-basic"

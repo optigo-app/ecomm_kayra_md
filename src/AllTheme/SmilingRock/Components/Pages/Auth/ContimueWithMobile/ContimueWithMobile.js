@@ -108,8 +108,8 @@ export default function ContimueWithMobile() {
                     <CircularProgress className='loadingBarManage' />
                 </div>
             )}
-            <div style={{ backgroundColor: '#c0bbb1' }}>
-                <div className='smling-forgot-main'>
+            <div>
+                <div className='smling-forgot-main' style={{ minHeight: "100%" }}>
                     <p style={{
                         textAlign: 'center',
                         paddingBlock: '60px',
@@ -130,7 +130,7 @@ export default function ContimueWithMobile() {
                         className='AuthScreenSubTitle'
                     >We'll check if you have an account, and help create one if you don't.</p>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: "40.6vh" }}>
                         <TextField
                             autoFocus
                             id="outlined-basic"

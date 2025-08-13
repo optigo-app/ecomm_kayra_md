@@ -22,12 +22,13 @@ const LoginOption = () => {
 
   return (
     <div className="smr_Loginoption">
-      <div className="loginDailog" >
+      <div className="loginDailog" style={{ minHeight: "100%" }}>
         <div style={{
           display: "flex",
           alignContent: "center",
           justifyContent: "center",
-          flexDirection: "column"
+          flexDirection: "column",
+          minHeight: "55.8vh"
         }}>
           <p className="loginDiTile">Log in or sign up in seconds</p>
           <p

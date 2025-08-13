@@ -1,0 +1,63 @@
+.services-section {
+    padding: 3rem 1rem;
+    text-align: center;
+    background-color: #f9f9f9;
+
+    .services-title {
+        font-size: 2rem;
+        // color: #caa544;
+        color: #000;
+        font-weight: bold;
+        margin-bottom: 2rem;
+    }
+
+    .services-cards {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+
+        .service-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 320px;
+            text-align: left;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px, rgba(0, 0, 0, 0.03) 0px 0px 0px 1px;
+
+            .service-icon {
+                font-size: 2rem;
+                color: #caa544;
+                // color: #1B3349;
+                margin-bottom: 1rem;
+                transition: color 0.3s ease;
+                width: 50px;
+            }
+
+            .service-title {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 0.75rem;
+            }
+
+            .service-description {
+                font-size: 0.95rem;
+                color: #555;
+                line-height: 1.5;
+                // text-align: justify;
+            }
+
+            // Hover effect
+            &:hover {
+                // background-color: #fff8e7;
+                background-color: #c6e5ff;
+
+                .service-icon {
+                    // color: #a88e2f; // deeper gold on hover
+                }
+            }
+        }
+    }
+}

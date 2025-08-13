@@ -1,0 +1,115 @@
+.quality-control {
+    padding: 3rem 1rem;
+    background-color: #fff;
+    text-align: center;
+
+    .quality-title {
+        font-size: 1.75rem;
+        font-weight: bold;
+        // color: #caa544;
+        color: #000;
+        margin-bottom: 2rem;
+    }
+
+    .quality-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        text-align: left;
+
+        @media (max-width: 850px) {
+            flex-direction: column;
+        }
+
+        .quality-image {
+            flex: 0 0 300px;
+            height: 300px;
+            background-color: #f5f5f5;
+            border: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+
+            @media (max-width: 850px) {
+                width: 100% !important;
+            }
+        }
+
+        .quality-text {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            text-align: justify;
+            gap: 2rem;
+            // max-width: 700px;
+            max-width: 60%;
+
+            @media (max-width: 850px) {
+                max-width: 100%;
+            }
+
+            @media (max-width: 500px) {
+                max-width: 100%;
+                flex-direction: column;
+            }
+
+            .quality-block-1 {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+
+                h3 {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                }
+
+                p {
+                    font-size: 0.95rem;
+                    line-height: 1.5;
+                    color: #444;
+                    margin-bottom: 0.5rem;
+
+                    em {
+                        font-style: italic;
+                    }
+
+                    strong {
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .quality-block-2 {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+
+                h3 {
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                }
+
+                p {
+                    font-size: 0.95rem;
+                    line-height: 1.5;
+                    color: #444;
+                    margin-bottom: 0.5rem;
+
+                    em {
+                        font-style: italic;
+                    }
+
+                    strong {
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+}
