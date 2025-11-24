@@ -1,8 +1,8 @@
 @import '../../../scss/variable.scss';
 
 .smr_topVideoMain {
-    // background-color: $backgroundColordfine;
-    background-color: #fff;
+    background-color: $backgroundColordfine;
+    // background-color: #fff;
 
     @media screen and (max-width:1200px) {
         min-height: auto !important;

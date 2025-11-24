@@ -1,6 +1,8 @@
+import { useRecoilValue } from 'recoil';
 import { storImagePath } from '../../../../../../utils/Glob_Functions/GlobalFunction';
 import Footer from '../../Home/Footer/Footer';
 import './PrivacyPolicy.scss'
+import { IsCurrentTheme } from '../../../Recoil/atom';
 
 
 const SonasonsprivacyData = {
@@ -216,6 +218,26 @@ const DfineprivacyData = {
 
 export default function PrivacyPolicy() {
     // const privacyData = SonasonsprivacyData
+
+ const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
+ console.log(IsCurrentThemeState,"IsCurrentThemeState");
+
+ let theme = ""
+ if(IsCurrentThemeState === "1"){
+    theme = ""
+ }else if(IsCurrentThemeState === "2"){
+    theme = ""
+ }else if(IsCurrentThemeState === "3"){
+    theme = DfineprivacyData
+ }else if(IsCurrentThemeState === "4"){
+    theme = SonasonsprivacyData
+ }else if(IsCurrentThemeState === "5"){
+    theme = ""
+ }
+
+
+
+
     const privacyData = DfineprivacyData
     return (
         <div className='smr_priv_mainDiv'>

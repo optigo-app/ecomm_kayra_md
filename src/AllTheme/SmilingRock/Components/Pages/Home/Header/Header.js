@@ -1103,6 +1103,8 @@ const Header = () => {
                 (
                   htmlContent?.rd[0]?.ExtraMenu == 1 &&
                   <> */}
+
+              {/* Dfine needed */}
               {/* <span
                 className="nav_li_smining nav_li_smining_Mobile"
                 style={{ cursor: "pointer" }}
@@ -1498,12 +1500,15 @@ const Header = () => {
                   </a>
                 </span>
                 {/* </>
-                  )} */}
+                  )}
 
                 {/* {htmlContent?.rd && htmlContent?.rd.length > 0 &&
                   (
                     htmlContent?.rd[0]?.ExtraMenu == 1 &&
                     <> */}
+
+                {/* dfine needed */}
+
                 {/* <span
                   className="nav_li_smining nav_li_smining_Mobile"
                   style={{ cursor: "pointer" }}

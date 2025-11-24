@@ -135,7 +135,7 @@ function Home() {
   const handleRedirectLink2 = `/p/Invisible/Collection/?M=${btoa("Invisible Collection,,/collection")}`
   const handleRedirectLink3 = `/p/Bezel/Collection/?M=${btoa("Bezel Collection,,/collection")}`
 
-  const dfine = 2;
+  const dfine = 1;
 
   return (
     <div draggable={false} onContextMenu={(e) => e.preventDefault()}>

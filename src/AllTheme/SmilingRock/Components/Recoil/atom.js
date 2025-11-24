@@ -1,4 +1,11 @@
-import { atom } from "recoil";
+import { atom, useRecoilState } from "recoil";
+
+export const ThemeType = {
+  MAIORA: "1",
+  KAYRA: "2",
+  DFINE: "3",
+}
+
 
 export const smr_companyLogo = atom({
   key: 'smr_smr_companyLogo',
@@ -44,3 +51,9 @@ export const defaultAddressState = atom({
   key: 'smr_defaultAddressState',
   default: null,
 });
+
+export const IsCurrentTheme = atom({
+  key: 'smr_IsCurrentTheme',
+  default: ThemeType.DFINE,
+})
+

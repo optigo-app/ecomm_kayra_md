@@ -2,8 +2,24 @@ import React, { useEffect } from "react";
 import Footer from "../../Home/Footer/Footer";
 import { MaioraTerms, TermsData } from "./Terms";
 import "./TermsPolicy.scss";
+import { useRecoilValue } from "recoil";
+import { IsCurrentTheme } from "../../../Recoil/atom";
 
 function TermsPolicy() {
+     const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
+
+     let theme = [];
+
+
+     if(IsCurrentThemeState === "1"){
+      theme = MaioraTerms
+    }else if(IsCurrentThemeState === "2"){
+      theme = TermsData
+    }else if(IsCurrentThemeState === "3"){
+      theme = []
+    }
+
+  
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -36,7 +52,7 @@ function TermsPolicy() {
             <div className="container2">
               {/* By Default TermsDATA */}
               {/* fOR MAIORA MaioraTerms */}
-              {TermsData?.map(({ bgColor, children, desc, title }, index) => {
+              {theme?.map(({ bgColor, children, desc, title }, index) => {
                 return (
                   <React.Fragment key={index}>
                     <div className="main_container_for">
