@@ -1,6 +1,8 @@
+import { useRecoilValue } from 'recoil';
 import { storImagePath } from '../../../../../../utils/Glob_Functions/GlobalFunction';
 import Footer from '../../Home/Footer/Footer';
 import './termsPage.scss'
+import { IsCurrentTheme } from '../../../Recoil/atom';
 
 
 const SonasonstermsData = {
@@ -318,8 +320,22 @@ const DfinetermsData = {
 
 
 export default function TermsAndConditions() {
-  // const termsData = SonasonstermsData;
-  const termsData = DfinetermsData;
+  // const termsData = SonasonstermsData;\
+   const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
+   let theme = ""
+   if(IsCurrentThemeState === "1"){
+     theme = ""
+   }else if(IsCurrentThemeState === "2"){
+     theme = ""
+   }else if(IsCurrentThemeState === "3"){
+     theme = DfinetermsData
+   }else if(IsCurrentThemeState === "4"){
+     theme = SonasonstermsData
+   }else if(IsCurrentThemeState === "5"){
+     theme = ""
+   }
+  
+  const termsData = theme;
   return (
     <div className='smr_term_mainDiv'>
       <div className='daimondsEveryterm'>

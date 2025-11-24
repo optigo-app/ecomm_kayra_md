@@ -95,6 +95,7 @@ const Lookbook = () => {
   const [dstCount, setDstCount] = useState();
   const [filterData, setFilterData] = useState([]);
   const [filterChecked, setFilterChecked] = useState({});
+  const [accordionExpanded, setAccordionExpanded] = useState({});
   const [afterFilterCount, setAfterFilterCount] = useState();
   const [selectedMetalId, setSelectedMetalId] = useState(
     loginUserDetail?.MetalId ?? ""
@@ -134,6 +135,7 @@ const Lookbook = () => {
     setCurrentPage(LookBookLastPageNo)
     setInputPage(LookBookLastPageNo);
   }, [LookBookLastPageNo])
+
   const handleImageError = (index) => {
     setImageLoadError((prev) => ({ ...prev, [index]: true }));
   };
@@ -345,20 +347,45 @@ const Lookbook = () => {
       sessionStorage.setItem("Lookbookcheckboxes", '')
       sessionStorage.setItem("listingPageNo", 1)
       setThumbsSwiper(null)
+      // Collapse all accordions when Clear All is clicked
+      setAccordionExpanded({});
     }
   };
 
   const handleCheckboxChange = (e, listname, val) => {
     const { name, checked } = e.target;
 
-    setFilterChecked((prev) => {
-      const newState = {
+    // Update filterChecked state
+    const newFilterChecked = {
+      ...filterChecked,
+      [name]: { checked, type: listname, id: name?.replace(/[a-zA-Z]/g, ''), value: val }
+    };
+    
+    setFilterChecked(newFilterChecked);
+    sessionStorage.setItem("Lookbookcheckboxes", JSON.stringify(newFilterChecked));
+    
+    // Update accordion expanded state based on checkbox status
+    // If checkbox is checked, expand the accordion
+    if (checked) {
+      setAccordionExpanded(prev => ({
         ...prev,
-        [name]: { checked, type: listname, id: name?.replace(/[a-zA-Z]/g, ''), value: val }
+        [listname]: true
+      }));
+    } else {
+      // Check if any other checkboxes in this accordion are still checked
+      const otherCheckedItems = Object.entries(newFilterChecked).some(([key, item]) => 
+        item.type === listname && item.checked && key !== name
+      );
+      
+      // Only collapse if no other items are checked
+      if (!otherCheckedItems) {
+        setAccordionExpanded(prev => ({
+          ...prev,
+          [listname]: false
+        }));
       }
-      sessionStorage.setItem("Lookbookcheckboxes", JSON.stringify(newState))
-      return newState
-    })
+    }
+    
     setThumbsSwiper(null);
   };
 
@@ -445,7 +472,6 @@ const Lookbook = () => {
     } else {
       finalprodListimg = 'a.jpg';
     }
-    console.log(finalprodListimg, "finalprodListimg")
     return finalprodListimg;
   };
 
@@ -884,24 +910,36 @@ const Lookbook = () => {
   }, []);
 
   useEffect(() => {
-    const handleNavigation = () => {
-      const Storedlookfilter = sessionStorage.getItem("Lookbookcheckboxes")
-      if (Storedlookfilter) {
-        try {
-          const parsedFilters = JSON.parse(Storedlookfilter)
-          setFilterChecked(parsedFilters)
-        } catch (err) {
-          console.error("Error parsing stored filters during navigation:", err)
+    const storedFilterChecked = sessionStorage.getItem("Lookbookcheckboxes");
+    if (storedFilterChecked) {
+      const parsedFilterChecked = JSON.parse(storedFilterChecked);
+      setFilterChecked(parsedFilterChecked);
+      
+      // Initialize accordion expanded state based on checked filters
+      const initialAccordionState = {};
+      Object.values(parsedFilterChecked).forEach(item => {
+        if (item.checked) {
+          initialAccordionState[item.type] = true;
         }
-      }
+      });
+      setAccordionExpanded(initialAccordionState);
     }
+  }, []);
 
-    window.addEventListener("popstate", handleNavigation)
-    return () => window.removeEventListener("popstate", handleNavigation)
-  }, [])
+  // Add this useEffect to update accordion state when filterChecked changes
+  useEffect(() => {
+    // Update accordion expanded state based on checked filters
+    const updatedAccordionState = {...accordionExpanded};
+    Object.values(filterChecked).forEach(item => {
+      if (item.checked) {
+        updatedAccordionState[item.type] = true;
+      }
+    });
+    setAccordionExpanded(updatedAccordionState);
+  }, []);
 
   useEffect(() => {
-    const loadFilters = () => {
+    const handleNavigation = () => {
       const Storedlookfilter = sessionStorage.getItem("Lookbookcheckboxes")
       if (Storedlookfilter) {
         try {
@@ -916,7 +954,7 @@ const Lookbook = () => {
       }
     }
 
-    loadFilters()
+    handleNavigation()
   }, [])
 
 
@@ -1454,11 +1492,27 @@ const Lookbook = () => {
                           !ele?.id?.includes("Price") && (
                             <Accordion
                               elevation={0}
+                              expanded={accordionExpanded[ele?.id] ?? Object.values(filterChecked).some(item => item.type === ele?.id && item.checked)}
+                              onChange={(event, isExpanded) => {
+                                // Allow manual expansion/collapse only if there are no checked items
+                                const hasCheckedItems = Object.values(filterChecked).some(item => item.type === ele?.id && item.checked);
+                                
+                                // If there are checked items, keep the accordion open regardless of manual collapse
+                                if (hasCheckedItems && !isExpanded) {
+                                  // Prevent collapsing when there are checked items
+                                  return;
+                                }
+                                
+                                // Otherwise, update the accordion state
+                                setAccordionExpanded(prev => ({
+                                  ...prev,
+                                  [ele?.id]: isExpanded
+                                }));
+                              }}
                               sx={{
                                 borderBottom: "1px solid #c7c8c9",
                                 borderRadius: 0,
-                                "&.MuiPaper-root.MuiAccordion-root:last-of-type":
-                                {
+                                "&.MuiPaper-root.MuiAccordion-root:last-of-type": {
                                   borderBottomLeftRadius: "0px",
                                   borderBottomRightRadius: "0px",
                                 },
@@ -1466,8 +1520,6 @@ const Lookbook = () => {
                                   background: "none",
                                 },
                               }}
-                            // expanded={accExpanded}
-                            // defaultExpanded={}
                             >
                               <AccordionSummary
                                 expandIcon={
@@ -1483,11 +1535,8 @@ const Lookbook = () => {
                                     padding: 0,
                                   },
                                 }}
-                              // className="filtercategoryLable"
                               >
-                                {/* <span> */}
                                 {ele.Name}
-                                {/* </span> */}
                               </AccordionSummary>
                               <AccordionDetails
                                 sx={{
@@ -1509,14 +1558,6 @@ const Lookbook = () => {
                                     }}
                                     key={opt?.id}
                                   >
-                                    {/* <small
-                                        style={{
-                                          fontFamily: "TT Commons, sans-serif",
-                                          color: "#7f7d85",
-                                        }}
-                                      >
-                                        {opt.Name}
-                                      </small> */}
                                     <FormControlLabel
                                       sx={{
                                         width: "100%",
@@ -1527,11 +1568,6 @@ const Lookbook = () => {
                                       control={
                                         <Checkbox
                                           name={`${ele?.id}${opt?.id}`}
-                                          // checked={
-                                          //   filterChecked[`checkbox${index + 1}${i + 1}`]
-                                          //     ? filterChecked[`checkbox${index + 1}${i + 1}`]?.checked
-                                          //     : false
-                                          // }
                                           checked={
                                             filterChecked[`${ele?.id}${opt?.id}`]
                                               ?.checked === undefined
@@ -1555,13 +1591,6 @@ const Lookbook = () => {
                                           size="small"
                                         />
                                       }
-                                      // sx={{
-                                      //   display: "flex",
-                                      //   justifyContent: "space-between", // Adjust spacing between checkbox and label
-                                      //   width: "100%",
-                                      //   flexDirection: "row-reverse", // Align items to the right
-                                      //   fontFamily:'TT Commons Regular'
-                                      // }}
                                       className="smr_mui_checkbox_label"
                                       label={opt.Name}
                                     />
@@ -1573,10 +1602,28 @@ const Lookbook = () => {
                         {ele?.id?.includes("Price") && (
                           <Accordion
                             elevation={0}
+                            expanded={accordionExpanded[ele?.id] ?? Object.values(filterChecked).some(item => item.type === ele?.id && item.checked)}
+                            onChange={(event, isExpanded) => {
+                              // Allow manual expansion/collapse only if there are no checked items
+                              const hasCheckedItems = Object.values(filterChecked).some(item => item.type === ele?.id && item.checked);
+                              
+                              // If there are checked items, keep the accordion open regardless of manual collapse
+                              if (hasCheckedItems && !isExpanded) {
+                                // Prevent collapsing when there are checked items
+                                return;
+                              }
+                              
+                              // Otherwise, update the accordion state
+                              setAccordionExpanded(prev => ({
+                                ...prev,
+                                [ele?.id]: isExpanded
+                              }));
+                            }}
                             sx={{
                               borderBottom: "1px solid #c7c8c9",
                               borderRadius: 0,
-                              "&.MuiPaper-root.MuiAccordion-root:last-of-type": {
+                              "&.MuiPaper-root.MuiAccordion-root:last-of-type":
+                              {
                                 borderBottomLeftRadius: "0px",
                                 borderBottomRightRadius: "0px",
                               },
@@ -1584,8 +1631,6 @@ const Lookbook = () => {
                                 background: "none",
                               },
                             }}
-                          // expanded={accExpanded}
-                          // defaultExpanded={}
                           >
                             <AccordionSummary
                               expandIcon={
@@ -1601,11 +1646,8 @@ const Lookbook = () => {
                                   padding: 0,
                                 },
                               }}
-                            // className="filtercategoryLable"
                             >
-                              {/* <span> */}
                               {ele.Name}
-                              {/* </span> */}
                             </AccordionSummary>
                             <AccordionDetails
                               sx={{
@@ -1628,14 +1670,6 @@ const Lookbook = () => {
                                     }}
                                     key={i}
                                   >
-                                    {/* <small
-                                        style={{
-                                          fontFamily: "TT Commons, sans-serif",
-                                          color: "#7f7d85",
-                                        }}
-                                      >
-                                        {opt.Name}
-                                      </small> */}
                                     <FormControlLabel
                                       sx={{
                                         width: "100%",
@@ -1645,17 +1679,12 @@ const Lookbook = () => {
                                       }}
                                       control={
                                         <Checkbox
-                                          name={`Price${i}${i}`}
-                                          // checked={
-                                          //   filterChecked[`checkbox${index + 1}${i + 1}`]
-                                          //     ? filterChecked[`checkbox${index + 1}${i + 1}`]?.checked
-                                          //     : false
-                                          // }
+                                          name={`${ele?.id}${i}`}
                                           checked={
-                                            filterChecked[`Price${i}${i}`]
+                                            filterChecked[`${ele?.id}${i}`]
                                               ?.checked === undefined
                                               ? false
-                                              : filterChecked[`Price${i}${i}`]
+                                              : filterChecked[`${ele?.id}${i}`]
                                                 ?.checked
                                           }
                                           style={{
@@ -1663,35 +1692,13 @@ const Lookbook = () => {
                                             padding: 0,
                                             width: "10px",
                                           }}
-                                          onClick={(e) =>
+                                          onChange={(e) =>
                                             handleCheckboxChange(e, ele?.id, opt)
                                           }
                                           size="small"
                                         />
                                       }
-                                      // sx={{
-                                      //   display: "flex",
-                                      //   justifyContent: "space-between", // Adjust spacing between checkbox and label
-                                      //   width: "100%",
-                                      //   flexDirection: "row-reverse", // Align items to the right
-                                      //   fontFamily:'TT Commons Regular'
-                                      // }}
                                       className="smr_mui_checkbox_label"
-                                      // label={
-                                      //   opt?.Minval == 0
-                                      //     ? `Under ${decodeEntities(
-                                      //       storeInit?.Currencysymbol
-                                      //     )}${opt?.Maxval}`
-                                      //     : opt?.Maxval == 0
-                                      //       ? `Over ${decodeEntities(
-                                      //         storeInit?.Currencysymbol
-                                      //       )}${opt?.Minval}`
-                                      //       : `${decodeEntities(
-                                      //         storeInit?.Currencysymbol
-                                      //       )}${opt?.Minval} - ${decodeEntities(
-                                      //         storeInit?.Currencysymbol
-                                      //       )}${opt?.Maxval}`
-                                      // }
                                       label={
                                         opt?.Minval == 0
                                           ? `Under ${loginUserDetail?.CurrencyCode ?? storeInit?.CurrencyCode}${opt?.Maxval}`
@@ -2636,6 +2643,7 @@ const Lookbook = () => {
             </div>
           </div>
           {storeInit?.IsProductListPagination == 1 &&
+            designSetLstData?.length > 0 &&
             Math.ceil(dstCount / itemsPerPage)
             > 1 && (
               <>

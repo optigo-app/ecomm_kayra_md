@@ -83,7 +83,7 @@ const ContactUs1 = () => {
                 <div>
                     <div className="contact-us-container">
                         <div className="contact-left">
-                            <h2>Contact Us</h2>
+                            {/* <h2>Contact Us</h2> */}
 
                             <div className="contact-details">
                                 <h4>Contact Details</h4>
@@ -91,6 +91,8 @@ const ContactUs1 = () => {
                                 <div className="office-block">
                                     <span className="office-label">(INDIA OFFICE)</span>
                                     <p>📍 3rd Floor, B-5,6,7, Krushnakant Compound, Vasta Devdi Rd, opp. Shivam Jeweles, Katargam, Surat, Gujarat 395004</p>
+                                    <span className="office-label">Registered Office</span>
+                                    <p>📍 118, SHANTINIKETAN SOCIETY, NR. LAZAMANI CHOWK, MOTA VARACHHA, Surat, Gujarat, 394101</p>
                                     <p>📞 +91 76000 44392</p>
                                 </div>
 

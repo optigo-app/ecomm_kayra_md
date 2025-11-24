@@ -621,9 +621,9 @@ const QuotationQuote = () => {
                                                 <TableCell align="center">{row.TotalDesign}</TableCell>
                                                 <TableCell align="right"><span  dangerouslySetInnerHTML={{__html: row?.Currencycode }}></span>&nbsp;{formatAmount(row.Amount)}</TableCell>
                                                 <TableCell align="center">
-                                                                            <div onClick={() => handlePrintUrl(row?.PrintUrl)}>
-                                                                                        <PrintIcon   />
-                                                                            </div>
+                                                    <div onClick={() => handlePrintUrl(row?.PrintUrl)}>
+                                                        <PrintIcon   />
+                                                    </div>
                                                 </TableCell>
                                                 
                                             </TableRow>

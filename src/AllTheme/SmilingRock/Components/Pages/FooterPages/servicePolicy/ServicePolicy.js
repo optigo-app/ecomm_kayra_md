@@ -2,17 +2,36 @@ import React, { useEffect, useState } from 'react'
 import { storImagePath } from '../../../../../../utils/Glob_Functions/GlobalFunction';
 import Footer from '../../Home/Footer/Footer';
 import './ServicePolicy.modul.scss'
+import { useRecoilValue } from 'recoil';
+import { IsCurrentTheme } from '../../../Recoil/atom';
 
 const ServicePolicy = () => {
 
   const [htmlContent, setHtmlContent] = useState('');
+ const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
 
 
   useEffect(() => {
+
+    let theme = ""
+    if(IsCurrentThemeState === "1"){
+      theme = "MaioraservicePolice.html"
+    }else if(IsCurrentThemeState === "2"){
+      theme = "servicePolice.html"
+    }else if(IsCurrentThemeState === "3"){
+      theme = ""
+    }else if(IsCurrentThemeState === "4"){
+      theme = "servicePolice.html"
+    }else if(IsCurrentThemeState === "5"){
+      theme = ""
+    }
+
+
     // fetch(`${storImagePath()}/html/servicePolice.html`)   /*  for kayra */
-    fetch(`${storImagePath()}/html/MaioraservicePolice.html`)   /* for mairo */
+    // fetch(`${storImagePath()}/html/MaioraservicePolice.html`)   /* for mairo */
       // fetch(`${storImagePath()}/html/servicePolice.html`)   /* for sonasons */
 
+    fetch(`${storImagePath()}/html/${theme}`)
       .then((response) => response.text())
       .then((html) => {
         setHtmlContent(html);

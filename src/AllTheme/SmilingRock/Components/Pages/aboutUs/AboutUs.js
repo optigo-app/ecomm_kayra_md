@@ -5,9 +5,14 @@ import './AboutUs.modul.scss'
 import { storImagePath } from '../../../../../utils/Glob_Functions/GlobalFunction';
 import Footer from '../Home/Footer/Footer';
 import Mission from '../Home/Mission/Mission';
+import { IsCurrentTheme } from '../../Recoil/atom';
+import { useRecoilValue } from 'recoil';
+
 
 export default function AboutUs() {
-
+    
+ const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
+ 
     const [htmlContent, setHtmlContent] = useState('');
     const data = [
         {
@@ -29,11 +34,24 @@ export default function AboutUs() {
     const AboutBanner = `${storImagePath()}/about/1.png`;
     const AboutLastBanner = `${storImagePath()}/about/22.jpg`;
 
-    useEffect(() => {
-        // fetch(`${storImagePath()}/html/About.html`) //MaioraAbout.html
-        // fetch(`${storImagePath()}/html/MaioraAbout.html`) // miora 
-        fetch(`${storImagePath()}/html/KayraAbout.html`) // kayra 
-        // fetch(`${storImagePath()}/html/dfine/About.html`) // dfine
+//       MAIORA: "1",
+//   KAYRA: "2",
+//   DFINE: "3",
+ useEffect(() => {
+        let theme = ""
+        if(IsCurrentThemeState === "1"){
+            theme = "MaioraAbout.html"
+            // fetch(`${storImagePath()}/html/About.html`) //MaioraAbout.html
+            // fetch(`${storImagePath()}/html/MaioraAbout.html`) // miora 
+
+        }else if(IsCurrentThemeState === "2"){
+            theme = "KayraAbout.html"
+        // fetch(`${storImagePath()}/html/KayraAbout.html`) // kayra 
+        }else if(IsCurrentThemeState === "3"){
+            theme = "dfine/About.html"
+            // fetch(`${storImagePath()}/html/dfine/About.html`) // dfine
+        }
+        fetch(`${storImagePath()}/html/${theme}`)
             .then((response) => response.text())
             .then((html) => {
                 setHtmlContent(html);

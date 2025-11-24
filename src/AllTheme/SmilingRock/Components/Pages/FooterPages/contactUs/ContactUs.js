@@ -7,11 +7,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { storImagePath } from '../../../../../../utils/Glob_Functions/GlobalFunction';
 import { BespokeAPI } from '../../../../../../utils/API/Bespoke/BespokeAPI';
 import { ContactUsAPI } from '../../../../../../utils/API/ContactUs/ContactUsAPI';
+import { useRecoilValue } from 'recoil';
+import { IsCurrentTheme } from '../../../Recoil/atom';
 
 export default function ContactUs() {
     const [activeTab, setActiveTab] = useState('M1');
     const [htmlContent, setHtmlContent] = useState('');
     const [loading, setLoading] = useState(false);
+ const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
@@ -25,10 +28,23 @@ export default function ContactUs() {
     }, []);
 
     useEffect(() => {
-        fetch(`${storImagePath()}/html/contactPage.html`)  /*  for kayra only */
+        let theme = ""
+        if(IsCurrentThemeState === "1"){
+            theme = "MaioraContact.html"
+        }else if(IsCurrentThemeState === "2"){
+            theme = "KayraContact.html"
+        }else if(IsCurrentThemeState === "3"){
+            theme = "DfineContact.html"
+        }else if(IsCurrentThemeState === "4"){
+            theme = "SonasonsContact.html"
+        }else if(IsCurrentThemeState === "5"){
+            theme = "MairoContact.html"
+        }
+            // fetch(`${storImagePath()}/html/contactPage.html`)  /*  for kayra only */
             // fetch(`${storImagePath()}/html/dfinecontact.html`)  /*  for dfine only */
             // fetch(`${storImagePath()}/html/SonasonsContactPage.html`)  /* for sonsons only  */
             // fetch(`${storImagePath()}/html/MairocontactPage.html`)  /* for mairo only */
+            fetch(`${storImagePath()}/html/${theme}`)
             .then((response) => response.text())
             .then((html) => {
                 setHtmlContent(html);

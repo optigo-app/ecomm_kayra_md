@@ -91,7 +91,7 @@ const Footer = ({ fromPage }) => {
                     fontWeight: 500,
                     cursor: 'pointer'
                   }}
-                  onClick={() => navigation('/TermsPolicy')}
+                    onClick={() => navigation('/TermsPolicy')}
                   >Terms & Privacy</p>
                 </div>
               </div>
@@ -119,7 +119,7 @@ const Footer = ({ fromPage }) => {
                         {/* no need in sonasons, need in dfine */}
                         {/* <p className='footerMoreOptionData' onClick={() => { navigation('/terms-and-conditions'); window.scrollTo(0, 0); }}>TERMS & CONDITIONS</p> */}
                         {/* no need in sonasons, need in dfine */}
-                        {/* <p className='footerMoreOptionData' onClick={() => { navigation('/privacyPolicy'); window.scrollTo(0, 0); }}>PRIVACY POLICY</p> */}
+                        <p className='footerMoreOptionData' onClick={() => { navigation('/privacyPolicy'); window.scrollTo(0, 0); }}>PRIVACY POLICY</p>
                         {/* no need in sonasons, need in dfine */}
                         {/* <p className='footerMoreOptionData' onClick={() => { navigation('/aboutUs'); window.scrollTo(0, 0); }}>ABOUT US</p> */}
 

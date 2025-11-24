@@ -235,7 +235,7 @@ const SmilingRock_App = () => {
     </Box>
   );
 
-  const dfine = 1;
+  const dfine = 0;
 
   function ProductListWrapper() {
     return (
@@ -361,7 +361,7 @@ const SmilingRock_App = () => {
               </div>
             }
           />
-          <Route path="/ContactUs" element={dfine === 2 ? <ContactUs1 /> : <ContactUs />} />
+          <Route path="/ContactUs" element={dfine === 1 ? <ContactUs1 /> : <ContactUs />} />
           {/* Maiora needed servicePolicy */}
           {/* Kayra not needed */}
           {/* sonasons needed */}
