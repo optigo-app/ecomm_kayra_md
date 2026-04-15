@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { storImagePath } from "../../../../../../utils/Glob_Functions/GlobalFunction";
 import "./TopSection.modul.scss";
+import { useRecoilValue } from "recoil";
+import { IsCurrentTheme } from "../../../Recoil/atom";
 
 const TopSection = () => {
   const [loading, setLoading] = useState(false);
@@ -8,6 +10,7 @@ const TopSection = () => {
   const videoRef = useRef(null);
   const [localData, setLocalData] = useState();
   const [showControls, setShowControls] = useState(false);
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
 
   useEffect(() => {
     let localData = JSON.parse(sessionStorage.getItem("storeInit"));
@@ -34,28 +37,32 @@ const TopSection = () => {
   return (
     <div className="smr_topVideoMain" style={{ minHeight: "550px" }} onContextMenu={(e) => { e.preventDefault() }}>
       {/* {Kayra} */}
-      <video
-        ref={videoRef}
-        width="500"
-        autoPlay
-        muted
-        controls={false}
-        loop
-        style={{ height: "auto", width: "100%" }}
-        preload="auto"
-        poster={`${storImagePath()}/images/HomePage/TopSection/poster1.webp`}
-        onLoadedData={handleVideoLoad} // Video has finished loading data
-      >
-        <source
+      {IsCurrentThemeState === "2" && (
+        <>
+          <video
+            ref={videoRef}
+            width="500"
+            autoPlay
+            muted
+            controls={false}
+            loop
+            style={{ height: "auto", width: "100%" }}
+            preload="auto"
+            poster={`${storImagePath()}/images/HomePage/TopSection/poster1.webp`}
+            onLoadedData={handleVideoLoad} // Video has finished loading data
+          >
+            <source
 
-          src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`}
-          type="video/mp4"
-        />
-        <track src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`} kind="subtitles" srcLang="en" label="english" />
-      </video>
+              src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`}
+              type="video/mp4"
+            />
+            <track src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`} kind="subtitles" srcLang="en" label="english" />
+          </video>
+        </>
+      )}
 
       {/* {Define} */}
-      {/* <video
+      {IsCurrentThemeState === "3" && (<video
         ref={videoRef}
         width="500"
         autoPlay
@@ -73,10 +80,10 @@ const TopSection = () => {
           type="video/mp4"
         />
         <track src={`${storImagePath()}/Banner/homepagemainvideo.webm`} kind="subtitles" srcLang="en" label="english" />
-      </video> */}
+      </video>)}
 
       {/* {Miora} */}
-      {/* <video
+      {IsCurrentThemeState === "1" && (<video
         ref={videoRef}
         width="500"
         autoPlay
@@ -94,7 +101,7 @@ const TopSection = () => {
           type="video/mp4"
         />
         <track src={`${storImagePath()}/images/HomePage/TopSection/HomepageMainBannerVideo.mp4`} kind="subtitles" srcLang="en" label="english" />
-      </video> */}
+      </video>)}
     </div>
   );
 };

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import './Footer.modul.scss'
 import { useNavigate } from 'react-router';
 import { storImagePath } from '../../../../../../utils/Glob_Functions/GlobalFunction';
+import { IsCurrentTheme } from '../../../Recoil/atom';
+import { useRecoilValue } from 'recoil';
 
 const Footer = ({ fromPage }) => {
 
@@ -10,6 +12,8 @@ const Footer = ({ fromPage }) => {
   const [localData, setLocalData] = useState(JSON.parse(sessionStorage?.getItem("storeInit")));
   let storeinit = JSON.parse(sessionStorage?.getItem("storeInit"));
   const [htmlContent, setHtmlContent] = useState("");
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
+
 
   useEffect(() => {
     fetch(`${storImagePath()}/ExtraFlag.txt`)
@@ -65,33 +69,42 @@ const Footer = ({ fromPage }) => {
                       htmlContent?.rd[0]?.ExtraMenu == 1 &&
                       <>
                         {/* no need in sonasons */}
-
-                        <p className='footerMoreOptionData' onClick={() => { navigation('/ExpertAdvice'); window.scrollTo(0, 0); }}>EXPERT ADVICE</p>
-                        {/* no need in sonasons, need in dfine */}
-                        {/* <p className='footerMoreOptionData' onClick={() => { navigation('/terms-and-conditions'); window.scrollTo(0, 0); }}>TERMS & CONDITIONS</p> */}
-                        {/* no need in sonasons, need in dfine */}
-                        {/* <p className='footerMoreOptionData' onClick={() => { navigation('/privacyPolicy'); window.scrollTo(0, 0); }}>PRIVACY POLICY</p> */}
-                        {/* no need in sonasons, need in dfine */}
-                        {/* <p className='footerMoreOptionData' onClick={() => { navigation('/aboutUs'); window.scrollTo(0, 0); }}>ABOUT US</p> */}
-
-                        {/* Maiora not needed */}
-                        {/* Kayra needed */}
-                        {/* no need in sonasons */}
-                        <p className='footerMoreOptionData' onClick={() => { navigation('/FunFact'); window.scrollTo(0, 0); }}>FUN FACT</p>
+                        {IsCurrentThemeState === "1" && <>
+                          {/* Maiora */}
+                          <p className='footerMoreOptionData' onClick={() => { navigation('/ExpertAdvice'); window.scrollTo(0, 0); }}>EXPERT ADVICE</p>
+                        </>
+                        }
+                        {IsCurrentThemeState === "2" && <>
+                          {/* kAYRA */}
+                          <p className='footerMoreOptionData' onClick={() => { navigation('/ExpertAdvice'); window.scrollTo(0, 0); }}>EXPERT ADVICE</p>
+                          <p className='footerMoreOptionData' onClick={() => { navigation('/FunFact'); window.scrollTo(0, 0); }}>FUN FACT</p>
+                        </>
+                        }
+                        {IsCurrentThemeState === "3" && <>
+                          {/* dEFINE */}
+                          <p className='footerMoreOptionData' onClick={() => { navigation('/terms-and-conditions'); window.scrollTo(0, 0); }}>TERMS & CONDITIONS</p>
+                          <p className='footerMoreOptionData' onClick={() => { navigation('/privacyPolicy'); window.scrollTo(0, 0); }}>PRIVACY POLICY</p>
+                          <p className='footerMoreOptionData' onClick={() => { navigation('/aboutUs'); window.scrollTo(0, 0); }}>ABOUT US</p>
+                        </>
+                        }
                       </>
                     )}
                 </div>
                 <div className='footerMoreText'>
                   {/* Maiora not needed */}
                   {/* Kayra needed */}
-                  <Copyright localData={localData} />
+                  {IsCurrentThemeState !== "1" && <Copyright
+                   IsCurrentThemeState={IsCurrentThemeState}
+                  localData={localData} />}
                   <p style={{
                     color: '#7d7f85',
                     fontSize: '12px',
                     fontWeight: 500,
-                    cursor: 'pointer'
+                    cursor: IsCurrentThemeState !== "3" ? 'pointer' : 'default',
+                    pointerEvents: IsCurrentThemeState !== "3" ? 'auto' : 'none'
                   }}
-                    onClick={() => navigation('/TermsPolicy')}
+                    onClick={IsCurrentThemeState !== "3" ? () => navigation('/TermsPolicy') : undefined}
+
                   >Terms & Privacy</p>
                 </div>
               </div>
@@ -158,12 +171,15 @@ const Footer = ({ fromPage }) => {
 export default Footer;
 
 
-const Copyright = ({ localData, title }) => {
+const Copyright = ({ localData, title ,IsCurrentThemeState }) => {
+  // Copyright ©️ 2026. Kayra Creation Limited. All rights reserved.
+  const isKayra = IsCurrentThemeState ===  "2" ? `Copyright © ${new Date().getFullYear()}. Kayra Creation Limited. All rights reserved.` : `© ${new Date()?.getFullYear()}, ${title || localData?.companyname}`;
+
   return <p style={{
     color: '#7d7f85',
     fontSize: '12px',
     fontWeight: 500,
     marginInline: '15px'
-  }}>© {new Date()?.getFullYear()}, {title || localData?.companyname}</p>
+  }}>{isKayra}</p>
   {/* // }}>© 2024, optigoapps</p> */ }
 }

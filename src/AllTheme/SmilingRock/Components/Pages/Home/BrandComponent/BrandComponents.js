@@ -1,8 +1,12 @@
 import Marquee from "react-fast-marquee";
 import "./brandComponents.scss";
 import { storImagePath } from "../../../../../../utils/Glob_Functions/GlobalFunction";
+import { IsCurrentTheme } from '../../../Recoil/atom';
+import { useRecoilValue } from 'recoil';
 
 const BrandsComponent = () => {
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
+
   const kayralogo = [
     "logo1.png",
     "logo2.png",
@@ -114,6 +118,21 @@ const BrandsComponent = () => {
       style={{ width: "130px", objectFit: "cover", marginRight: "90px" }}
     />
   ));
+
+  let themelogo;
+
+  if (IsCurrentThemeState === "1") {
+    themelogo = MayoralogoElements
+  }
+  else if (IsCurrentThemeState === "2") {
+    themelogo = KayralogoElements
+  }
+  else if (IsCurrentThemeState === "3") {
+    themelogo = dfinelogoElements
+  } else {
+    themelogo = SonasonslogoElements
+  }
+  
   return (
     <div id="brandsComponentID" className="smr_brandsComponentsDiv">
       {/* For kayra */}
@@ -129,7 +148,7 @@ const BrandsComponent = () => {
         pauseOnHover={true}
       // style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
       >
-        {KayralogoElements}
+        {themelogo}
       </Marquee>
     </div>
   );

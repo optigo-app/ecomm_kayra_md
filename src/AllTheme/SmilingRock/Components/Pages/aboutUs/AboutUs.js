@@ -1,79 +1,72 @@
-
-
-import React, { useEffect, useState } from 'react'
-import './AboutUs.modul.scss'
-import { storImagePath } from '../../../../../utils/Glob_Functions/GlobalFunction';
-import Footer from '../Home/Footer/Footer';
-import Mission from '../Home/Mission/Mission';
-import { IsCurrentTheme } from '../../Recoil/atom';
-import { useRecoilValue } from 'recoil';
-
+import React, { useEffect, useState } from "react";
+import "./AboutUs.modul.scss";
+import { storImagePath } from "../../../../../utils/Glob_Functions/GlobalFunction";
+import Footer from "../Home/Footer/Footer";
+import Mission from "../Home/Mission/Mission";
+import { IsCurrentTheme } from "../../Recoil/atom";
+import { useRecoilValue } from "recoil";
 
 export default function AboutUs() {
-    
- const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
- 
-    const [htmlContent, setHtmlContent] = useState('');
-    const data = [
-        {
-            title: "Crafting Timeless Elegance",
-            desc: "At [Your Brand Name], we believe that jewelry is more than just an accessory—it's a statement of individuality and grace. Our collections are carefully designed and crafted by skilled artisans, ensuring each piece embodies the perfect balance of beauty and craftsmanship. From the selection of the finest materials to the intricate details of every design, we create jewelry that tells a story and lasts a lifetime.",
-            img: `${storImagePath()}/about/2.png`,
-        },
-        {
-            title: "Our Commitment to Quality",
-            desc: "Every piece of jewelry we create is a reflection of our dedication to quality. We source only the finest gemstones and precious metals, ensuring that each item meets the highest standards of excellence. Whether it’s a sparkling diamond ring or a delicate gold necklace, our commitment to quality ensures that every creation exudes luxury and sophistication.",
-            img: `${storImagePath()}/about/4.png`,
-        },
-        {
-            title: "Designed for Every Moment",
-            desc: "Our jewelry is designed to complement every aspect of life—from everyday elegance to the most special occasions. Each collection is crafted with a blend of modern trends and timeless sophistication, making it easy to find a piece that’s perfect for you or a loved one. Celebrate life’s most precious moments with jewelry that speaks to the heart and soul.",
-            img: `${storImagePath()}/about/4.png`,
-        },
-    ];
-    const AboutBanner = `${storImagePath()}/about/1.png`;
-    const AboutLastBanner = `${storImagePath()}/about/22.jpg`;
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
 
-//       MAIORA: "1",
-//   KAYRA: "2",
-//   DFINE: "3",
- useEffect(() => {
-        let theme = ""
-        if(IsCurrentThemeState === "1"){
-            theme = "MaioraAbout.html"
-            // fetch(`${storImagePath()}/html/About.html`) //MaioraAbout.html
-            // fetch(`${storImagePath()}/html/MaioraAbout.html`) // miora 
+  const [htmlContent, setHtmlContent] = useState("");
+  const data = [
+    {
+      title: "Crafting Timeless Elegance",
+      desc: "At [Your Brand Name], we believe that jewelry is more than just an accessory—it's a statement of individuality and grace. Our collections are carefully designed and crafted by skilled artisans, ensuring each piece embodies the perfect balance of beauty and craftsmanship. From the selection of the finest materials to the intricate details of every design, we create jewelry that tells a story and lasts a lifetime.",
+      img: `${storImagePath()}/about/2.png`,
+    },
+    {
+      title: "Our Commitment to Quality",
+      desc: "Every piece of jewelry we create is a reflection of our dedication to quality. We source only the finest gemstones and precious metals, ensuring that each item meets the highest standards of excellence. Whether it’s a sparkling diamond ring or a delicate gold necklace, our commitment to quality ensures that every creation exudes luxury and sophistication.",
+      img: `${storImagePath()}/about/4.png`,
+    },
+    {
+      title: "Designed for Every Moment",
+      desc: "Our jewelry is designed to complement every aspect of life—from everyday elegance to the most special occasions. Each collection is crafted with a blend of modern trends and timeless sophistication, making it easy to find a piece that’s perfect for you or a loved one. Celebrate life’s most precious moments with jewelry that speaks to the heart and soul.",
+      img: `${storImagePath()}/about/4.png`,
+    },
+  ];
+  const AboutBanner = `${storImagePath()}/about/1.png`;
+  const AboutLastBanner = `${storImagePath()}/about/22.jpg`;
 
-        }else if(IsCurrentThemeState === "2"){
-            theme = "KayraAbout.html"
-        // fetch(`${storImagePath()}/html/KayraAbout.html`) // kayra 
-        }else if(IsCurrentThemeState === "3"){
-            theme = "dfine/About.html"
-            // fetch(`${storImagePath()}/html/dfine/About.html`) // dfine
-        }
-        fetch(`${storImagePath()}/html/${theme}`)
-            .then((response) => response.text())
-            .then((html) => {
-                setHtmlContent(html);
-            })
-            .catch((error) => {
-                console.error('Error fetching the HTML file:', error);
-            });
-    }, []);
+  //       MAIORA: "1",
+  //   KAYRA: "2",
+  //   DFINE: "3",
+  useEffect(() => {
+    let theme = "";
+    if (IsCurrentThemeState === "1") {
+      theme = "MaioraAbout.html";
+      // fetch(`${storImagePath()}/html/About.html`) //MaioraAbout.html
+      // fetch(`${storImagePath()}/html/MaioraAbout.html`) // miora
+    } else if (IsCurrentThemeState === "2") {
+      theme = "KayraAbout.html";
+      // fetch(`${storImagePath()}/html/KayraAbout.html`) // kayra
+    } else if (IsCurrentThemeState === "3") {
+      theme = "dfine/About.html";
+      // fetch(`${storImagePath()}/html/dfine/About.html`) // dfine
+    }
+    fetch(`${storImagePath()}/html/${theme}`)
+      .then((response) => response.text())
+      .then((html) => {
+        setHtmlContent(html);
+      })
+      .catch((error) => {
+        console.error("Error fetching the HTML file:", error);
+      });
+  }, []);
 
-    return (
-        <div className='smr_about_mainDiv'>
-            <div className='daimondsEveryAbout'>
-                <div className='smr_daimondsEveryAbout_sub' style={{ paddingBottom: '80px', minHeight: '400px' }}>
-                    {/* Old sonasons about us */}
-                    <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+  return (
+    <div className="smr_about_mainDiv">
+      <div className="daimondsEveryAbout">
+        <div className="smr_daimondsEveryAbout_sub" style={{ paddingBottom: "80px", minHeight: "400px" }}>
+          {/* Old sonasons about us */}
+          <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
+          {/* Dfine needed */}
+          {IsCurrentThemeState === "3" && <Mission />}
 
-                    {/* Dfine needed */}
-                    {/* <Mission /> */}
-
-
-                    {/* <div className="stam_about_l">
+          {/* <div className="stam_about_l">
                         <div className="bgimage_banner_stam">
                             <img src={AboutBanner} alt="" />
                         </div>
@@ -119,21 +112,28 @@ export default function AboutUs() {
                             })}
                         </div>
                     </div> */}
-                </div>
-                <Footer />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', paddingBlock: '30px' }}>
-                <p style={{ margin: '0px', fontWeight: 500, width: '100px', color: 'white', cursor: 'pointer' }} onClick={() => window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                })}>BACK TO TOP</p>
-            </div>
         </div>
-    )
+        <Footer />
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", paddingBlock: "30px" }}>
+        <p
+          style={{ margin: "0px", fontWeight: 500, width: "100px", color: "white", cursor: "pointer" }}
+          onClick={() =>
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            })
+          }
+        >
+          BACK TO TOP
+        </p>
+      </div>
+    </div>
+  );
 }
 
-
-{/* <div>
+{
+  /* <div>
                 <img
                     src="https://cdn.accentuate.io/19336364132/3641674891364/Stocksy_txpdd2f673ddEJ200_Medium_1086442.jpg?1733x1155"
                     alt="..."
@@ -148,7 +148,8 @@ export default function AboutUs() {
                     color: 'white',
                     fontFamily: 'FreightDispProBook-Regular,Times New Roman,serif'
                 }}>About Us</p>
-            </div> */}
+            </div> */
+}
 
 // <div className='daimondsEveryAboutSub'>
 // <div style={{
@@ -196,11 +197,8 @@ export default function AboutUs() {
 // </div>
 // </div>
 
-
-
-
-
-{/* <div>
+{
+  /* <div>
                     <div>
                         <p style={{ fontSize: '25px', color: '#7d7f85', textAlign: 'center', fontFamily: 'FreightDispProMedium-Regular,Times New Roman,serif', marginTop: '80px' }}>Gentereted</p>
                         <div className='about-foundersDesc'>
@@ -220,6 +218,9 @@ export default function AboutUs() {
                     <div style={{display : 'flex', justifyContent : 'center'}}>
                         <iframe src="https://player.vimeo.com/video/431344262" width="640" height="480" frameborder="0" allowfullscreen=""></iframe>
                     </div>
-                </div> */}
+                </div> */
+}
 
-{/* <ContactForm /> */ }
+{
+  /* <ContactForm /> */
+}

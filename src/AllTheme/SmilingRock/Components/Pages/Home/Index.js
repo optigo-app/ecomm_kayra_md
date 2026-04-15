@@ -1,6 +1,6 @@
 import React, { lazy, useEffect, useLayoutEffect, useState } from "react";
 import "./Index.modul.scss";
-import { homeLoading } from "../../Recoil/atom";
+import { homeLoading, IsCurrentTheme } from "../../Recoil/atom";
 import { useRecoilValue } from "recoil";
 import Cookies from 'js-cookie'
 import QualityCore from "./QualityCore/QualityCore";
@@ -70,6 +70,7 @@ function Home() {
   const [collection3, setCollection3] = useState([]);
   const [isMount, setIsMount] = useState(true)
   const [error, setError] = useState(null);
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
 
   const localData = JSON?.parse(sessionStorage.getItem("storeInit"));
 
@@ -135,11 +136,11 @@ function Home() {
   const handleRedirectLink2 = `/p/Invisible/Collection/?M=${btoa("Invisible Collection,,/collection")}`
   const handleRedirectLink3 = `/p/Bezel/Collection/?M=${btoa("Bezel Collection,,/collection")}`
 
-  const dfine = 1;
+  const dfine = IsCurrentThemeState === "3";
 
   return (
     <div draggable={false} onContextMenu={(e) => e.preventDefault()}>
-      {dfine === 1 ? (
+      {dfine ? (
         <>
           {/* {htmlContent?.rd && htmlContent?.rd.length > 0 && */}
           {localData?.YearCode !== "" &&
@@ -198,8 +199,8 @@ function Home() {
                           fontWeight: 500,
                           letterSpacing: "1px",
                           whiteSpace: "nowrap",
-                          backgroundColor: '#1B3349'
                         }}
+                      className="Smiling_Rock_Footer_BTP"
                         onClick={() =>
                           window.scrollTo({
                             top: 0,
@@ -301,9 +302,8 @@ function Home() {
                         fontWeight: 500,
                         letterSpacing: "1px",
                         whiteSpace: "nowrap",
-                        // backgroundColor: '#1B3349'
-                        backgroundColor: '#c0bbb1'
                       }}
+                      className="Smiling_Rock_Footer_BTP"
                       onClick={() =>
                         window.scrollTo({
                           top: 0,
@@ -311,7 +311,7 @@ function Home() {
                         })
                       }
                     >
-                      BACK TO TOP
+                      BACK TO TOP  
                     </p>
                   }
                 </div>

@@ -3,6 +3,7 @@ import "./Header.modul.scss";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   CartCount,
+  IsCurrentTheme,
   WishCount,
   cartB2CDrawer,
   smr_companyLogo,
@@ -36,6 +37,7 @@ const Header = () => {
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
   const [isHeaderFixedDropShow, setIsHeaderFixedDropShow] = useState(false);
   const searchOverlayRef = useRef(null);
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
 
   const compnyLogo = useRecoilValue(smr_companyLogo);
   const compnyLogoM = useRecoilValue(smr_companyLogoM);
@@ -1007,7 +1009,9 @@ const Header = () => {
         <div className="smiling_Top_header_sub">
           <div className="smiling_Top_header_div1">
             <ul className="nav_ul_shop">
-              {/* {IsB2BWebsiteChek == 1 ? (
+              {
+              IsCurrentThemeState === "1" &&
+             ( IsB2BWebsiteChek == 1 ? (
                 islogin == true ? (
                   <li 
                     className="nav_li_smining nav_li_smining_shop"
@@ -1051,20 +1055,23 @@ const Header = () => {
                     />
                   </span>
                 </li>
-              )} */}
+              ))
+             }
 
               {/* Miora Needed */}
               {/* Kayra Don't */}
               {/* sonasons needs */}
-              {/* <li
-                className="nav_li_smining nav_li_smining_Mobile"
-                style={{ cursor: "pointer" }}
-                onClick={(event) => hanldeStaticPageNavigation(event, "/servicePolicy")}
-              >
-                <a href="/servicePolicy" className="smr_A_link">
-                  SERVICE POLICY
-                </a>
-              </li> */}
+              {
+                IsCurrentThemeState === "1" && <li
+                  className="nav_li_smining nav_li_smining_Mobile"
+                  style={{ cursor: "pointer" }}
+                  onClick={(event) => hanldeStaticPageNavigation(event, "/servicePolicy")}
+                >
+                  <a href="/servicePolicy" className="smr_A_link">
+                    SERVICE POLICY
+                  </a>
+                </li>
+              }
 
               {/* Define don't need this */}
               {/* {htmlContent?.rd && htmlContent?.rd.length > 0 &&
@@ -1072,7 +1079,7 @@ const Header = () => {
                   htmlContent?.rd[0]?.ExtraMenu == 1 &&
                   <> */}
               {/* No Need for sonasons */}
-              <span
+              {IsCurrentThemeState !== "3" && <span
                 className="nav_li_smining nav_li_smining_Mobile"
                 style={{ cursor: "pointer" }}
                 onClick={(event) => hanldeStaticPageNavigation(event, "/ExpertAdvice")}
@@ -1081,12 +1088,13 @@ const Header = () => {
                   EXPERT ADVICE
                 </a>
               </span>
+              }
 
               {/* Maiora not needed fun facts */}
               {/* Kayra needed */}
               {/* No need for sonasons */}
 
-              <span
+              {IsCurrentThemeState === "2" && <span
                 className="nav_li_smining nav_li_smining_Mobile"
                 style={{ cursor: "pointer" }}
                 onClick={(event) => hanldeStaticPageNavigation(event, "/FunFact")}
@@ -1094,7 +1102,7 @@ const Header = () => {
                 <a href="/FunFact" className="smr_A_link">
                   FUN FACT
                 </a>
-              </span>
+              </span>}
               {/* </>
                   )} */}
 
@@ -1105,24 +1113,27 @@ const Header = () => {
                   <> */}
 
               {/* Dfine needed */}
-              {/* <span
-                className="nav_li_smining nav_li_smining_Mobile"
-                style={{ cursor: "pointer" }}
-                onClick={(event) => hanldeStaticPageNavigation(event, "/gallery")}
-              >
-                <a href="/gallery" className="smr_A_link">
-                  GALLERY
-                </a>
-              </span>
-              <span
-                className="nav_li_smining nav_li_smining_Mobile"
-                style={{ cursor: "pointer" }}
-                onClick={(event) => hanldeStaticPageNavigation(event, "/theteam")}
-              >
-                <a href="/theteam" className="smr_A_link">
-                  THE TEAM
-                </a>
-              </span> */}
+              {IsCurrentThemeState === "3" && <>
+                <span
+                  className="nav_li_smining nav_li_smining_Mobile"
+                  style={{ cursor: "pointer" }}
+                  onClick={(event) => hanldeStaticPageNavigation(event, "/gallery")}
+                >
+                  <a href="/gallery" className="smr_A_link">
+                    GALLERY
+                  </a>
+                </span>
+                <span
+                  className="nav_li_smining nav_li_smining_Mobile"
+                  style={{ cursor: "pointer" }}
+                  onClick={(event) => hanldeStaticPageNavigation(event, "/theteam")}
+                >
+                  <a href="/theteam" className="smr_A_link">
+                    THE TEAM
+                  </a>
+                </span>
+              </>
+              }
               {/* </>
                 )} */}
 
@@ -1251,13 +1262,13 @@ const Header = () => {
                 </>
               )}
 
-              {/* <span
+              {IsCurrentThemeState === "3" && <span
                 className="nav_li_smining_Fixed nav_li_smining_Mobile"
                 style={{ cursor: "pointer" }}
                 onClick={() => navigation("/ContactUs")}
               >
                 CONTACT US
-              </span> */}
+              </span>}
 
               {islogin ? (
                 <li
@@ -1406,7 +1417,9 @@ const Header = () => {
             <div className="smiling_Top_header_div1">
               <ul className="nav_ul_shop">
                 {/* {islogin && */}
-                {/* {IsB2BWebsiteChek == 1 ? (
+                {
+                IsCurrentThemeState === "1" &&
+               ( IsB2BWebsiteChek == 1 ? (
                   islogin == true ? (
                     <li
                       className="nav_li_smining_Fixed nav_li_smining_shop"
@@ -1452,20 +1465,24 @@ const Header = () => {
                       />
                     </span>
                   </li>
-                )} */}
+                ))}
 
                 {/* Miora Needed */}
                 {/* Kayra Don't */}
                 {/* sonasons needs */}
-                {/* <li
-                  className="nav_li_smining_Fixed nav_li_smining_Mobile"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => hanldeStaticPageNavigation(event, "/servicePolicy")}
-                >
-                  <a href="/servicePolicy" className="smr_A_linkFixed">
-                    SERVICE POLICY
-                  </a>
-                </li> */}
+                {
+                  IsCurrentThemeState === "1" && <>
+                    <li
+                      className="nav_li_smining_Fixed nav_li_smining_Mobile"
+                      style={{ cursor: "pointer" }}
+                      onClick={(event) => hanldeStaticPageNavigation(event, "/servicePolicy")}
+                    >
+                      <a href="/servicePolicy" className="smr_A_linkFixed">
+                        SERVICE POLICY
+                      </a>
+                    </li>
+                  </>
+                }
 
 
                 {/* Define don't need this */}
@@ -1475,7 +1492,7 @@ const Header = () => {
                     <> */}
                 {/* no need for sonasons */}
 
-                <span
+                {IsCurrentThemeState !== "3" && <span
                   className="nav_li_smining_Fixed nav_li_smining_Mobile"
                   style={{ cursor: "pointer" }}
                   onClick={(event) => hanldeStaticPageNavigation(event, "/ExpertAdvice")}
@@ -1483,14 +1500,14 @@ const Header = () => {
                   <a href="/ExpertAdvice" className="smr_A_linkFixed">
                     EXPERT ADVICE
                   </a>
-                </span>
+                </span>}
 
 
                 {/* Maiora not needed fun facts */}
                 {/* Kayra needed */}
                 {/* no need for sonasons */}
 
-                <span
+                {IsCurrentThemeState === "2" && <span
                   className="nav_li_smining_Fixed nav_li_smining_Mobile"
                   style={{ cursor: "pointer" }}
                   onClick={(event) => hanldeStaticPageNavigation(event, "/FunFact")}
@@ -1499,6 +1516,7 @@ const Header = () => {
                     FUN FACT
                   </a>
                 </span>
+                }
                 {/* </>
                   )}
 
@@ -1509,24 +1527,26 @@ const Header = () => {
 
                 {/* dfine needed */}
 
-                {/* <span
-                  className="nav_li_smining nav_li_smining_Mobile"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => hanldeStaticPageNavigation(event, "/gallery")}
-                >
-                  <a href="/gallery" className="smr_A_link">
-                    GALLERY
-                  </a>
-                </span>
-                <span
-                  className="nav_li_smining nav_li_smining_Mobile"
-                  style={{ cursor: "pointer" }}
-                  onClick={(event) => hanldeStaticPageNavigation(event, "/theteam")}
-                >
-                  <a href="/theteam" className="smr_A_link">
-                    THE TEAM
-                  </a>
-                </span> */}
+                {IsCurrentThemeState === "3" && <>
+                  <span
+                    className="nav_li_smining nav_li_smining_Mobile"
+                    style={{ cursor: "pointer" }}
+                    onClick={(event) => hanldeStaticPageNavigation(event, "/gallery")}
+                  >
+                    <a href="/gallery" className="smr_A_link">
+                      GALLERY
+                    </a>
+                  </span>
+                  <span
+                    className="nav_li_smining nav_li_smining_Mobile"
+                    style={{ cursor: "pointer" }}
+                    onClick={(event) => hanldeStaticPageNavigation(event, "/theteam")}
+                  >
+                    <a href="/theteam" className="smr_A_link">
+                      THE TEAM
+                    </a>
+                  </span>
+                </>}
                 {/* </>
                   )} */}
                 {IsB2BWebsiteChek === 1 ? (
@@ -1651,13 +1671,13 @@ const Header = () => {
                   )
                 )}
 
-                {/* <span
+                {IsCurrentThemeState === "3" && <span
                   className="nav_li_smining_Fixed nav_li_smining_Mobile"
                   style={{ cursor: "pointer" }}
                   onClick={() => navigation("/ContactUs")}
                 >
                   CONTACT US
-                </span> */}
+                </span>}
 
                 {islogin ? (
                   <li
@@ -1821,11 +1841,13 @@ const Header = () => {
           >
             {/* Navbar Old Code Under */}
             {/* <NewMenuBar handelMenu={handelMenu} menuItems={menuItems} /> */}
-            {/* <OldMenuBar handelMenu={handelMenu} menuItems={menuItems} /> */}
+           {  IsCurrentThemeState === "1" && <OldMenuBar handelMenu={handelMenu} menuItems={menuItems} />}
           </div>
         </div>
       </div>
-      {IsB2BWebsiteChek === 1 ? (islogin ? <TopNavBar menuItems={menuItems} handelMenu={handelMenu} /> : "") : <TopNavBar menuItems={menuItems} handelMenu={handelMenu} />}
+      { IsCurrentThemeState !== "1" && 
+      ( IsB2BWebsiteChek === 1 ? (islogin ? <TopNavBar menuItems={menuItems} handelMenu={handelMenu} /> : "") : <TopNavBar menuItems={menuItems} handelMenu={handelMenu} />)
+       }
       {IsCartNo == 2 &&
         <CartDrawer open={isCartOpen} />
       }

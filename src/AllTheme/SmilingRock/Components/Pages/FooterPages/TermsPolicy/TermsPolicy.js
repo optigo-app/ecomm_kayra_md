@@ -6,20 +6,24 @@ import { useRecoilValue } from "recoil";
 import { IsCurrentTheme } from "../../../Recoil/atom";
 
 function TermsPolicy() {
-     const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
 
-     let theme = [];
+  let theme = [];
+  let Title = ""
 
 
-     if(IsCurrentThemeState === "1"){
-      theme = MaioraTerms
-    }else if(IsCurrentThemeState === "2"){
-      theme = TermsData
-    }else if(IsCurrentThemeState === "3"){
-      theme = []
-    }
+  if (IsCurrentThemeState === "1") {
+    theme = MaioraTerms;
+    Title = "Maiora Terms & Policy"
+  } else if (IsCurrentThemeState === "2") {
+    theme = TermsData;
+    Title = "Kayra Creation Terms & Policy"
+  } else if (IsCurrentThemeState === "3") {
+    theme = []
+    Title = "Terms & Policy"
+  }
 
-  
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -43,7 +47,7 @@ function TermsPolicy() {
                   " FreightDispProBook-Regular, Times New Roman , serif",
               }}
             >
-              TERMS POLICY
+              {Title}
             </span>
           </strong>
         </p>

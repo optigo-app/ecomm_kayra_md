@@ -1,5 +1,8 @@
 import { Box, CircularProgress } from "@mui/material";
+import { useRecoilValue } from "recoil";
+import { IsCurrentTheme } from "./AllTheme/SmilingRock/Components/Recoil/atom";
 
+// 0
 export const LoadingFallback = () => (
     <Box
         sx={{
@@ -12,7 +15,7 @@ export const LoadingFallback = () => (
         <CircularProgress sx={{ color: 'rgba(255, 87, 34, 0.8)' }} />
     </Box>
 )
-
+//  1
 export const MdLoadingFallback = () => (
     <Box
         sx={{
@@ -34,7 +37,7 @@ export const MdLoadingFallback = () => (
         />
     </Box>
 );
-
+// 2
 export const KayraLoadingFallback = () => (
     <Box
         sx={{
@@ -56,7 +59,7 @@ export const KayraLoadingFallback = () => (
         />
     </Box>
 );
-
+// 3
 export const DfineLoadingFallback = () => (
     <Box
         sx={{
@@ -78,3 +81,20 @@ export const DfineLoadingFallback = () => (
         />
     </Box>
 );
+
+export default function FallBackLoaderDefaultConfig() {
+    const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
+    switch (IsCurrentThemeState) {
+        case "1":
+            return <MdLoadingFallback />;
+
+        case "2":
+            return <KayraLoadingFallback />;
+
+        case "3":
+            return <DfineLoadingFallback />;
+
+        default:
+            return <LoadingFallback />;
+    }
+}
