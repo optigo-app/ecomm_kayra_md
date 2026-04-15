@@ -4,6 +4,7 @@ export const ThemeType = {
   MAIORA: "1",
   KAYRA: "2",
   DFINE: "3",
+  SONASONS: "4"
 }
 
 
@@ -54,6 +55,6 @@ export const defaultAddressState = atom({
 
 export const IsCurrentTheme = atom({
   key: 'smr_IsCurrentTheme',
-  default: ThemeType.DFINE,
+  default: ThemeType.KAYRA,
 })
 

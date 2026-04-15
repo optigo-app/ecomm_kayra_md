@@ -30,15 +30,13 @@ export default function ContactUs() {
     useEffect(() => {
         let theme = ""
         if(IsCurrentThemeState === "1"){
-            theme = "MaioraContact.html"
+            theme = "MairocontactPage.html"
         }else if(IsCurrentThemeState === "2"){
-            theme = "KayraContact.html"
+            theme = "contactPage.html"
         }else if(IsCurrentThemeState === "3"){
-            theme = "DfineContact.html"
+            theme = "dfinecontact.html"
         }else if(IsCurrentThemeState === "4"){
-            theme = "SonasonsContact.html"
-        }else if(IsCurrentThemeState === "5"){
-            theme = "MairoContact.html"
+            theme = "SonasonsContactPage.html"
         }
             // fetch(`${storImagePath()}/html/contactPage.html`)  /*  for kayra only */
             // fetch(`${storImagePath()}/html/dfinecontact.html`)  /*  for dfine only */

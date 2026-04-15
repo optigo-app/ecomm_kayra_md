@@ -7,7 +7,7 @@ import loaderImg from './Components/Assets/webLogo.png';
 import loaderImg1 from './Components/Assets/mdLogo.png';
 import loaderImg2 from './Components/Assets/kayraLogo.png';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { companyLogo, companyLogoM, loginState, smr_companyLogo, smr_companyLogoM, smr_loginState } from "./Components/Recoil/atom";
+import { companyLogo, companyLogoM, IsCurrentTheme, loginState, smr_companyLogo, smr_companyLogoM, smr_loginState } from "./Components/Recoil/atom";
 import PrivateRoutes from "./PrivateRoutes";
 import { storImagePath, storInitDataPath } from "../../utils/Glob_Functions/GlobalFunction";
 import { LoginWithEmailAPI } from "../../utils/API/Auth/LoginWithEmailAPI";
@@ -76,6 +76,7 @@ const SmilingRock_App = () => {
   const [htmlContent, setHtmlContent] = useState(JSON.parse(sessionStorage.getItem("storeInit")));
   const storeInit = JSON.parse(sessionStorage.getItem("storeInit"));
   const [localData, setLocalData] = useState(sessionStorage.getItem("storeInit"));
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
 
   useGlobalPreventSave();
 
@@ -211,6 +212,15 @@ const SmilingRock_App = () => {
     }
   }
 
+  let loader = "";
+  if (IsCurrentThemeState === "1") {
+    loader = loaderImg1;
+  } else if (IsCurrentThemeState === "2") {
+    loader = loaderImg2
+  } else if (IsCurrentThemeState === "3") {
+    loader = loaderImg
+
+  }
 
   const LoadingFallback = () => (
     <Box
@@ -223,7 +233,7 @@ const SmilingRock_App = () => {
     >
       {/* <CircularProgress sx={{ color: 'rgba(255, 87, 34, 0.8)' }} /> */}
       <img
-        src={loaderImg2}
+        src={loader}
         alt="Loading..."
         height="100%"
         width="auto"
@@ -234,8 +244,6 @@ const SmilingRock_App = () => {
       />
     </Box>
   );
-
-  const dfine = 0;
 
   function ProductListWrapper() {
     return (
@@ -361,7 +369,7 @@ const SmilingRock_App = () => {
               </div>
             }
           />
-          <Route path="/ContactUs" element={dfine === 1 ? <ContactUs1 /> : <ContactUs />} />
+          <Route path="/ContactUs" element={IsCurrentThemeState === "3" ? <ContactUs1 /> : <ContactUs />} />
           {/* Maiora needed servicePolicy */}
           {/* Kayra not needed */}
           {/* sonasons needed */}

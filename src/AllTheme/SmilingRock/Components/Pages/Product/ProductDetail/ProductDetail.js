@@ -21,8 +21,8 @@ import { ColorStoneQualityColorComboAPI } from "../../../../../../utils/API/Comb
 import { MetalColorCombo } from "../../../../../../utils/API/Combo/MetalColorCombo";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
-import { CartCount, WishCount } from "../../../Recoil/atom";
-import { useSetRecoilState } from "recoil";
+import { CartCount, IsCurrentTheme, WishCount } from "../../../Recoil/atom";
+import { useSetRecoilState ,useRecoilValue } from "recoil";
 import { CartAndWishListAPI } from "../../../../../../utils/API/CartAndWishList/CartAndWishListAPI";
 import { RemoveCartAndWishAPI } from "../../../../../../utils/API/RemoveCartandWishAPI/RemoveCartAndWishAPI";
 import { IoIosPlayCircle } from "react-icons/io";
@@ -1500,8 +1500,7 @@ const ProductDetail = () => {
   //   }
   // },[pdThumbImg,pdVideoArr])
 
-  const KayraCreation = 2;
-
+  const IsCurrentThemeState = useRecoilValue(IsCurrentTheme);
   const [isClamped, setIsClamped] = useState(false);
 
   const descriptionRef = useRef(null); // Using useRef instead of document.querySelector
@@ -1877,7 +1876,7 @@ const ProductDetail = () => {
                                   </span>
                                 </span> : null}
                               {/* Miora Need Net weight / kayra Don't */}
-                              {KayraCreation === 1 && storeInit?.IsMetalWeight === 1 &&
+                              {IsCurrentThemeState !== "2" && ( storeInit?.IsMetalWeight === 1 &&
                                 <span className="smr_prod_short_key">
                                   Net. wt :{" "}
                                   <span className="smr_prod_short_val">
@@ -1885,7 +1884,7 @@ const ProductDetail = () => {
                                       singleProd1?.Nwt ?? singleProd?.Nwt
                                     )?.toFixed(3)}
                                   </span>
-                                </span>}
+                                </span>)}
                               {/* {singleProd?.description && (
                                 <div
                                   style={{
@@ -2657,7 +2656,8 @@ const ProductDetail = () => {
 
 
                 {/* Maiora chnages Need the / in website for other not need right now !! */}
-                {KayraCreation === 1 && <div className="smr_material_details_portion">
+                {IsCurrentThemeState !== "2"  && 
+              (  <div className="smr_material_details_portion">
                   {(diaList?.length > 0 ||
                     csList?.filter((ele) => ele?.D === "MISC")?.length > 0 ||
                     csList?.filter((ele) => ele?.D !== "MISC")?.length > 0) && (
@@ -2771,7 +2771,7 @@ const ProductDetail = () => {
                         ))}
                     </div>
                   )}
-                </div>}
+                </div>)}
 
                 {stockItemArr?.length > 0 &&
                   storeInit?.IsStockWebsite === 1 && stockItemArr?.[0]?.stat_code != 1005 && (
