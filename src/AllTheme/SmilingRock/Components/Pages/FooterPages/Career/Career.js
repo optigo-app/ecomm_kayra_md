@@ -190,12 +190,12 @@ const Career = () => {
       <Box sx={{ bgcolor: "#fff" }}>
         <Box sx={{ maxWidth: 1200, mx: "auto", px: { xs: 2.5, md: 6 }, pt: { xs: 6, md: 10 }, pb: { xs: 6, md: 9 } }}>
           <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-            <Typography component="h1" sx={{ fontSize: { xs: 52, md: 110 }, lineHeight: 1, fontWeight: 400, letterSpacing: -3 }}>
+            <Typography component="h1" sx={{ fontSize: { xs: 34, md: 60 }, lineHeight: 1.1, fontWeight: 400, letterSpacing: -1 }}>
               Career
             </Typography>
           </motion.div>
           <Typography sx={{ mt: 3.5, maxWidth: 440, fontSize: { xs: 14, md: 16 }, color: "text.secondary", lineHeight: 1.7 }}>
-            {data.tagline}
+            {data.tagline}+
           </Typography>
         </Box>
 
