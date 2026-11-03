@@ -35,6 +35,7 @@ import useGlobalPreventSave from "../../utils/Glob_Functions/useGlobalPreventSav
 import Home from './Components/Pages/Home/Index';
 import Header from './Components/Pages/Home/Header/Header';
 import Header2 from './Components/Pages/Home/Header/Header2';
+import ExhibitionsPage from "./Components/Pages/Exhibitions";
 
 const ProductList = lazy(() => import("./Components/Pages/Product/ProductList/ProductList"));
 const ProductDetail = lazy(() => import("./Components/Pages/Product/ProductDetail/ProductDetail"));
@@ -59,6 +60,7 @@ const Wrapper = lazy(() => import("./Components/Pages/Home/Appointment/Wrapper")
 const PrivacyPolicy = lazy(() => import("./Components/Pages/FooterPages/PrivacyPolicy/PrivacyPolicy"));
 const TermsAndConditions = lazy(() => import("./Components/Pages/FooterPages/TermsPage/TermsPage"));
 const Achievement = lazy(() => import("./Components/Pages/FooterPages/Achievement/Achievement"));
+const Career = lazy(() => import("./Components/Pages/FooterPages/Career/Career"));
 const TheTeam = lazy(() => import("./Components/Pages/FooterPages/TheTeam/TheTeam"));
 
 const Cart = React.lazy(() => import(`./Components/Pages/Cart/CartMain`))
@@ -377,6 +379,7 @@ const SmilingRock_App = () => {
           <Route path="/ExpertAdvice" element={<ExpertAdvice />} />
           <Route path="/gallery" element={<Achievement />} />
           <Route path="/theteam" element={<TheTeam />} />
+          <Route path="/career" element={<Career />} />
           <Route path="/bespoke-jewelry" element={<Bespoke />} />
           <Route path="/appointment" element={<Wrapper />} />
           <Route
@@ -405,6 +408,7 @@ const SmilingRock_App = () => {
             {/* <Route path="/accountdwsr" element={<DWSRprintComp />} /> */}
             <Route path="/Lookbook" element={<LookbookWrapper />} />
           </Route>
+          <Route path="/exhibitions" element={<ExhibitionsPage />} />
           <Route path="/accountdwsr" element={<DWSRprintComp />} />
           <Route path="/paymentFailure" element={<PaymentFailure />} />
           <Route path="*" element={<PageNotFound />} />

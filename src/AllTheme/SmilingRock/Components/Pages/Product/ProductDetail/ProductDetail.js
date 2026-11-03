@@ -990,12 +990,19 @@ const ProductDetail = () => {
       }, {});
     };
 
-    const maxColorCount = Math.max(...Object.values(getMaxCountByColor(colorImages)), 0);
-    const normalImageCount = normalImages.length ? Math.max(...normalImages.map(i => i.Nm)) : 0;
-
     // Get metal color code
     const mcArr = mtColorLocal.find(ele => ele.id === singleProd?.MetalColorid);
     setSelectedMetalColor(mcArr?.colorcode);
+
+    // Keep only the images of the currently selected metal color
+    const selColorName = mcArr?.metalcolorname?.trim()?.toUpperCase();
+    const selColorImages = colorImages
+      .filter(i => i.CN?.trim()?.toUpperCase() === selColorName)
+      .sort((a, b) => a.Nm - b.Nm);
+    colorImages.splice(0, colorImages.length, ...selColorImages);
+
+    const maxColorCount = colorImages.length ? Math.max(...colorImages.map(i => i.Nm)) : 0;
+    const normalImageCount = normalImages.length ? Math.max(...normalImages.map(i => i.Nm)) : 0;
 
     const buildImageURL = (i, isColor = false) => {
       const base = storeInit?.CDNDesignImageFol;
@@ -1156,18 +1163,14 @@ const ProductDetail = () => {
     });
 
     // Filter color and normal images
-    const colorImgs = parsedData.filter(ele => ele?.CN && ele?.TI === 2);
+    const selColorName = mcArr?.metalcolorname?.trim()?.toUpperCase();
+    const colorImgs = parsedData
+      .filter(ele => ele?.CN && ele?.TI === 2 && ele.CN.trim().toUpperCase() === selColorName)
+      .sort((a, b) => a.Nm - b.Nm);
     const normalImgs = parsedData.filter(ele => !ele?.CN && ele?.TI === 1);
+    colorImages.splice(0, colorImages.length, ...colorImgs);
 
-    const maxColorImgCount = Math.max(
-      0,
-      ...Object.values(
-        colorImgs.reduce((acc, { CN }) => {
-          acc[CN] = (acc[CN] || 0) + 1;
-          return acc;
-        }, {})
-      )
-    );
+    const maxColorImgCount = colorImgs.length ? Math.max(...colorImgs.map(i => i.Nm)) : 0;
 
     const normalImageCount = normalImgs.length > 0
       ? Math.max(...normalImgs.map(item => item.Nm))

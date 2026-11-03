@@ -1,0 +1,64 @@
+{
+  "company": "Kayra Creation",
+  "tagline": "Join Kayra Creation and help shape the future of fine jewelry design, from strategy to the storefront.",
+  "jobs": [
+    {
+      "id": "KC26DS",
+      "position": "Design Strategist",
+      "location": "New York, NY",
+      "type": "Full-time",
+      "hours": "Mon - Fri, 9:00am - 5:00pm",
+      "jobType": "Regular, Full time",
+      "opening": "10/28/2026",
+      "closing": "11/28/2026",
+      "applyEmail": "kyaracreationusa@gmail.com",
+      "mailAddress": "HR Kayra Creation Inc, 71 W 4th Street, Suite 1305, New York, NY 10036",
+      "duties": [
+        {
+          "title": "Design & Market Research",
+          "points": [
+            "Research and evaluate jewelry design trends, material innovations and consumer purchasing behavior",
+            "Guide data-driven product development with analytical findings",
+            "Monitor market trends and consumer preference data for new product development and long-term portfolio expansion"
+          ]
+        },
+        {
+          "title": "Sales & Brand Strategy",
+          "points": [
+            "Review historical sales performance, customer feedback, pricing structures and competitive market conditions",
+            "Inform design direction, collection planning and brand positioning strategies",
+            "Assess existing collections, manufacturing processes and design standards for consistency with brand identity, quality control and target market expectations"
+          ]
+        },
+        {
+          "title": "Supplier Management",
+          "points": [
+            "Collaborate with domestic and international suppliers to source materials and components",
+            "Evaluate quality benchmarks and negotiate pricing, lead times and contractual terms",
+            "Analyze supplier performance metrics to optimize cost efficiency, maintain production timelines and ensure material quality"
+          ]
+        },
+        {
+          "title": "Inventory Management",
+          "points": [
+            "Analyze stock levels and identify high-performing and underperforming product categories",
+            "Coordinate production adjustments to optimize supply-demand balance"
+          ]
+        },
+        {
+          "title": "E-commerce Support",
+          "points": [
+            "Support development and implementation of a B2C e-commerce platform",
+            "Provide functional jewelry design to maximize accessibility and minimize bounce rate"
+          ]
+        }
+      ],
+      "summary": "Guide data-driven jewelry product development through research, supplier collaboration and design strategy.",
+      "requirements": [
+        "Master's degree in Design Management or a related major",
+        "Travel 5 to 6 times per year, 4 to 5 days each, within the US or internationally",
+        "Participate in jewelry trade shows and market field research"
+      ]
+    }
+  ]
+}

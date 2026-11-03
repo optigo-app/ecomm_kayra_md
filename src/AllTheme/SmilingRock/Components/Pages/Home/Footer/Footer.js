@@ -78,6 +78,7 @@ const Footer = ({ fromPage }) => {
                           {/* kAYRA */}
                           <p className='footerMoreOptionData' onClick={() => { navigation('/ExpertAdvice'); window.scrollTo(0, 0); }}>EXPERT ADVICE</p>
                           <p className='footerMoreOptionData' onClick={() => { navigation('/FunFact'); window.scrollTo(0, 0); }}>FUN FACT</p>
+                          <p className='footerMoreOptionData' onClick={() => { navigation('/exhibitions'); window.scrollTo(0, 0); }}>EXHIBITIONS</p>
                         </>
                         }
                         {IsCurrentThemeState === "3" && <>
@@ -94,8 +95,8 @@ const Footer = ({ fromPage }) => {
                   {/* Maiora not needed */}
                   {/* Kayra needed */}
                   {IsCurrentThemeState !== "1" && <Copyright
-                   IsCurrentThemeState={IsCurrentThemeState}
-                  localData={localData} />}
+                    IsCurrentThemeState={IsCurrentThemeState}
+                    localData={localData} />}
                   <p style={{
                     color: '#7d7f85',
                     fontSize: '12px',
@@ -140,6 +141,7 @@ const Footer = ({ fromPage }) => {
                         {/* Kayra needed */}
                         {/* no need in sonasons */}
                         <p className='footerMoreOptionData' onClick={() => { navigation('/FunFact'); window.scrollTo(0, 0); }}>FUN FACT</p>
+                        <p className='footerMoreOptionData' onClick={() => { navigation('/exhibitions'); window.scrollTo(0, 0); }}>EXHIBITIONS</p>
                       </>
                     )}
                   {/* <p className='footerMoreOptionData' onClick={() => navigation('/TermsPolicy')}>TERMS & PRIVACY</p> */}
@@ -171,9 +173,9 @@ const Footer = ({ fromPage }) => {
 export default Footer;
 
 
-const Copyright = ({ localData, title ,IsCurrentThemeState }) => {
+const Copyright = ({ localData, title, IsCurrentThemeState }) => {
   // Copyright ©️ 2026. Kayra Creation Limited. All rights reserved.
-  const isKayra = IsCurrentThemeState ===  "2" ? `Copyright © ${new Date().getFullYear()}. Kayra Creation Limited. All rights reserved.` : `© ${new Date()?.getFullYear()}, ${title || localData?.companyname}`;
+  const isKayra = IsCurrentThemeState === "2" ? `Copyright © ${new Date().getFullYear()}. Kayra Creation Limited. All rights reserved.` : `© ${new Date()?.getFullYear()}, ${title || localData?.companyname}`;
 
   return <p style={{
     color: '#7d7f85',
