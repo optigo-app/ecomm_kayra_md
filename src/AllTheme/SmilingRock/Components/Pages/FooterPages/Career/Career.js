@@ -173,7 +173,8 @@ const Career = () => {
       .then((r) => r.json())
       .then((d) => {
         setData(d);
-        setOpenId(d.jobs?.[0]?.id ?? null);
+        // setOpenId(d.jobs?.[0]?.id ?? null);
+        setOpenId(null);
       })
       .catch(() => setData({ jobs: [] }));
   }, []);
