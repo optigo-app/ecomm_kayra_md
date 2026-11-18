@@ -1082,10 +1082,10 @@ const Header = () => {
               {IsCurrentThemeState !== "3" && <span
                 className="nav_li_smining nav_li_smining_Mobile"
                 style={{ cursor: "pointer" }}
-                onClick={(event) => hanldeStaticPageNavigation(event, "/ExpertAdvice")}
+                onClick={(event) => hanldeStaticPageNavigation(event, "/career")}
               >
-                <a href="/ExpertAdvice" className="smr_A_link">
-                  EXPERT ADVICE
+                <a href="/career" className="smr_A_link">
+                  CAREER
                 </a>
               </span>
               }
@@ -1495,10 +1495,10 @@ const Header = () => {
                 {IsCurrentThemeState !== "3" && <span
                   className="nav_li_smining_Fixed nav_li_smining_Mobile"
                   style={{ cursor: "pointer" }}
-                  onClick={(event) => hanldeStaticPageNavigation(event, "/ExpertAdvice")}
+                  onClick={(event) => hanldeStaticPageNavigation(event, "/career")}
                 >
-                  <a href="/ExpertAdvice" className="smr_A_linkFixed">
-                    EXPERT ADVICE
+                  <a href="/career" className="smr_A_linkFixed">
+                    CAREER
                   </a>
                 </span>}
 
